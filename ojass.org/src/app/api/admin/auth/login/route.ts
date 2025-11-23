@@ -69,12 +69,12 @@ export async function POST(req: NextRequest) {
         // Get origin for SameSite cookie configuration
         const origin = req.headers.get('origin');
         const isProduction = process.env.NODE_ENV === "production";
-        const isLocalhost = origin && (origin.includes('localhost') || origin.includes('127.0.0.1'));
-        
+        const isLocalhost = !!(origin && (origin.includes('localhost') || origin.includes('127.0.0.1')));
+
         // Check if this is a cross-origin request by comparing origin with request URL
         const requestUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}`;
         const isCrossOrigin = origin && origin !== requestUrl;
-        
+
         // Cookie configuration:
         // - Cross-origin (including localhost different ports): SameSite=None
         //   - Production: Secure=true (requires HTTPS)
@@ -82,11 +82,25 @@ export async function POST(req: NextRequest) {
         // - Same origin: SameSite=Lax, Secure based on environment
         let sameSite: "strict" | "lax" | "none" = "lax";
         let secure: boolean = isProduction;
-        
-        if (isCrossOrigin) {
+        let domain: string | undefined = undefined;
+
+        // Handle ojass.org subdomains
+        const host = req.headers.get('host') || '';
+        if (host.includes('ojass.org')) {
+            domain = '.ojass.org';
+            // If we are sharing between subdomains of the same site, we can use Lax
+            // This avoids the need for SameSite=None + Secure on HTTP
+            sameSite = "lax";
+        } else if (isCrossOrigin) {
             sameSite = "none";
             // Chrome allows Secure=false for localhost in development
-            secure = isProduction || !isLocalhost;
+            // For custom domains on HTTP, we must NOT set Secure
+            secure = isProduction || (isLocalhost && !isProduction);
+
+            // If we are cross-origin but not localhost (e.g. custom domain HTTP), 
+            // SameSite=None requires Secure. If we can't be Secure (HTTP), 
+            // this cookie will be rejected by Chrome. 
+            // But if we matched the ojass.org block above, we use Lax, so we are fine.
         }
 
         response.cookies.set({
@@ -97,6 +111,7 @@ export async function POST(req: NextRequest) {
             sameSite: sameSite,
             maxAge: 2 * 60 * 60, // 2 hours
             path: "/",
+            domain: domain,
         });
 
         return response;

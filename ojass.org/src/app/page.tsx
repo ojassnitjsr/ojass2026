@@ -213,11 +213,10 @@ export default function Home() {
             height: '120vh',
             marginLeft: '-10vw',
             marginTop: '-10vh',
-            backgroundImage: 'url(/layers/bg_new_3.jpg)',
+            backgroundImage: isDystopia ? 'url(/layers/bg_new_3_dist.png)' : 'url(/layers/bg_new_3.jpg)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
-            filter: isDystopia ? 'blur(1.5px) hue-rotate(180deg)' : 'blur(1.5px) hue-rotate(0deg)',
             transformStyle: 'preserve-3d',
             willChange: 'transform'
           }}
@@ -249,11 +248,11 @@ export default function Home() {
             width: '120vw',
             height: '70vh',
             marginLeft: '-10vw',
-            backgroundImage: 'url(/layers/layer2_new_2.png)',
+            backgroundImage: isDystopia ? 'url(/layers/layer2_new_2_dist.png)' : 'url(/layers/layer2_new_2.png)',
             backgroundSize: '50% 120%',
             backgroundPosition: 'center',
             backgroundRepeat: 'repeat-x',
-            filter: isDystopia ? 'blur(1px) brightness(1.2) hue-rotate(180deg)' : 'blur(1px) brightness(1.2) hue-rotate(0deg)',
+            // filter: isDystopia ? 'brightness(1.2) hue-rotate(180deg)' : 'blur(0px) brightness(1.2) hue-rotate(0deg)',
             transformStyle: 'preserve-3d',
             willChange: 'transform',
           }}
@@ -261,7 +260,7 @@ export default function Home() {
         
         <div
           id="title"
-          className='absolute top-[20%] font-bold text-[200px] text-center w-full bg-[url(/layers/text.png)] bg-contain bg-center bg-no-repeat h-[30vh]'
+          className='absolute top-[40%] font-bold text-[200px] text-center w-full bg-[url(/layers/text.png)] bg-contain bg-center bg-no-repeat h-[20vh]'
           style={{ willChange: 'transform', pointerEvents: 'none', filter: isDystopia ? 'hue-rotate(180deg)' : 'hue-rotate(0deg)', }}
         >
         </div>
@@ -282,13 +281,13 @@ export default function Home() {
               height: '100%',
               width: '50%',
               minWidth: '40vw',
-              backgroundImage: 'url(/layers/layer3_1.png)',
+              backgroundImage: isDystopia ? 'url(/layers/layer3_1_dist.png)' : 'url(/layers/layer3_1.png)',
               backgroundSize: 'contain',
               backgroundPosition: '80% bottom',
               backgroundRepeat: 'no-repeat',
               transform: 'scaleX(-1)',
               willChange: 'transform',
-              filter: isDystopia ? 'hue-rotate(180deg)' : 'hue-rotate(0deg)',
+              // filter: isDystopia ? 'hue-rotate(180deg)' : 'hue-rotate(0deg)',
               // backgroundColor: 'red'
             }}
           ></div>
@@ -297,11 +296,11 @@ export default function Home() {
               height: '100%',
               width: '50%',
               minWidth: '40vw',
-              backgroundImage: 'url(/layers/layer3_2.png)',
+              backgroundImage: isDystopia ? 'url(/layers/layer3_2_dist.png)' : 'url(/layers/layer3_2.png)',
               backgroundSize: '90%',
               backgroundPosition: '40% bottom',
               backgroundRepeat: 'no-repeat',
-              filter: isDystopia ? 'hue-rotate(180deg)' : 'hue-rotate(0deg)',
+              // filter: isDystopia ? 'hue-rotate(180deg)' : 'hue-rotate(0deg)',
             }}
           ></div>
         </div>

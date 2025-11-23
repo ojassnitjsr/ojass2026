@@ -2,6 +2,7 @@
 import { gsap } from 'gsap';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { useTheme } from "@/contexts/ThemeContext";
 import EventCard from '@/components/OverlayLayout/EventCard';
@@ -24,6 +25,8 @@ type Props = {}
 
 export default function Page({ }: Props) {
   const { theme } = useTheme();
+  const router = useRouter();
+  const isDystopia = theme === "dystopia";
   const containerRef = useRef<HTMLDivElement>(null)
   const [allEvents, setAllEvents] = useState<CardData[][]>([]);
   const [selectedEventIndex, setSelectedEventIndex] = useState<number>(0);
@@ -67,13 +70,38 @@ export default function Page({ }: Props) {
   }, [selectedEventIndex]);
 
   useEffect(() => {
-    fetch('/event.json')
+    fetch('/api/events')
       .then(response => response.json())
-      .then((data: CardData[][]) => {
-        setAllEvents(data);
-        console.log('Event data loaded!', data);
+      .then((events: any[]) => {
+        // Transform API events to CardData format
+        const transformedEvents: CardData[] = events.map((event) => {
+          // Use event ID for redirect, ignore old redirect field from database
+          const eventId = event._id || event.id;
+          return {
+            id: eventId,
+            name: event.name,
+            description: event.description || '',
+            img: event.img,
+            redirect: `/events/${eventId}`, // Always use new format with event ID
+            cardposition: 'center'
+          };
+        });
+        
+        // Group events into pages (3 events per page for swiper)
+        const eventsPerPage = 3;
+        const groupedEvents: CardData[][] = [];
+        for (let i = 0; i < transformedEvents.length; i += eventsPerPage) {
+          groupedEvents.push(transformedEvents.slice(i, i + eventsPerPage));
+        }
+        
+        setAllEvents(groupedEvents);
+        console.log('Event data loaded from API!', groupedEvents);
       })
-      .catch(error => console.error("Error fetching event data:", error));
+      .catch(error => {
+        console.error("Error fetching event data:", error);
+        // Fallback to empty array
+        setAllEvents([]);
+      });
   }, []);
 
   useEffect(() => {
@@ -144,7 +172,7 @@ export default function Page({ }: Props) {
         pointerEvents: 'none',
       }}>
         <Image
-          src="/events/bg_bg.png"
+          src={isDystopia ? "/events/bg_bg_dist.png" : "/events/bg_bg.png"}
           alt="Event 1"
           width={1000}
           height={1000}
@@ -211,11 +239,10 @@ export default function Page({ }: Props) {
                   <div className="w-full h-full flex items-center justify-center">
                     <div
                       onClick={(e) => {
-                        // only navigate if this slide is active
-                        if (swiperInstance?.slides[swiperInstance.activeIndex] === e.currentTarget.closest('.swiper-slide')) {
-                          if (card.redirect) {
-                            window.location.href = card.redirect; // 👈 redirect to URL
-                          }
+                        e.stopPropagation();
+                        // Navigate to event detail page
+                        if (card.redirect) {
+                          router.push(card.redirect);
                         }
                       }}
                       className="cursor-pointer"

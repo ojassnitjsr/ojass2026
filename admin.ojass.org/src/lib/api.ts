@@ -159,3 +159,215 @@ export const mediaAPI = {
   },
 };
 
+// User API Types
+export interface User {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  ojassId: string;
+  gender: string;
+  collegeName: string;
+  city: string;
+  state: string;
+  isPaid: boolean;
+  isEmailVerified: boolean;
+  isNitJsrStudent: boolean;
+  referralCount: number;
+  paymentAmount?: number;
+  paymentDate?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UserPagination {
+  page: number;
+  limit: number;
+  total: number;
+  pages: number;
+}
+
+// User API
+export const userAPI = {
+  getAll: async (params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    paymentStatus?: 'all' | 'paid' | 'unpaid';
+    emailVerified?: string;
+  }): Promise<{ users: User[]; pagination: UserPagination }> => {
+    const queryParams = new URLSearchParams();
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.search) queryParams.append('search', params.search);
+    if (params?.paymentStatus) queryParams.append('paymentStatus', params.paymentStatus);
+    if (params?.emailVerified) queryParams.append('emailVerified', params.emailVerified);
+
+    const query = queryParams.toString();
+    return apiRequest<{ users: User[]; pagination: UserPagination }>(
+      `/api/admin/users${query ? `?${query}` : ''}`
+    );
+  },
+
+  getById: async (userId: string): Promise<User> => {
+    return apiRequest<User>(`/api/admin/users/${userId}`);
+  },
+
+  update: async (userId: string, userData: Partial<User>): Promise<User> => {
+    return apiRequest<User>(`/api/admin/users/${userId}`, {
+      method: 'PUT',
+      body: JSON.stringify(userData),
+    });
+  },
+
+  delete: async (userId: string): Promise<{ success: boolean; message: string }> => {
+    return apiRequest<{ success: boolean; message: string }>(`/api/admin/users/${userId}`, {
+      method: 'DELETE',
+    });
+  },
+};
+
+// Team API Types
+export interface TeamMember {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  ojassId: string;
+}
+
+export interface TeamEvent {
+  _id: string;
+  name: string;
+  teamSizeMin: number;
+  teamSizeMax: number;
+  isTeamEvent: boolean;
+  img?: string;
+}
+
+export interface Team {
+  _id: string;
+  eventId: TeamEvent | string;
+  isIndividual: boolean;
+  teamName?: string;
+  teamLeader: TeamMember | string;
+  teamMembers: TeamMember[] | string[];
+  joinToken?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TeamPagination {
+  page: number;
+  limit: number;
+  total: number;
+  pages: number;
+}
+
+// Team API
+export const teamAPI = {
+  getAll: async (params?: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    eventId?: string;
+    isIndividual?: string;
+  }): Promise<{ teams: Team[]; pagination: TeamPagination }> => {
+    const queryParams = new URLSearchParams();
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.limit) queryParams.append('limit', params.limit.toString());
+    if (params?.search) queryParams.append('search', params.search);
+    if (params?.eventId) queryParams.append('eventId', params.eventId);
+    if (params?.isIndividual) queryParams.append('isIndividual', params.isIndividual);
+
+    const query = queryParams.toString();
+    return apiRequest<{ teams: Team[]; pagination: TeamPagination }>(
+      `/api/admin/teams${query ? `?${query}` : ''}`
+    );
+  },
+
+  getById: async (teamId: string): Promise<Team> => {
+    return apiRequest<Team>(`/api/admin/teams/${teamId}`);
+  },
+
+  delete: async (teamId: string): Promise<{ success: boolean; message: string }> => {
+    return apiRequest<{ success: boolean; message: string }>(`/api/admin/teams/${teamId}`, {
+      method: 'DELETE',
+    });
+  },
+};
+
+// Registration API
+export const registrationAPI = {
+  getByEvent: async (eventId: string): Promise<Team[]> => {
+    return apiRequest<Team[]>(`/api/admin/events/${eventId}/registrations`);
+  },
+
+  getById: async (eventId: string, registrationId: string): Promise<Team> => {
+    return apiRequest<Team>(`/api/admin/events/${eventId}/registrations/${registrationId}`);
+  },
+
+  verify: async (eventId: string, registrationId: string): Promise<{ success: boolean; message: string }> => {
+    return apiRequest<{ success: boolean; message: string }>(
+      `/api/admin/events/${eventId}/registrations/${registrationId}/verify`,
+      { method: 'POST' }
+    );
+  },
+
+  reject: async (eventId: string, registrationId: string): Promise<{ success: boolean; message: string }> => {
+    return apiRequest<{ success: boolean; message: string }>(
+      `/api/admin/events/${eventId}/registrations/${registrationId}/reject`,
+      { method: 'POST' }
+    );
+  },
+
+  getVerified: async (eventId: string): Promise<Team[]> => {
+    return apiRequest<Team[]>(`/api/admin/events/${eventId}/registrations/verified`);
+  },
+
+  getRejected: async (eventId: string): Promise<Team[]> => {
+    return apiRequest<Team[]>(`/api/admin/events/${eventId}/registrations/rejected`);
+  },
+};
+
+// Stats API Types
+export interface Stats {
+  users: {
+    total: number;
+    paid: number;
+    unpaid: number;
+    emailVerified: number;
+    nitJsr: number;
+  };
+  teams: {
+    total: number;
+    individual: number;
+    team: number;
+  };
+  events: {
+    total: number;
+    teamEvents: number;
+    individualEvents: number;
+  };
+  registrationsByEvent: Array<{
+    eventId: string;
+    eventName: string;
+    registrations: number;
+  }>;
+  payments: {
+    totalAmount: number;
+    averageAmount: number;
+  };
+  referrals: {
+    totalReferrals: number;
+    usersWithReferrals: number;
+  };
+}
+
+// Stats API
+export const statsAPI = {
+  getAll: async (): Promise<Stats> => {
+    return apiRequest<Stats>('/api/admin/stats');
+  },
+};
+

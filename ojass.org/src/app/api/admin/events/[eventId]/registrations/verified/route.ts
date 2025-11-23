@@ -4,7 +4,7 @@ import Team from "@/models/Team";
 import { requireAdmin } from "@/lib/admin";
 import { cookies } from "next/headers";
 
-export async function GET_VERIFIED(req: Request, { params }: { params: { eventId: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ eventId: string }> }) {
   await connectToDatabase();
 
   try {
@@ -12,7 +12,7 @@ export async function GET_VERIFIED(req: Request, { params }: { params: { eventId
     const tokenCookie = (await cookieStore).get("admin_token");
     requireAdmin(tokenCookie?.value);
 
-    const { eventId } = params;
+    const { eventId } = await params;
     const verified = await Team.find({ eventId, isVerified: true })
       .populate("teamLeader", "name email phone")
       .populate("teamMembers", "name email phone")

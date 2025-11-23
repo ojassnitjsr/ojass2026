@@ -10,16 +10,18 @@ import {
   FaUsers,
   FaTrash,
   FaSave,
+  FaCopy,
+  FaLink,
 } from "react-icons/fa";
 
-type Member = { _id: string; name: string };
+type Member = { _id: string; name: string; ojassId?: string };
 type Team = {
   _id: string;
   eventId: string;
   eventName: string;
   isIndividual: boolean;
   teamName: string;
-  teamLeader: string;
+  teamLeader: string | { _id: string; name: string; ojassId?: string };
   teamMembers: Member[];
   joinToken: string;
   status: string;
@@ -36,7 +38,10 @@ export default function Team({ teamData, currentUserId }: TeamProps) {
   const [editingTeam, setEditingTeam] = useState<string | null>(null);
   const [editedTeamName, setEditedTeamName] = useState("");
   const [showAddMemberModal, setShowAddMemberModal] = useState<string | null>(null);
-  const [newMemberName, setNewMemberName] = useState("");
+  const [newMemberOjassId, setNewMemberOjassId] = useState("");
+  const [isAddingMember, setIsAddingMember] = useState(false);
+  const [isSavingTeamName, setIsSavingTeamName] = useState(false);
+  const [isRemovingMember, setIsRemovingMember] = useState<string | null>(null);
   const [teams, setTeams] = useState<Team[]>(teamData);
 
   // 🎨 Theme-based colors
@@ -62,41 +67,184 @@ export default function Team({ teamData, currentUserId }: TeamProps) {
     setEditedTeamName(currentName);
   };
 
-  const handleSaveTeamName = (teamId: string) => {
-    if (editedTeamName.trim()) {
+  const handleSaveTeamName = async (teamId: string) => {
+    if (!editedTeamName.trim()) {
+      setEditingTeam(null);
+      setEditedTeamName("");
+      return;
+    }
+
+    setIsSavingTeamName(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Please login to update team name");
+        return;
+      }
+
+      const response = await fetch(`/api/teams/${teamId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          teamName: editedTeamName.trim(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to update team name");
+      }
+
+      // Update local state
       setTeams((prev) =>
         prev.map((team) =>
           team._id === teamId ? { ...team, teamName: editedTeamName.trim() } : team
         )
       );
-      console.log("Updated team name:", teamId, editedTeamName);
+      setEditingTeam(null);
+      setEditedTeamName("");
+      alert("Team name updated successfully!");
+    } catch (error: any) {
+      alert(error.message || "Failed to update team name");
+    } finally {
+      setIsSavingTeamName(false);
     }
-    setEditingTeam(null);
-    setEditedTeamName("");
   };
 
   const handleAddMember = (teamId: string) => {
     setShowAddMemberModal(teamId);
-    setNewMemberName("");
+    setNewMemberOjassId("");
   };
 
-  const handleConfirmAddMember = (teamId: string) => {
-    if (newMemberName.trim()) {
-      const newMember: Member = { _id: `member_${Date.now()}`, name: newMemberName.trim() };
-      setTeams((prev) =>
-        prev.map((team) =>
-          team._id === teamId
-            ? { ...team, teamMembers: [...team.teamMembers, newMember] }
-            : team
-        )
-      );
+  const handleConfirmAddMember = async (teamId: string) => {
+    if (!newMemberOjassId.trim()) {
+      alert("Please enter OJASS ID");
+      return;
     }
-    setShowAddMemberModal(null);
-    setNewMemberName("");
+
+    // Validate OJASS ID format
+    if (!/^OJASS26[A-Z0-9]{4}$/i.test(newMemberOjassId.trim())) {
+      alert("Invalid OJASS ID format. Format should be: OJASS26XXXX");
+      return;
+    }
+
+    setIsAddingMember(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Please login to add members");
+        return;
+      }
+
+      const response = await fetch(`/api/teams/${teamId}/members/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          ojassId: newMemberOjassId.trim().toUpperCase(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to add member");
+      }
+
+      // Refresh teams data
+      const teamsRes = await fetch("/api/teams", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (teamsRes.ok) {
+        const updatedTeams = await teamsRes.json();
+        const actualTeams = updatedTeams.filter((team: any) => !team.isIndividual);
+        const transformedTeams = actualTeams.map((team: any) => ({
+          _id: team._id,
+          eventId: team.eventId?._id || team.eventId,
+          eventName: team.eventId?.name || "Unknown Event",
+          isIndividual: team.isIndividual,
+          teamName: team.teamName || "Individual",
+          teamLeader:
+            typeof team.teamLeader === "object"
+              ? {
+                  _id: team.teamLeader._id,
+                  name: team.teamLeader.name || "Unknown",
+                  ojassId: team.teamLeader.ojassId,
+                }
+              : team.teamLeader,
+          teamMembers: team.teamMembers
+            .filter((member: any) => {
+              // Filter out leader from members list
+              const memberId = typeof member === "object" ? member._id : member;
+              const leaderId = typeof team.teamLeader === "object"
+                ? team.teamLeader._id
+                : team.teamLeader;
+              return memberId.toString() !== leaderId.toString();
+            })
+            .map((member: any) => ({
+              _id: typeof member === "object" ? member._id : member,
+              name: typeof member === "object" ? member.name : "Unknown",
+              ojassId: typeof member === "object" ? member.ojassId : undefined,
+            })),
+          joinToken: team.joinToken || "",
+          status: "Active",
+        }));
+        setTeams(transformedTeams);
+      }
+
+      setShowAddMemberModal(null);
+      setNewMemberOjassId("");
+      alert("Member added successfully!");
+    } catch (error: any) {
+      alert(error.message || "Failed to add member");
+    } finally {
+      setIsAddingMember(false);
+    }
   };
 
-  const handleRemoveMember = (teamId: string, memberId: string) => {
-    if (confirm("Are you sure you want to remove this member?")) {
+  const handleRemoveMember = async (teamId: string, memberId: string) => {
+    const teamLeaderId = typeof teams.find((t) => t._id === teamId)?.teamLeader === "object"
+      ? (teams.find((t) => t._id === teamId)?.teamLeader as any)?._id
+      : teams.find((t) => t._id === teamId)?.teamLeader;
+
+    // Prevent leader from removing themselves
+    if (memberId === teamLeaderId || memberId === currentUserId) {
+      alert("Team leader cannot remove themselves");
+      return;
+    }
+
+    if (!confirm("Are you sure you want to remove this member?")) {
+      return;
+    }
+
+    setIsRemovingMember(memberId);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Please login to remove members");
+        return;
+      }
+
+      const response = await fetch(`/api/teams/${teamId}/members/${memberId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to remove member");
+      }
+
+      // Update local state
       setTeams((prev) =>
         prev.map((team) =>
           team._id === teamId
@@ -104,19 +252,72 @@ export default function Team({ teamData, currentUserId }: TeamProps) {
             : team
         )
       );
+      alert("Member removed successfully!");
+    } catch (error: any) {
+      alert(error.message || "Failed to remove member");
+    } finally {
+      setIsRemovingMember(null);
     }
   };
 
-  const handleDeleteTeam = (teamId: string) => {
-    if (confirm("Are you sure you want to delete this team?")) {
-      setTeams((prev) => prev.filter((team) => team._id !== teamId));
+  const handleDeleteTeam = async (teamId: string) => {
+    if (!confirm("Are you sure you want to delete this team? All members will be unregistered from the event.")) {
+      return;
     }
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Please login to delete team");
+        return;
+      }
+
+      const response = await fetch(`/api/teams/${teamId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to delete team");
+      }
+
+      // Remove team from local state
+      setTeams((prev) => prev.filter((team) => team._id !== teamId));
+      
+      alert(data.message || "Team deleted successfully! All members have been unregistered from the event.");
+    } catch (error: any) {
+      alert(error.message || "Failed to delete team");
+    }
+  };
+
+  const handleCopyInviteLink = (joinToken: string) => {
+    const inviteLink = `${window.location.origin}/teams/join/${joinToken}`;
+    navigator.clipboard.writeText(inviteLink).then(() => {
+      alert("Invitation link copied to clipboard!");
+    }).catch((err) => {
+      console.error("Failed to copy link:", err);
+      // Fallback: select text
+      const textArea = document.createElement("textarea");
+      textArea.value = inviteLink;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+      alert("Invitation link copied to clipboard!");
+    });
   };
 
   return (
     <div className="space-y-3">
       {teams.map((team) => {
-        const isLeader = team.teamLeader === currentUserId;
+        const teamLeaderId = typeof team.teamLeader === 'object' 
+          ? team.teamLeader._id 
+          : team.teamLeader;
+        const isLeader = teamLeaderId === currentUserId;
         const isOpen = openTeams[team._id];
         const isEditing = editingTeam === team._id;
 
@@ -143,9 +344,14 @@ export default function Team({ teamData, currentUserId }: TeamProps) {
                     />
                     <button
                       onClick={() => handleSaveTeamName(team._id)}
-                      className="text-green-400 hover:text-green-300"
+                      disabled={isSavingTeamName}
+                      className="text-green-400 hover:text-green-300 disabled:opacity-50"
                     >
-                      <FaSave size={14} />
+                      {isSavingTeamName ? (
+                        <span className="text-xs">Saving...</span>
+                      ) : (
+                        <FaSave size={14} />
+                      )}
                     </button>
                     <button
                       onClick={() => setEditingTeam(null)}
@@ -174,7 +380,12 @@ export default function Team({ teamData, currentUserId }: TeamProps) {
                   Event: {team.eventName}
                 </div>
                 <p className={`text-sm ${textSecondary}`}>
-                  Team Leader: {team.teamLeader}
+                  Team Leader: {typeof team.teamLeader === 'object' 
+                    ? (team.teamLeader.name || team.teamLeader.ojassId || team.teamLeader._id)
+                    : team.teamLeader}
+                  {typeof team.teamLeader === 'object' && team.teamLeader.ojassId && (
+                    <span className="text-gray-500 ml-2">({team.teamLeader.ojassId})</span>
+                  )}
                 </p>
               </div>
 
@@ -212,26 +423,52 @@ export default function Team({ teamData, currentUserId }: TeamProps) {
                   </>
                 )}
               </button>
+              {isLeader && team.joinToken && (
+                <button
+                  onClick={() => handleCopyInviteLink(team.joinToken)}
+                  className={`text-xs px-2 py-1 border ${buttonBorder} rounded ${textPrimary} ${buttonHover} flex items-center gap-1`}
+                  title="Copy invitation link"
+                >
+                  <FaLink size={12} /> Copy Link
+                </button>
+              )}
             </div>
 
             {isOpen && (
-              <div className="mt-3 flex flex-wrap gap-2 text-xs text-gray-300">
-                {team.teamMembers.map((member) => (
-                  <span
-                    key={member._id}
-                    className={`px-2 py-0.5 rounded ${accentBg} flex items-center gap-1`}
-                  >
-                    {member.name}
-                    {isLeader && (
-                      <button
-                        onClick={() => handleRemoveMember(team._id, member._id)}
-                        className="text-red-400 hover:text-red-300"
-                      >
-                        <FaTimes size={10} />
-                      </button>
-                    )}
-                  </span>
-                ))}
+              <div className="mt-3 space-y-2">
+                {/* Filter out leader from members list */}
+                {team.teamMembers
+                  .filter((member) => {
+                    const memberId = member._id;
+                    const leaderId = typeof team.teamLeader === 'object' 
+                      ? team.teamLeader._id 
+                      : team.teamLeader;
+                    return memberId !== leaderId;
+                  })
+                  .map((member) => (
+                    <div
+                      key={member._id}
+                      className={`px-2 py-1 rounded ${accentBg} flex items-center justify-between gap-2`}
+                    >
+                      <span className="text-xs text-gray-300">
+                        {member.name} {member.ojassId && <span className="text-gray-400">({member.ojassId})</span>}
+                      </span>
+                      {isLeader && (
+                        <button
+                          onClick={() => handleRemoveMember(team._id, member._id)}
+                          disabled={isRemovingMember === member._id}
+                          className="text-red-400 hover:text-red-300 disabled:opacity-50"
+                          title="Remove member"
+                        >
+                          {isRemovingMember === member._id ? (
+                            <span className="text-xs">Removing...</span>
+                          ) : (
+                            <FaTimes size={10} />
+                          )}
+                        </button>
+                      )}
+                    </div>
+                  ))}
                 {isLeader && (
                   <button
                     onClick={() => handleAddMember(team._id)}
@@ -266,16 +503,27 @@ export default function Team({ teamData, currentUserId }: TeamProps) {
             <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
               <FaPlus className={textPrimary} /> Add Team Member
             </h3>
-            <input
-              type="text"
-              value={newMemberName}
-              onChange={(e) => setNewMemberName(e.target.value)}
-              placeholder="Enter member name"
-              className={`w-full ${accentBg} border ${buttonBorder} rounded px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-[${glow}] mb-4`}
-              onKeyPress={(e) => {
-                if (e.key === "Enter") handleConfirmAddMember(showAddMemberModal);
-              }}
-            />
+            <div className="mb-4">
+              <label className="text-xs text-gray-400 mb-2 block">
+                Enter OJASS ID (e.g., OJASS26A7B2)
+              </label>
+              <input
+                type="text"
+                value={newMemberOjassId}
+                onChange={(e) => setNewMemberOjassId(e.target.value.toUpperCase())}
+                placeholder="OJASS26XXXX"
+                className={`w-full ${accentBg} border ${buttonBorder} rounded px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-[${glow}] font-mono`}
+                onKeyPress={(e) => {
+                  if (e.key === "Enter" && !isAddingMember) {
+                    handleConfirmAddMember(showAddMemberModal);
+                  }
+                }}
+                maxLength={10}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Only verified and paid users can be added
+              </p>
+            </div>
             <div className="flex gap-2 justify-end">
               <button
                 onClick={() => setShowAddMemberModal(null)}
@@ -285,9 +533,18 @@ export default function Team({ teamData, currentUserId }: TeamProps) {
               </button>
               <button
                 onClick={() => handleConfirmAddMember(showAddMemberModal)}
-                className={`px-4 py-2 ${accentBg} border ${buttonBorder} rounded ${textPrimary} hover:opacity-80 flex items-center gap-2`}
+                disabled={isAddingMember || !newMemberOjassId.trim()}
+                className={`px-4 py-2 ${accentBg} border ${buttonBorder} rounded ${textPrimary} hover:opacity-80 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed`}
               >
-                <FaCheck size={12} /> Add Member
+                {isAddingMember ? (
+                  <>
+                    <span className="text-xs">Adding...</span>
+                  </>
+                ) : (
+                  <>
+                    <FaCheck size={12} /> Add Member
+                  </>
+                )}
               </button>
             </div>
           </div>

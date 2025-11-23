@@ -20,6 +20,9 @@ export default function OjassDashboard() {
   const [showEmailVerificationModal, setShowEmailVerificationModal] = useState(false);
   const [paymentData, setPaymentData] = useState<any>(null);
   const [pricing, setPricing] = useState<any>(null);
+  const [userTeams, setUserTeams] = useState<any[]>([]);
+  const [registeredEvents, setRegisteredEvents] = useState<any[]>([]);
+  const [loadingTeams, setLoadingTeams] = useState(false);
   const currentUserId = profileData?._id || "u1";
 
   // 🌗 Theme-based color mapping (same concept as StarfleetContact)
@@ -89,6 +92,86 @@ export default function OjassDashboard() {
             const pricingData = await pricingRes.json();
             setPricing(pricingData);
           }
+
+          // Fetch user teams
+          setLoadingTeams(true);
+          try {
+            const teamsRes = await fetch('/api/teams', {
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (teamsRes.ok) {
+              const teams = await teamsRes.json();
+              // Filter out individual teams (only show actual teams, not individual registrations)
+              const actualTeams = teams.filter((team: any) => !team.isIndividual);
+              // Transform teams to match Team component format
+              const transformedTeams = actualTeams.map((team: any) => ({
+                _id: team._id,
+                eventId: team.eventId?._id || team.eventId,
+                eventName: team.eventId?.name || 'Unknown Event',
+                isIndividual: team.isIndividual,
+                teamName: team.teamName || 'Individual',
+                teamLeader: typeof team.teamLeader === 'object' 
+                  ? { 
+                      _id: team.teamLeader._id, 
+                      name: team.teamLeader.name || 'Unknown',
+                      ojassId: team.teamLeader.ojassId 
+                    }
+                  : team.teamLeader,
+                  teamMembers: team.teamMembers
+                  .filter((member: any) => {
+                    // Filter out leader from members list
+                    const memberId = typeof member === 'object' ? member._id : member;
+                    const leaderId = typeof team.teamLeader === 'object' 
+                      ? team.teamLeader._id 
+                      : team.teamLeader;
+                    return memberId.toString() !== leaderId.toString();
+                  })
+                  .map((member: any) => ({
+                    _id: typeof member === 'object' ? member._id : member,
+                    name: typeof member === 'object' ? member.name : 'Unknown',
+                    ojassId: typeof member === 'object' ? member.ojassId : undefined
+                  })),
+                joinToken: team.joinToken || '',
+                status: 'Active'
+              }));
+              setUserTeams(transformedTeams);
+            }
+          } catch (err) {
+            console.error('Error fetching teams:', err);
+          } finally {
+            setLoadingTeams(false);
+          }
+
+          // Fetch registered events
+          try {
+            const registrationsRes = await fetch('/api/events/my-registrations', {
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (registrationsRes.ok) {
+              const registrations = await registrationsRes.json();
+              // Transform registrations to match expected format
+              const transformedRegistrations = registrations.map((reg: any) => ({
+                id: reg._id,
+                name: reg.eventId?.name || 'Unknown Event',
+                date: new Date(reg.createdAt).toLocaleDateString('en-US', { 
+                  month: 'short', 
+                  day: 'numeric', 
+                  year: 'numeric' 
+                }),
+                time: new Date(reg.createdAt).toLocaleTimeString('en-US', { 
+                  hour: 'numeric', 
+                  minute: '2-digit',
+                  hour12: true 
+                }),
+                status: 'Confirmed',
+                team: reg.isIndividual ? 'Solo' : (reg.teamName || 'Team'),
+                registration: reg
+              }));
+              setRegisteredEvents(transformedRegistrations);
+            }
+          } catch (err) {
+            console.error('Error fetching registrations:', err);
+          }
         }
       } catch (err) {
         console.error('Error parsing user data:', err);
@@ -101,47 +184,6 @@ export default function OjassDashboard() {
     fetchUserData();
   }, [router]);
 
-  const teamData = [
-    {
-      _id: "t1",
-      eventId: "e1",
-      eventName: "Hackathon",
-      isIndividual: false,
-      teamName: "Code Warriors",
-      teamLeader: "u1",
-      teamMembers: [
-        { _id: "u1", name: "Rahul Kumar" },
-        { _id: "u2", name: "Aditi" },
-        { _id: "u3", name: "Rohit" },
-      ],
-      joinToken: "ABC123",
-      status: "Active",
-    },
-    {
-      _id: "t2",
-      eventId: "e2",
-      eventName: "Robowars",
-      isIndividual: false,
-      teamName: "Robo Titans",
-      teamLeader: "u4",
-      teamMembers: [
-        { _id: "u4", name: "Vikram" },
-        { _id: "u5", name: "Neha" },
-      ],
-      joinToken: "XYZ987",
-      status: "Active",
-    },
-  ];
-
-  const userTeams = teamData.filter(team =>
-    team.teamMembers.some(member => member._id === currentUserId)
-  );
-
-  const registeredEvents = [
-    { id: 1, name: "Hackathon", date: "Nov 16, 2024", time: "9:00 AM", status: "Confirmed", team: "Code Warriors" },
-    { id: 2, name: "Robowars", date: "Nov 15, 2024", time: "10:00 AM", status: "Confirmed", team: "Robo Titans" },
-    { id: 3, name: "Tech Quiz", date: "Nov 17, 2024", time: "2:00 PM", status: "Pending", team: "Solo" },
-  ];
 
   const certificates = [
     { id: 1, event: "Web Development Workshop", type: "Participation", date: "Nov 10, 2024" },

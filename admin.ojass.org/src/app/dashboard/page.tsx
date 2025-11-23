@@ -2,34 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { eventAPI, authAPI, Event, CreateEventData } from '@/lib/api';
+import { eventAPI, authAPI, userAPI, teamAPI, registrationAPI, User, Team, Event, CreateEventData } from '@/lib/api';
 import EventForm from '@/components/EventForm';
-
-const fakeStudents = [
-  { id: 1, name: 'John Doe', email: 'john@example.com', college: 'MIT', registeredAt: '2024-01-15', events: 3, ojassId: 'OJASS001', paymentStatus: 'paid' },
-  { id: 2, name: 'Jane Smith', email: 'jane@example.com', college: 'Stanford', registeredAt: '2024-01-20', events: 2, ojassId: 'OJASS002', paymentStatus: 'paid' },
-  { id: 3, name: 'Bob Johnson', email: 'bob@example.com', college: 'Harvard', registeredAt: '2024-02-01', events: 1, ojassId: 'OJASS003', paymentStatus: 'unpaid' },
-  { id: 4, name: 'Alice Williams', email: 'alice@example.com', college: 'Caltech', registeredAt: '2024-02-05', events: 4, ojassId: 'OJASS004', paymentStatus: 'paid' },
-  { id: 5, name: 'Charlie Brown', email: 'charlie@example.com', college: 'MIT', registeredAt: '2024-02-10', events: 2, ojassId: 'OJASS005', paymentStatus: 'unpaid' },
-];
-
-const fakeAmbassadors = [
-  { id: 1, name: 'Sarah Connor', email: 'sarah@example.com', referrals: 25, paid: 15, unpaid: 10, status: 'Active' },
-  { id: 2, name: 'Mike Tyson', email: 'mike@example.com', referrals: 18, paid: 18, unpaid: 0, status: 'Active' },
-  { id: 3, name: 'Emma Watson', email: 'emma@example.com', referrals: 32, paid: 20, unpaid: 12, status: 'Active' },
-  { id: 4, name: 'Tom Cruise', email: 'tom@example.com', referrals: 14, paid: 8, unpaid: 6, status: 'Inactive' },
-  { id: 5, name: 'Lisa Park', email: 'lisa@example.com', referrals: 41, paid: 35, unpaid: 6, status: 'Active' },
-];
-
-const fakeTeams = [
-  { id: 1, name: 'Team Alpha', eventId: 1, eventName: 'Tech Fest 2024', members: 4, leader: 'John Doe', registeredAt: '2024-01-15', ojassId: 'TEAM001', studentIds: [1, 2] },
-  { id: 2, name: 'Team Beta', eventId: 1, eventName: 'Tech Fest 2024', members: 3, leader: 'Jane Smith', registeredAt: '2024-01-18', ojassId: 'TEAM002', studentIds: [2, 3] },
-  { id: 3, name: 'Team Gamma', eventId: 2, eventName: 'Hackathon', members: 5, leader: 'Bob Johnson', registeredAt: '2024-02-01', ojassId: 'TEAM003', studentIds: [3, 4] },
-  { id: 4, name: 'Team Delta', eventId: 2, eventName: 'Hackathon', members: 4, leader: 'Alice Williams', registeredAt: '2024-02-05', ojassId: 'TEAM004', studentIds: [4, 5] },
-  { id: 5, name: 'Team Echo', eventId: 3, eventName: 'Workshop Series', members: 2, leader: 'Charlie Brown', registeredAt: '2024-02-10', ojassId: 'TEAM005', studentIds: [1, 5] },
-  { id: 6, name: 'Team Zeta', eventId: 3, eventName: 'Workshop Series', members: 3, leader: 'Sarah Connor', registeredAt: '2024-02-12', ojassId: 'TEAM006', studentIds: [2, 3, 4] },
-  { id: 7, name: 'Team Eta', eventId: 4, eventName: 'Coding Competition', members: 4, leader: 'Mike Tyson', registeredAt: '2024-01-20', ojassId: 'TEAM007', studentIds: [1, 3, 4, 5] },
-];
 
 export default function Dashboard() {
   const router = useRouter();
@@ -48,8 +22,14 @@ export default function Dashboard() {
   const [teamEventFilter, setTeamEventFilter] = useState<string | 'all'>('all');
   const [selectedEventParticipants, setSelectedEventParticipants] = useState<string | null>(null);
   const [selectedAmbassadorReferrals, setSelectedAmbassadorReferrals] = useState<number | null>(null);
-  const [selectedStudentDetails, setSelectedStudentDetails] = useState<number | null>(null);
-  const [selectedTeamDetails, setSelectedTeamDetails] = useState<number | null>(null);
+  const [selectedStudentDetails, setSelectedStudentDetails] = useState<string | null>(null);
+  const [selectedTeamDetails, setSelectedTeamDetails] = useState<string | null>(null);
+  const [students, setStudents] = useState<User[]>([]);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [loadingStudents, setLoadingStudents] = useState(false);
+  const [loadingTeams, setLoadingTeams] = useState(false);
+  const [studentsPage, setStudentsPage] = useState(1);
+  const [teamsPage, setTeamsPage] = useState(1);
 
   // Set mounted state after hydration
   useEffect(() => {
@@ -60,8 +40,24 @@ export default function Dashboard() {
   useEffect(() => {
     if (mounted) {
       loadEvents();
+      loadStudents();
+      loadTeams();
     }
   }, [mounted]);
+
+  // Load students when filters change
+  useEffect(() => {
+    if (mounted) {
+      loadStudents();
+    }
+  }, [studentSearch, paymentFilter, studentsPage, mounted]);
+
+  // Load teams when filters change
+  useEffect(() => {
+    if (mounted) {
+      loadTeams();
+    }
+  }, [teamEventFilter, teamsPage, mounted]);
 
   const loadEvents = async () => {
     try {
@@ -74,6 +70,42 @@ export default function Dashboard() {
       console.error('Error loading events:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadStudents = async () => {
+    try {
+      setLoadingStudents(true);
+      const response = await userAPI.getAll({
+        page: studentsPage,
+        limit: 50,
+        search: studentSearch,
+        paymentStatus: paymentFilter,
+      });
+      setStudents(response.users);
+    } catch (err: any) {
+      console.error('Error loading students:', err);
+      setError(err.message || 'Failed to load students');
+    } finally {
+      setLoadingStudents(false);
+    }
+  };
+
+  const loadTeams = async () => {
+    try {
+      setLoadingTeams(true);
+      const eventId = teamEventFilter === 'all' ? undefined : teamEventFilter;
+      const response = await teamAPI.getAll({
+        page: teamsPage,
+        limit: 50,
+        eventId,
+      });
+      setTeams(response.teams);
+    } catch (err: any) {
+      console.error('Error loading teams:', err);
+      setError(err.message || 'Failed to load teams');
+    } finally {
+      setLoadingTeams(false);
     }
   };
 
@@ -144,28 +176,57 @@ export default function Dashboard() {
     setViewingEvent(null);
   };
 
-  const getEventParticipants = (eventId: string): Array<{ student: typeof fakeStudents[0], teamName: string, teamOjassId: string }> => {
-    // TODO: Fetch real participants from API
-    // For now, return empty array with proper type
-    return [] as Array<{ student: typeof fakeStudents[0], teamName: string, teamOjassId: string }>;
+  const getEventParticipants = async (eventId: string) => {
+    try {
+      const registrations = await registrationAPI.getByEvent(eventId);
+      return registrations.map((reg: Team) => {
+        const leader = typeof reg.teamLeader === 'object' ? reg.teamLeader : null;
+        return {
+          student: leader ? {
+            _id: leader._id,
+            name: leader.name,
+            email: leader.email,
+            ojassId: leader.ojassId,
+          } : null,
+          teamName: reg.teamName || 'Individual',
+          teamOjassId: reg._id,
+        };
+      }).filter((p: any) => p.student !== null);
+    } catch (err) {
+      console.error('Error fetching participants:', err);
+      return [];
+    }
   };
 
   const getAmbassadorReferrals = (ambassadorId: number) => {
-    // Fake referral data - in real app this would come from backend
-    return fakeStudents.slice(0, 3).map(student => ({
-      ...student,
-      referralDate: '2024-01-15',
-      paymentStatus: Math.random() > 0.5 ? 'paid' : 'unpaid'
-    }));
+    // Filter students by referral count > 0 (ambassadors)
+    const ambassadors = students.filter(s => s.referralCount > 0);
+    if (ambassadorId && ambassadors[ambassadorId - 1]) {
+      // Return referrals for specific ambassador (simplified - would need referral tracking)
+      return students.slice(0, 3).map(student => ({
+        _id: student._id,
+        name: student.name,
+        email: student.email,
+        college: student.collegeName,
+        registeredAt: new Date(student.createdAt).toLocaleDateString(),
+        events: 0, // Would need to count from registrations
+        ojassId: student.ojassId,
+        paymentStatus: student.isPaid ? 'paid' : 'unpaid',
+        referralDate: new Date(student.createdAt).toLocaleDateString(),
+      }));
+    }
+    return [];
   };
 
-  const getTeamMembers = (teamId: number) => {
-    const team = fakeTeams.find(t => t.id === teamId);
-    if (!team || !team.studentIds) return [];
+  const getTeamMembers = (teamId: string) => {
+    const team = teams.find(t => t._id === teamId);
+    if (!team || !team.teamMembers) return [];
     
-    return team.studentIds.map(studentId => {
-      const student = fakeStudents.find(s => s.id === studentId);
-      return student;
+    return team.teamMembers.map((member: any) => {
+      if (typeof member === 'object') {
+        return member;
+      }
+      return students.find(s => s._id === member);
     }).filter(Boolean);
   };
 
@@ -184,31 +245,30 @@ export default function Dashboard() {
            (event.description?.toLowerCase().includes(searchLower) ?? false);
   });
 
-  const filteredStudents = fakeStudents.filter((student) => {
+  const filteredStudents = students.filter((student) => {
     const searchTerm = studentSearch || '';
     if (searchTerm.trim() === '') {
       // If no search term, only filter by payment status
-      return paymentFilter === 'all' || student.paymentStatus === paymentFilter;
+      return paymentFilter === 'all' || (paymentFilter === 'paid' ? student.isPaid : !student.isPaid);
     }
     
     const searchLower = searchTerm.toLowerCase();
-    const matchesSearch = student.name.toLowerCase().includes(searchLower) ||
-      student.ojassId.toLowerCase().includes(searchLower) ||
-      student.email.toLowerCase().includes(searchLower);
+    const matchesSearch = student.name?.toLowerCase().includes(searchLower) ||
+      student.ojassId?.toLowerCase().includes(searchLower) ||
+      student.email?.toLowerCase().includes(searchLower) ||
+      student.collegeName?.toLowerCase().includes(searchLower);
     
     const matchesPayment = paymentFilter === 'all' ||
-      student.paymentStatus === paymentFilter;
+      (paymentFilter === 'paid' ? student.isPaid : !student.isPaid);
     
     return matchesSearch && matchesPayment;
   });
 
-  const filteredTeams = teamEventFilter === 'all' 
-    ? fakeTeams 
-    : fakeTeams.filter(team => {
-        // Since we're using fake data, we can't match with real event IDs
-        // This is a placeholder until we integrate real team data
-        return true;
-      });
+  const filteredTeams = teams.filter((team) => {
+    if (teamEventFilter === 'all') return true;
+    const eventId = typeof team.eventId === 'object' ? team.eventId._id : team.eventId;
+    return eventId === teamEventFilter;
+  });
 
   // Prevent hydration mismatch by not rendering event-dependent content until mounted
   if (!mounted) {
@@ -404,13 +464,11 @@ export default function Dashboard() {
                           </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                          {getEventParticipants(selectedEventParticipants).map((participant, idx) => (
-                            <tr key={idx} className="hover:bg-gray-50">
-                              <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{participant.student.name}</td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{participant.teamName}</td>
-                              <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{participant.teamOjassId}</td>
-                            </tr>
-                          ))}
+                          <tr>
+                            <td colSpan={3} className="px-4 py-8 text-center text-sm text-gray-500">
+                              Click on an event to view participants
+                            </td>
+                          </tr>
                         </tbody>
                       </table>
                     </div>
@@ -662,7 +720,6 @@ export default function Dashboard() {
                 <table className="w-full">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">OJASS ID</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
@@ -674,26 +731,35 @@ export default function Dashboard() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredStudents.length > 0 ? (
+                    {loadingStudents ? (
+                      <tr>
+                        <td colSpan={9} className="px-4 py-8 text-center text-sm text-gray-500">
+                          Loading students...
+                        </td>
+                      </tr>
+                    ) : filteredStudents.length > 0 ? (
                       filteredStudents.map((student) => (
-                        <tr key={student.id} className="hover:bg-gray-50">
-                          <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{student.id}</td>
+                        <tr key={student._id} className="hover:bg-gray-50">
                           <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{student.ojassId}</td>
                           <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{student.name}</td>
                           <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{student.email}</td>
-                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{student.college}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{student.collegeName}</td>
                           <td className="px-4 py-4 whitespace-nowrap">
                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              student.paymentStatus === 'paid' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                              student.isPaid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
                             }`}>
-                              {student.paymentStatus === 'paid' ? 'Paid' : 'Unpaid'}
+                              {student.isPaid ? 'Paid' : 'Unpaid'}
                             </span>
                           </td>
-                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{student.registeredAt}</td>
-                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{student.events}</td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
+                            {new Date(student.createdAt).toLocaleDateString()}
+                          </td>
+                          <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
+                            {student.referralCount || 0}
+                          </td>
                           <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
                             <button
-                              onClick={() => setSelectedStudentDetails(student.id)}
+                              onClick={() => setSelectedStudentDetails(student._id)}
                               className="text-indigo-600 hover:text-indigo-800 transition-colors"
                               title="View Details"
                             >
@@ -734,14 +800,20 @@ export default function Dashboard() {
                       </button>
                     </div>
                     {(() => {
-                      const student = fakeStudents.find(s => s.id === selectedStudentDetails);
-                      if (!student) return null;
+                      const student = students.find(s => s._id === selectedStudentDetails);
+                      if (!student) {
+                        return (
+                          <div className="text-center py-8">
+                            <p className="text-gray-500">Loading student details...</p>
+                          </div>
+                        );
+                      }
                       return (
                         <div className="space-y-4">
                           <div className="grid grid-cols-2 gap-4">
                             <div>
                               <label className="text-sm font-medium text-gray-500">Student ID</label>
-                              <p className="text-lg font-semibold text-gray-900">{student.id}</p>
+                              <p className="text-lg font-semibold text-gray-900">{student._id.slice(-6)}</p>
                             </div>
                             <div>
                               <label className="text-sm font-medium text-gray-500">OJASS ID</label>
@@ -757,25 +829,25 @@ export default function Dashboard() {
                             </div>
                             <div>
                               <label className="text-sm font-medium text-gray-500">College</label>
-                              <p className="text-lg text-gray-900">{student.college}</p>
+                              <p className="text-lg text-gray-900">{student.collegeName}</p>
                             </div>
                             <div>
                               <label className="text-sm font-medium text-gray-500">Payment Status</label>
                               <p className="text-lg">
                                 <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                                  student.paymentStatus === 'paid' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                  student.isPaid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
                                 }`}>
-                                  {student.paymentStatus === 'paid' ? 'Paid' : 'Unpaid'}
+                                  {student.isPaid ? 'Paid' : 'Unpaid'}
                                 </span>
                               </p>
                             </div>
                             <div>
                               <label className="text-sm font-medium text-gray-500">Registration Date</label>
-                              <p className="text-lg text-gray-900">{student.registeredAt}</p>
+                              <p className="text-lg text-gray-900">{new Date(student.createdAt).toLocaleDateString()}</p>
                             </div>
                             <div>
-                              <label className="text-sm font-medium text-gray-500">Events Registered</label>
-                              <p className="text-lg font-semibold text-gray-900">{student.events}</p>
+                              <label className="text-sm font-medium text-gray-500">Referral Count</label>
+                              <p className="text-lg font-semibold text-gray-900">{student.referralCount || 0}</p>
                             </div>
                           </div>
                         </div>
@@ -792,8 +864,8 @@ export default function Dashboard() {
             <div>
               <h2 className="text-2xl font-bold text-gray-800 mb-6">Ambassadors</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {fakeAmbassadors.map((ambassador) => (
-                  <div key={ambassador.id} className="border border-gray-200 rounded-lg p-5 hover:shadow-lg transition-shadow">
+                {students.filter(s => s.referralCount > 0).map((ambassador, index) => (
+                  <div key={ambassador._id} className="border border-gray-200 rounded-lg p-5 hover:shadow-lg transition-shadow">
                     <div className="mb-3">
                       <h3 className="text-lg font-semibold text-gray-800">{ambassador.name}</h3>
                     </div>
@@ -801,19 +873,19 @@ export default function Dashboard() {
                     <div className="mt-4 space-y-2">
                       <div className="flex justify-between">
                         <span className="text-gray-600">Total Referrals:</span>
-                        <span className="font-semibold">{ambassador.referrals}</span>
+                        <span className="font-semibold">{ambassador.referralCount || 0}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-green-600">Paid:</span>
-                        <span className="font-semibold text-green-600">{ambassador.paid}</span>
+                        <span className="font-semibold text-green-600">{ambassador.isPaid ? 'Yes' : 'No'}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-red-600">Unpaid:</span>
-                        <span className="font-semibold text-red-600">{ambassador.unpaid}</span>
+                        <span className="text-gray-600">OJASS ID:</span>
+                        <span className="font-semibold">{ambassador.ojassId}</span>
                       </div>
                     </div>
                     <button
-                      onClick={() => setSelectedAmbassadorReferrals(ambassador.id)}
+                      onClick={() => setSelectedAmbassadorReferrals(index + 1)}
                       className="w-full mt-4 px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all"
                     >
                       View Referral Details
@@ -828,7 +900,7 @@ export default function Dashboard() {
                   <div className="bg-white rounded-lg p-6 max-w-3xl w-full mx-4 max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="text-2xl font-bold text-gray-800">
-                        Referral Details - {fakeAmbassadors.find(a => a.id === selectedAmbassadorReferrals)?.name}
+                        Referral Details - {students.filter(s => s.referralCount > 0)[(selectedAmbassadorReferrals || 1) - 1]?.name || 'Unknown'}
                       </h3>
                       <button
                         onClick={() => setSelectedAmbassadorReferrals(null)}
@@ -906,27 +978,45 @@ export default function Dashboard() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredTeams.map((team) => (
-                      <tr key={team.id} className="hover:bg-gray-50">
-                        <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{team.name}</td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{team.eventName}</td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{team.leader}</td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{team.members}</td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{team.registeredAt}</td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
-                          <button
-                            onClick={() => setSelectedTeamDetails(team.id)}
-                            className="text-indigo-600 hover:text-indigo-800 transition-colors"
-                            title="View Details"
-                          >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                            </svg>
-                          </button>
+                    {loadingTeams ? (
+                      <tr>
+                        <td colSpan={6} className="px-4 py-8 text-center text-sm text-gray-500">
+                          Loading teams...
                         </td>
                       </tr>
-                    ))}
+                    ) : filteredTeams.length > 0 ? (
+                      filteredTeams.map((team) => {
+                        const eventName = typeof team.eventId === 'object' ? team.eventId.name : 'Unknown';
+                        const leader = typeof team.teamLeader === 'object' ? team.teamLeader.name : 'Unknown';
+                        return (
+                          <tr key={team._id} className="hover:bg-gray-50">
+                            <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{team.teamName || 'Individual'}</td>
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{eventName}</td>
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{leader}</td>
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{team.teamMembers?.length || 0}</td>
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{new Date(team.createdAt).toLocaleDateString()}</td>
+                            <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">
+                              <button
+                                onClick={() => setSelectedTeamDetails(team._id)}
+                                className="text-indigo-600 hover:text-indigo-800 transition-colors"
+                                title="View Details"
+                              >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    ) : (
+                      <tr>
+                        <td colSpan={6} className="px-4 py-8 text-center text-sm text-gray-500">
+                          No teams found.
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -949,36 +1039,44 @@ export default function Dashboard() {
                       </button>
                     </div>
                     {(() => {
-                      const team = fakeTeams.find(t => t.id === selectedTeamDetails);
-                      if (!team) return null;
-                      const members = getTeamMembers(team.id);
+                      const team = teams.find(t => t._id === selectedTeamDetails);
+                      if (!team) {
+                        return (
+                          <div className="text-center py-8">
+                            <p className="text-gray-500">Loading team details...</p>
+                          </div>
+                        );
+                      }
+                      const members = getTeamMembers(team._id);
+                      const eventName = typeof team.eventId === 'object' ? team.eventId.name : 'Unknown Event';
+                      const leader = typeof team.teamLeader === 'object' ? team.teamLeader : null;
                       return (
                         <div className="space-y-6">
                           {/* Team Information */}
                           <div className="grid grid-cols-2 gap-4 pb-4 border-b">
                             <div>
                               <label className="text-sm font-medium text-gray-500">Team Name</label>
-                              <p className="text-lg font-semibold text-gray-900">{team.name}</p>
+                              <p className="text-lg font-semibold text-gray-900">{team.teamName || 'Individual'}</p>
                             </div>
                             <div>
-                              <label className="text-sm font-medium text-gray-500">Team OJASS ID</label>
-                              <p className="text-lg font-semibold text-gray-900">{team.ojassId}</p>
+                              <label className="text-sm font-medium text-gray-500">Team ID</label>
+                              <p className="text-lg font-semibold text-gray-900">{team._id.slice(-6)}</p>
                             </div>
                             <div>
                               <label className="text-sm font-medium text-gray-500">Event</label>
-                              <p className="text-lg text-gray-900">{team.eventName}</p>
+                              <p className="text-lg text-gray-900">{eventName}</p>
                             </div>
                             <div>
                               <label className="text-sm font-medium text-gray-500">Team Leader</label>
-                              <p className="text-lg text-gray-900">{team.leader}</p>
+                              <p className="text-lg text-gray-900">{leader?.name || 'Unknown'}</p>
                             </div>
                             <div>
                               <label className="text-sm font-medium text-gray-500">Total Members</label>
-                              <p className="text-lg font-semibold text-gray-900">{team.members}</p>
+                              <p className="text-lg font-semibold text-gray-900">{team.teamMembers?.length || 0}</p>
                             </div>
                             <div>
                               <label className="text-sm font-medium text-gray-500">Registration Date</label>
-                              <p className="text-lg text-gray-900">{team.registeredAt}</p>
+                              <p className="text-lg text-gray-900">{new Date(team.createdAt).toLocaleDateString()}</p>
                             </div>
                           </div>
 
@@ -999,20 +1097,42 @@ export default function Dashboard() {
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
                                   {members.length > 0 ? (
-                                    members.map((member) => (
+                                    members.map((member: any) => (
                                       member && (
-                                        <tr key={member.id} className="hover:bg-gray-50">
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{member.id}</td>
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{member.ojassId}</td>
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{member.name}</td>
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{member.email}</td>
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{member.college}</td>
+                                        <tr key={member._id || member} className="hover:bg-gray-50">
+                                          <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            {typeof member === 'object' ? member._id?.slice(-6) : member.slice(-6)}
+                                          </td>
+                                          <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            {typeof member === 'object' ? member.ojassId : 'N/A'}
+                                          </td>
+                                          <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            {typeof member === 'object' ? member.name : 'Unknown'}
+                                          </td>
+                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                                            {typeof member === 'object' ? member.email : 'N/A'}
+                                          </td>
+                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                                            {typeof member === 'object' ? member.collegeName : 'N/A'}
+                                          </td>
                                           <td className="px-4 py-3 whitespace-nowrap">
-                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                              member.paymentStatus === 'paid' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                                            }`}>
-                                              {member.paymentStatus === 'paid' ? 'Paid' : 'Unpaid'}
-                                            </span>
+                                            {(() => {
+                                              // Get payment status from member object or find in students array
+                                              let isPaid = false;
+                                              if (typeof member === 'object') {
+                                                isPaid = member.isPaid || false;
+                                              } else {
+                                                const student = students.find(s => s._id === member);
+                                                isPaid = student?.isPaid || false;
+                                              }
+                                              return (
+                                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                                  isPaid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                                }`}>
+                                                  {isPaid ? 'Paid' : 'Unpaid'}
+                                                </span>
+                                              );
+                                            })()}
                                           </td>
                                         </tr>
                                       )

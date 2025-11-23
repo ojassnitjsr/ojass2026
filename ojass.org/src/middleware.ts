@@ -43,61 +43,61 @@ function addCorsHeaders(response: NextResponse, request: NextRequest): NextRespo
 }
 
 export function middleware(request: NextRequest) {
-    const path = request.nextUrl.pathname;
+  const path = request.nextUrl.pathname;
 
-    // Helper function to create CORS response
-    const createCorsResponse = (response: NextResponse): NextResponse => {
-        return addCorsHeaders(response, request);
-    };
+  // Helper function to create CORS response
+  const createCorsResponse = (response: NextResponse): NextResponse => {
+    return addCorsHeaders(response, request);
+  };
 
-    // Handle CORS for all API routes
-    // Handle OPTIONS preflight requests
-    if (request.method === 'OPTIONS') {
-        const response = new NextResponse(null, { status: 200 });
-        return addCorsHeaders(response, request);
-    }
+  // Handle CORS for all API routes
+  // Handle OPTIONS preflight requests
+  if (request.method === 'OPTIONS') {
+    const response = new NextResponse(null, { status: 200 });
+    return addCorsHeaders(response, request);
+  }
 
-    // Excluded Routes (don't require admin auth but need CORS)
-    if (path.startsWith("/api/admin/auth")) {
-        const response = NextResponse.next();
-        return createCorsResponse(response);
-    }
-
-    // Public routes that don't need admin auth
-    if (path === "/api/admin/events" && request.method === "GET") {
-        const response = NextResponse.next();
-        return createCorsResponse(response);
-    }
-
-    // Routes that need admin auth
-    // Exclude public GET /api/admin/events from admin auth check
-    const needsAdminAuth = (path.startsWith("/api/admin") || path.startsWith("/api/events")) 
-        && !(path === "/api/admin/events" && request.method === "GET");
-    
-    if (needsAdminAuth) {
-        // Check admin authentication
-        const adminResponse = adminMiddleware(request);
-        
-        // If admin middleware returns an error response (status >= 400), add CORS and return it
-        if (adminResponse && adminResponse.status >= 400) {
-            return createCorsResponse(adminResponse);
-        }
-        
-        // If authentication passes, continue with CORS headers
-        // adminResponse will be NextResponse.next() when auth passes
-        const response = adminResponse || NextResponse.next();
-        return createCorsResponse(response);
-    }
-
-    // For all other API routes, just add CORS headers
+  // Excluded Routes (don't require admin auth but need CORS)
+  if (path.startsWith("/api/admin/auth")) {
     const response = NextResponse.next();
     return createCorsResponse(response);
+  }
+
+  // Public routes that don't need admin auth
+  if (path === "/api/admin/events" && request.method === "GET") {
+    const response = NextResponse.next();
+    return createCorsResponse(response);
+  }
+
+  // Routes that need admin auth
+  // Exclude public GET /api/admin/events from admin auth check
+  const needsAdminAuth = (path.startsWith("/api/admin") || path.startsWith("/api/events"))
+    && !(path === "/api/admin/events" && request.method === "GET");
+
+  if (needsAdminAuth) {
+    // Check admin authentication
+    const adminResponse = adminMiddleware(request);
+
+    // If admin middleware returns an error response (status >= 400), add CORS and return it
+    if (adminResponse && adminResponse.status >= 400) {
+      return createCorsResponse(adminResponse);
+    }
+
+    // If authentication passes, continue with CORS headers
+    // adminResponse will be NextResponse.next() when auth passes
+    const response = adminResponse || NextResponse.next();
+    return createCorsResponse(response);
+  }
+
+  // For all other API routes, just add CORS headers
+  const response = NextResponse.next();
+  return createCorsResponse(response);
 }
 
 
 export const config = {
-    matcher: [
-        "/api/:path*"
-    ],
-    runtime: 'nodejs'
+  matcher: [
+    "/api/:path*"
+  ],
+  runtime: 'nodejs'
 };

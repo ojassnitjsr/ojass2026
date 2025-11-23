@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 
 export async function GET(
   req: Request,
-  { params }: { params: { eventId: string } }
+  { params }: { params: Promise<{ eventId: string }> }
 ) {
   await connectToDatabase();
 
@@ -16,7 +16,7 @@ export async function GET(
     const tokenCookie =(await cookieStore).get("admin_token");
     requireAdmin(tokenCookie?.value); // Throws if invalid
 
-    const { eventId } = params;
+    const { eventId } = await params;
 
     // Find all teams/registrations for the event
     const registrations = await Team.find({ eventId })
