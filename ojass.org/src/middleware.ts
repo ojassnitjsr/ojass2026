@@ -9,6 +9,7 @@ const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(',') || [
   'http://localhost:3002',
   'https://admin.ojass.org',
   'https://ojass.org',
+  'http://10.240.208.161:3000',
 ];
 
 /**
@@ -71,8 +72,7 @@ export function middleware(request: NextRequest) {
 
   // Routes that need admin auth
   // Exclude public GET /api/admin/events from admin auth check
-  const needsAdminAuth = (path.startsWith("/api/admin") || path.startsWith("/api/events"))
-    && !(path === "/api/admin/events" && request.method === "GET");
+  const needsAdminAuth = path.startsWith("/api/admin") && !(path === "/api/admin/events" && request.method === "GET");
 
   if (needsAdminAuth) {
     // Check admin authentication

@@ -41,6 +41,52 @@ export async function GET(
 }
 
 /**
+ * PUT /api/admin/teams/[teamId]
+ * Update team (e.g., verification status)
+ * Requires: Admin authentication
+ */
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: Promise<{ teamId: string }> }
+) {
+  await connectToDatabase();
+
+  try {
+    const cookieStore = cookies();
+    const tokenCookie = (await cookieStore).get('admin_token');
+    requireAdmin(tokenCookie?.value);
+
+    const { teamId } = await params;
+    const body = await req.json();
+    const { isVerified } = body;
+
+    const team = await Team.findById(teamId);
+
+    if (!team) {
+      return NextResponse.json({ error: 'Team not found' }, { status: 404 });
+    }
+
+    // Update verification status if provided
+    if (typeof isVerified === 'boolean') {
+      team.isVerified = isVerified;
+      await team.save();
+    }
+
+    // Populate and return updated team
+    await team.populate('teamLeader', 'name email phone ojassId isPaid collegeName');
+    await team.populate('teamMembers', 'name email phone ojassId isPaid collegeName');
+    await team.populate('eventId', 'name teamSizeMin teamSizeMax isTeamEvent img description');
+
+    return NextResponse.json({ success: true, team });
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: err.message },
+      { status: err.message.includes('Unauthorized') ? 401 : 500 }
+    );
+  }
+}
+
+/**
  * DELETE /api/admin/teams/[teamId]
  * Delete team
  * Requires: Admin authentication

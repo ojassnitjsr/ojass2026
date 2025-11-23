@@ -53,18 +53,18 @@ export default function RegisteredEvent({
             </div>
             <span
               className={`text-xs font-mono px-2 py-1 rounded border border-white/10 ${
-                event.status === "Confirmed"
+                event.status === "Confirmed" || event.isVerified
                   ? "bg-green-500/20 text-green-300"
-                  : "bg-yellow-500/20 text-yellow-300"
+                  : "bg-red-500/20 text-red-300"
               }`}
               style={{
                 boxShadow:
-                  event.status === "Confirmed"
+                  event.status === "Confirmed" || event.isVerified
                     ? `0 0 10px rgba(0,255,0,0.3)`
-                    : `0 0 10px rgba(255,255,0,0.3)`,
+                    : `0 0 10px rgba(255,0,0,0.3)`,
               }}
             >
-              {event.status}
+              {event.status === "Confirmed" || event.isVerified ? "Verified" : "Unverified"}
             </span>
           </div>
 

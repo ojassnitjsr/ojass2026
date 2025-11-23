@@ -13,6 +13,7 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  allowedDevOrigins: ['local-origin.dev', '10.240.208.161'],
   images: {
     remotePatterns: [
       {

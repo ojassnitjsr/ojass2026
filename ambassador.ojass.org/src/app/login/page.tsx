@@ -5,11 +5,12 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
-import { Mail, Lock, AlertCircle } from "lucide-react";
+import { Mail, Lock, AlertCircle, Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string; general?: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
@@ -40,15 +41,18 @@ export default function LoginPage() {
 
     setIsSubmitting(true);
 
-    // Simulate API call delay
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    try {
+      const success = await login(email, password);
 
-    const success = login(email, password);
-
-    if (success) {
-      router.push("/dashboard");
-    } else {
-      setErrors({ general: "Invalid email or password. Please try again." });
+      if (success) {
+        router.push("/dashboard");
+      } else {
+        setErrors({ general: "Invalid email or password. Please try again." });
+        setIsSubmitting(false);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setErrors({ general: "An error occurred. Please try again." });
       setIsSubmitting(false);
     }
   };
@@ -139,16 +143,28 @@ export default function LoginPage() {
                 </div>
                 <input
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-[#FF8C00] focus:border-[#FF8C00] transition-colors ${
+                  className={`block w-full pl-10 pr-10 py-3 border rounded-lg focus:ring-2 focus:ring-[#FF8C00] focus:border-[#FF8C00] transition-colors ${
                     errors.password
                       ? "border-red-300 bg-red-50"
                       : "border-gray-300 bg-white"
                   }`}
                   placeholder="Enter your password"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </button>
               </div>
               {errors.password && (
                 <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
@@ -168,29 +184,6 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Register Link */}
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
-              Don&apos;t have an account?{" "}
-              <Link
-                href="/"
-                className="text-[#FF8C00] hover:text-orange-500 font-semibold transition-colors"
-              >
-                Register here
-              </Link>
-            </p>
-          </div>
-
-          {/* Demo Credentials Hint */}
-          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-xs font-semibold text-blue-900 mb-2">Demo Credentials:</p>
-            <p className="text-xs text-blue-700">
-              Email: <span className="font-mono">john@example.com</span> | Password: <span className="font-mono">password123</span>
-            </p>
-            <p className="text-xs text-blue-700 mt-1">
-              Or: <span className="font-mono">test@ojass.com</span> | <span className="font-mono">test123</span>
-            </p>
-          </div>
         </motion.div>
       </div>
     </div>

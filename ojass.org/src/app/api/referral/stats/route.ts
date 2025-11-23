@@ -56,12 +56,26 @@ export async function GET(request: NextRequest) {
             );
         }
 
-        // Get referral statistics
+        // Get referral statistics with full user details
         const stats = await getReferralStats(user.ojassId);
+        
+        // Get full details of referred users including phone and payment status
+        const referredUsersWithDetails = await User.find({ referredBy: user.ojassId })
+            .select('name email phone ojassId isPaid createdAt')
+            .sort({ createdAt: -1 });
 
         return NextResponse.json({
             success: true,
-            ...stats,
+            ojassId: stats.ojassId,
+            referralCount: stats.referralCount,
+            referredUsers: referredUsersWithDetails.map(u => ({
+                name: u.name,
+                email: u.email,
+                phone: u.phone,
+                ojassId: u.ojassId,
+                isPaid: u.isPaid,
+                registeredAt: u.createdAt
+            }))
         }, { status: 200 });
 
     } catch (error: any) {

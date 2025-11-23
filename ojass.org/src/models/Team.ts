@@ -7,6 +7,7 @@ export interface ITeam extends Document {
   teamLeader: Types.ObjectId;
   teamMembers: Types.ObjectId[];
   joinToken?: string;
+  isVerified: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -49,6 +50,10 @@ const teamSchema = new Schema<ITeam>(
       type: String,
       unique: true,
       sparse: true,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
     },
   },
   {

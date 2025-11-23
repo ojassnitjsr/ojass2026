@@ -518,7 +518,7 @@ export default function Team({ teamData, currentUserId }: TeamProps) {
                     handleConfirmAddMember(showAddMemberModal);
                   }
                 }}
-                maxLength={10}
+                maxLength={11}
               />
               <p className="text-xs text-gray-500 mt-1">
                 Only verified and paid users can be added

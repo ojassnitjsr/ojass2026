@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
 import User from '@/models/User';
+import Team from '@/models/Team';
 import { requireAdmin } from '@/lib/admin';
 import { cookies } from 'next/headers';
 
@@ -59,8 +60,63 @@ export async function GET(req: NextRequest) {
       .skip((page - 1) * limit)
       .limit(limit);
 
+    // Get event counts for each user
+    const userIds = users.map(u => u._id);
+    const eventCounts = await Team.aggregate([
+      {
+        $match: {
+          $or: [
+            { teamLeader: { $in: userIds } },
+            { teamMembers: { $in: userIds } },
+          ],
+        },
+      },
+      {
+        $project: {
+          eventId: 1,
+          userIds: {
+            $setUnion: [
+              ['$teamLeader'],
+              '$teamMembers',
+            ],
+          },
+        },
+      },
+      {
+        $unwind: '$userIds',
+      },
+      {
+        $match: {
+          userIds: { $in: userIds },
+        },
+      },
+      {
+        $group: {
+          _id: '$userIds',
+          eventCount: { $addToSet: '$eventId' },
+        },
+      },
+      {
+        $project: {
+          userId: '$_id',
+          eventCount: { $size: '$eventCount' },
+        },
+      },
+    ]);
+
+    // Create a map of userId to eventCount
+    const eventCountMap = new Map(
+      eventCounts.map((item: any) => [item.userId.toString(), item.eventCount])
+    );
+
+    // Add event count to each user
+    const usersWithEventCount = users.map((user: any) => ({
+      ...user.toObject(),
+      eventCount: eventCountMap.get(user._id.toString()) || 0,
+    }));
+
     return NextResponse.json({
-      users,
+      users: usersWithEventCount,
       pagination: {
         page,
         limit,

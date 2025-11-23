@@ -37,6 +37,8 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showMobileForm,setShowMobileForm]=useState(false);
+  const [hasPendingTeamJoin, setHasPendingTeamJoin] = useState(false);
+  
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.play().catch((err) => console.log("Autoplay blocked:", err));
@@ -48,6 +50,12 @@ export default function LoginPage() {
     const formTimer = setTimeout(() => {
       setShowForm(true);
     }, 2500);
+
+    // Check for pending team join
+    const pendingTeamJoin = localStorage.getItem('pendingTeamJoin');
+    if (pendingTeamJoin) {
+      setHasPendingTeamJoin(true);
+    }
 
     return () => {
       clearTimeout(timer);
@@ -82,7 +90,15 @@ export default function LoginPage() {
       if (res.ok) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
-        router.push('/dashboard');
+        
+        // Check if there's a pending team join
+        const pendingTeamJoin = localStorage.getItem('pendingTeamJoin');
+        if (pendingTeamJoin) {
+          localStorage.removeItem('pendingTeamJoin');
+          router.push(`/teams/join/${pendingTeamJoin}`);
+        } else {
+          router.push('/dashboard');
+        }
       } else {
         setError(data.error || 'Login failed');
       }
@@ -121,7 +137,15 @@ export default function LoginPage() {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         setSuccess('Registration successful! Redirecting...');
-        setTimeout(() => router.push('/dashboard'), 1500);
+        
+        // Check if there's a pending team join
+        const pendingTeamJoin = localStorage.getItem('pendingTeamJoin');
+        if (pendingTeamJoin) {
+          localStorage.removeItem('pendingTeamJoin');
+          setTimeout(() => router.push(`/teams/join/${pendingTeamJoin}`), 1500);
+        } else {
+          setTimeout(() => router.push('/dashboard'), 1500);
+        }
       } else {
         setError(data.error || 'Registration failed');
       }
@@ -319,6 +343,17 @@ export default function LoginPage() {
                     <h2 className="text-cyan-400 text-2xl font-bold mb-6 text-center tracking-wider drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]">
                       {activeForm === 'participant' ? 'PARTICIPANT LOGIN' : 'AMBASSADOR LOGIN'}
                     </h2>
+
+                    {hasPendingTeamJoin && (
+                      <div className="mb-4 p-3 bg-cyan-500/20 border border-cyan-400 text-cyan-300 text-sm rounded">
+                        <div className="flex items-center gap-2">
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span>You have a pending team invitation. Please login to join the team.</span>
+                        </div>
+                      </div>
+                    )}
 
                     {error && <div className="mb-4 p-3 bg-red-500/20 border border-red-500 text-red-300 text-sm">{error}</div>}
                     {success && <div className="mb-4 p-3 bg-green-500/20 border border-green-500 text-green-300 text-sm">{success}</div>}
@@ -597,6 +632,17 @@ export default function LoginPage() {
                     <h2 className="text-cyan-400 text-xl md:text-2xl font-bold mb-4 md:mb-6 text-center tracking-wider drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]">
                       CREATE ACCOUNT
                     </h2>
+
+                    {hasPendingTeamJoin && (
+                      <div className="mb-4 p-3 bg-cyan-500/20 border border-cyan-400 text-cyan-300 text-xs md:text-sm rounded">
+                        <div className="flex items-center gap-2">
+                          <svg className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <span>You have a pending team invitation. After registration, you'll be redirected to join the team.</span>
+                        </div>
+                      </div>
+                    )}
 
                     {error && <div className="mb-4 p-3 bg-red-500/20 border border-red-500 text-red-300 text-xs md:text-sm">{error}</div>}
                     {success && <div className="mb-4 p-3 bg-green-500/20 border border-green-500 text-green-300 text-xs md:text-sm">{success}</div>}

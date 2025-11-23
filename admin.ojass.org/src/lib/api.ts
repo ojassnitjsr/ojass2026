@@ -174,8 +174,11 @@ export interface User {
   isEmailVerified: boolean;
   isNitJsrStudent: boolean;
   referralCount: number;
+  eventCount?: number;
   paymentAmount?: number;
   paymentDate?: string;
+  idCardImageUrl?: string;
+  idCardCloudinaryId?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -225,6 +228,14 @@ export const userAPI = {
       method: 'DELETE',
     });
   },
+
+  getRegistrations: async (userId: string): Promise<Team[]> => {
+    return apiRequest<Team[]>(`/api/admin/users/${userId}/registrations`);
+  },
+
+  getReferrals: async (userId: string): Promise<{ referrer: { _id: string; ojassId: string }; referredUsers: Array<{ _id: string; name: string; email: string; phone: string; ojassId: string; college: string; isPaid: boolean; registeredAt: string }> }> => {
+    return apiRequest<{ referrer: { _id: string; ojassId: string }; referredUsers: Array<{ _id: string; name: string; email: string; phone: string; ojassId: string; college: string; isPaid: boolean; registeredAt: string }> }>(`/api/admin/users/${userId}/referrals`);
+  },
 };
 
 // Team API Types
@@ -234,6 +245,8 @@ export interface TeamMember {
   email: string;
   phone: string;
   ojassId: string;
+  isPaid?: boolean;
+  collegeName?: string;
 }
 
 export interface TeamEvent {
@@ -253,6 +266,7 @@ export interface Team {
   teamLeader: TeamMember | string;
   teamMembers: TeamMember[] | string[];
   joinToken?: string;
+  isVerified?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -288,6 +302,13 @@ export const teamAPI = {
 
   getById: async (teamId: string): Promise<Team> => {
     return apiRequest<Team>(`/api/admin/teams/${teamId}`);
+  },
+
+  update: async (teamId: string, data: { isVerified?: boolean }): Promise<{ success: boolean; team: Team }> => {
+    return apiRequest<{ success: boolean; team: Team }>(`/api/admin/teams/${teamId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
   },
 
   delete: async (teamId: string): Promise<{ success: boolean; message: string }> => {
