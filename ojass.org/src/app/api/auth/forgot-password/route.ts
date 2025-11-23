@@ -45,21 +45,35 @@ export async function POST(request: NextRequest) {
         const otp = generateOTP();
         const otpExpires = getOTPExpiration();
 
-    // Save OTP to user
-    user.resetPasswordOtp = otp;
-    user.resetPasswordOtpExpires = otpExpires;
-    await user.save();
+        // Save OTP to user
+        user.resetPasswordOtp = otp;
+        user.resetPasswordOtpExpires = otpExpires;
+        await user.save();
 
-        // Send OTP via email using templates
+        // Refetch user to get the exact saved OTP value from database
+        const savedUser = await User.findById(user._id);
+        const savedOtp = savedUser?.resetPasswordOtp || otp;
+
+        // Debug logging (development only)
+        if (process.env.NODE_ENV === 'development') {
+            console.log('OTP Debug:', {
+                generated: otp,
+                saved: savedOtp,
+                match: otp === savedOtp,
+                savedUserOtp: savedUser?.resetPasswordOtp
+            });
+        }
+
+        // Send OTP via email using templates - use the saved OTP value
         try {
             const { sendPasswordReset } = await import('@/utils/email.util');
-            await sendPasswordReset(email, otp);
+            await sendPasswordReset(email, savedOtp);
         } catch (emailError) {
             console.error('Error sending email:', emailError);
             // Still return success to prevent email enumeration
             // In development, log the OTP
             if (process.env.NODE_ENV === 'development') {
-                console.log('Password reset OTP for', email, ':', otp);
+                console.log('Password reset OTP for', email, ':', savedOtp);
             }
         }
 
@@ -67,7 +81,7 @@ export async function POST(request: NextRequest) {
             { 
                 message: 'If an account exists with this email, a password reset code has been sent',
                 // Only return OTP in development for testing
-                ...(process.env.NODE_ENV === 'development' && { otp })
+                ...(process.env.NODE_ENV === 'development' && { otp: savedOtp })
             },
             { status: 200 }
         );

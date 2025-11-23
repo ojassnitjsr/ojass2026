@@ -54,16 +54,30 @@ export async function POST(request: NextRequest) {
         user.emailOtpExpires = otpExpires;
         await user.save();
 
-        // Send OTP via email using templates
+        // Refetch user to get the exact saved OTP value from database
+        const savedUser = await User.findById(user._id);
+        const savedOtp = savedUser?.emailOtp || otp;
+
+        // Debug logging (development only)
+        if (process.env.NODE_ENV === 'development') {
+            console.log('OTP Debug:', {
+                generated: otp,
+                saved: savedOtp,
+                match: otp === savedOtp,
+                savedUserOtp: savedUser?.emailOtp
+            });
+        }
+
+        // Send OTP via email using templates - use the saved OTP value
         try {
             const { sendEmailVerification } = await import('@/utils/email.util');
-            await sendEmailVerification(email, otp);
+            await sendEmailVerification(email, savedOtp);
         } catch (emailError) {
             console.error('Error sending email:', emailError);
             // Still return success to prevent email enumeration
             // In development, log the OTP
             if (process.env.NODE_ENV === 'development') {
-                console.log('Email verification OTP for', email, ':', otp);
+                console.log('Email verification OTP for', email, ':', savedOtp);
             }
         }
 
@@ -71,7 +85,7 @@ export async function POST(request: NextRequest) {
             { 
                 message: 'Email verification code has been sent',
                 // Only return OTP in development for testing
-                ...(process.env.NODE_ENV === 'development' && { otp })
+                ...(process.env.NODE_ENV === 'development' && { otp: savedOtp })
             },
             { status: 200 }
         );

@@ -71,7 +71,8 @@ export function middleware(request: NextRequest) {
 
   // Routes that need admin auth
   // Exclude public GET /api/admin/events from admin auth check
-  const needsAdminAuth = path.startsWith("/api/admin") && !(path === "/api/admin/events" && request.method === "GET");
+  const needsAdminAuth = (path.startsWith("/api/admin") || path.startsWith("/api/events"))
+    && !(path === "/api/admin/events" && request.method === "GET");
 
   if (needsAdminAuth) {
     // Check admin authentication
