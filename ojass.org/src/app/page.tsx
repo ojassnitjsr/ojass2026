@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 export default function Home() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
-  const isMouseParallaxEnabledRef = useRef<boolean>(true);
+
   const { theme } = useTheme();
   const isDystopia = theme === "dystopia";
   if (typeof window !== 'undefined' && (gsap as any).registeredPlugins?.includes?.(ScrollTrigger) !== true) {
@@ -18,35 +18,21 @@ export default function Home() {
   // Smooth mouse tracking without throttling
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (!isMouseParallaxEnabledRef.current) return;
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width;
-        const y = (e.clientY - rect.top) / rect.height;
+      // Normalize to -1 to 1 range, centered at 0 based on window size to support all sections
+      const x = e.clientX / window.innerWidth;
+      const y = e.clientY / window.innerHeight;
 
-        // Normalize to -1 to 1 range, centered at 0
-        const normalizedX = (x - 0.5) * 2;
-        const normalizedY = (y - 0.5) * 2;
+      const normalizedX = (x - 0.5) * 2;
+      const normalizedY = (y - 0.5) * 2;
 
-        setMousePosition({ x: normalizedX, y: normalizedY });
-      }
+      setMousePosition({ x: normalizedX, y: normalizedY });
     };
 
-    const handleMouseLeave = () => {
-      // Smoothly reset to center when mouse leaves
-      setMousePosition({ x: 0, y: 0 });
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
     };
-
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener('mousemove', handleMouseMove);
-      container.addEventListener('mouseleave', handleMouseLeave);
-
-      return () => {
-        container.removeEventListener('mousemove', handleMouseMove);
-        container.removeEventListener('mouseleave', handleMouseLeave);
-      };
-    }
   }, []);
 
 
@@ -54,94 +40,83 @@ export default function Home() {
   useGSAP(() => {
     // Animate layers based on mouse position
     const animateLayers = () => {
-      if (!isMouseParallaxEnabledRef.current) return; // enable only at top
       const { x, y } = mousePosition;
 
-      // Different parallax speeds for each layer (closer layers move more)
-      const bgSpeed = 0.1;      // Background moves least (furthest)
-      const layer2Speed = 0.3;  // Layer 2 moves more
-      const layer3Speed = 0.5;  // Layer 3 moves even more
-      const bottomSpeed = 0.7;  // Bottom layer moves most (closest)
+      // --- SECTION 1 PARALLAX ---
+      const bgSpeed = 0.1;
+      const layer2Speed = 0.3;
+      const layer3Speed = 0.5;
+      const bottomSpeed = 0.7;
       const titleSpeed = 0.9;
-
-      // Calculate movement amounts for div positioning
-      const bgX = x * bgSpeed * 40;      // Max 40px movement
-      const bgY = y * bgSpeed * 30;      // Max 30px movement
-
-      const layer2X = x * layer2Speed * 60;
-      const layer2Y = y * layer2Speed * 40;
-
-      const layer3X = x * layer3Speed * 80;
-      const layer3Y = y * layer3Speed * 50;
-
-      const bottomX = x * bottomSpeed * 100;
-      const bottomY = y * bottomSpeed * 60;
-
-      const titleX = x * titleSpeed * 80;
-      const titleY = y * titleSpeed * 50;
-
-      // Subtle rotation for 3D effect (very small angles)
-      const bgRotateX = y * bgSpeed * 0.5;
-      const bgRotateY = x * bgSpeed * 0.5;
-
-      const layer2RotateX = y * layer2Speed * 1;
-      const layer2RotateY = x * layer2Speed * 1;
-
-      const layer3RotateX = y * layer3Speed * 1.5;
-      const layer3RotateY = x * layer3Speed * 1.5;
-
-      const titleRotateY = x * titleSpeed * 1.2;
-
-
-      // Parallax for the title text
-      // faster for foreground text
 
       // Move the actual divs instead of background position
       gsap.to('#bg', {
-        x: bgX,
-        y: bgY,
-        rotationX: bgRotateX,
-        rotationY: bgRotateY,
+        x: x * bgSpeed * 40,
+        y: y * bgSpeed * 30,
+        rotationX: y * bgSpeed * 0.5,
+        rotationY: x * bgSpeed * 0.5,
         transformOrigin: 'center center',
-        duration: 0.2,
-        ease: 'none'
+        duration: 0.5,
       });
 
       gsap.to('#layer2', {
-        x: layer2X,
-        y: layer2Y,
-        rotationX: layer2RotateX,
-        rotationY: layer2RotateY,
+        x: x * layer2Speed * 60,
+        y: y * layer2Speed * 40,
+        rotationX: y * layer2Speed * 1,
+        rotationY: x * layer2Speed * 1,
         transformOrigin: 'center center',
-        duration: 0.2,
-        ease: 'none'
+        duration: 0.5,
       });
 
       gsap.to('#layer3', {
-        x: layer3X,
-        y: layer3Y,
-        rotationX: layer3RotateX,
-        rotationY: layer3RotateY,
+        x: x * layer3Speed * 80,
+        y: y * layer3Speed * 50,
+        rotationX: y * layer3Speed * 1.5,
+        rotationY: x * layer3Speed * 1.5,
         transformOrigin: 'center center',
-        duration: 0.2,
-        ease: 'none'
+        duration: 0.5,
       });
 
       gsap.to('#bottom', {
-        x: bottomX,
-        y: bottomY,
-        duration: 0.2,
-        ease: 'none'
+        x: x * bottomSpeed * 100,
+        y: y * bottomSpeed * 60,
+        duration: 0.5,
       });
 
       gsap.to('#title', {
-        x: titleX,
-        y: titleY,
-        rotationY: titleRotateY,
+        x: x * titleSpeed * 80,
+        y: y * titleSpeed * 50,
+        rotationY: x * titleSpeed * 1.2,
         transformOrigin: 'center center',
-        duration: 0.2,
-        ease: 'none'
+        duration: 0.5,
       });
+
+      // --- SECTION 2 PARALLAX ---
+      // Adding parallax for cave section elements using similar logic
+      const caveInnerSpeed = 0.2;
+      const rocketSpeed = 0.6;
+      const title2Speed = 0.8;
+
+      gsap.to('#cave-inner', {
+        x: x * caveInnerSpeed * 40,
+        y: y * caveInnerSpeed * 40,
+        duration: 0.5,
+      });
+
+      gsap.to('#rocket', {
+        x: x * rocketSpeed * 80,
+        y: y * rocketSpeed * 60,
+        duration: 0.5,
+      });
+
+      gsap.to('#title2', {
+        x: x * title2Speed * 70,
+        y: y * title2Speed * 50,
+        rotationY: x * title2Speed * 1.0,
+        transformOrigin: 'center center',
+        duration: 0.5,
+      });
+      // Cave Outer is static as per previous request
     };
 
     animateLayers();
@@ -160,9 +135,6 @@ export default function Home() {
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
         const progress = maxScroll > 0 ? scrollY / maxScroll : 0;
 
-        // Mouse parallax only when page is at top
-        isMouseParallaxEnabledRef.current = scrollY === 0;
-
         // Parallax speeds: 
         // We use negative Y to move elements UP as the user scrolls DOWN (Natural scroll direction).
 
@@ -176,7 +148,6 @@ export default function Home() {
         // This "cancels" relative motion between the scroll and this element's position on page.
         gsap.set('#bottom', {
           y: 0,
-          scale: 1 + progress * 0.05,
         });
 
         // Layer3 (Behind bottom) - Moves slower (Speed ~0.6)
@@ -204,33 +175,35 @@ export default function Home() {
 
   useGSAP(() => {
     // Parallax for the second section (Cave & Rocket)
-    ScrollTrigger.create({
-      trigger: '#second-section',
-      start: 'top bottom', // Start when the top of the section enters the bottom of viewport
-      end: 'bottom top',   // End when the bottom of the section leaves the top of viewport
-      scrub: true,
-      onUpdate: (self) => {
-        const progress = self.progress;
-
-        // Cave (Background) - Moves slower (Parallax effect)
-        // Moving it slightly DOWN (positive Y) as we scroll UP the content makes it appear further away
-        gsap.set('#cave', {
-          y: (progress - 0.5) * 100,
-        });
-
-        // Rocket (Foreground) - Moves faster or stays put
-        // Moving it UP (negative Y) makes it appear closer/floating
-        gsap.set('#rocket', {
-          y: -(progress - 0.5) * 200,
-        });
-
-        // Title 2 (in second section) - Moves into view from bottom
-        gsap.set('#title2', {
-          y: (progress - 0.5) * 50, // Slight parallax
-          scale: 1 + progress * 0.05,
-        });
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#second-section',
+        start: 'top bottom', // Start when the top of the section enters the bottom of viewport
+        end: 'bottom bottom',   // End when the bottom of the section hits the bottom of viewport
+        scrub: true,
       }
     });
+
+    // Cave Inner moves slightly (Parallax)
+    tl.from('#cave-inner', {
+      y: '0vh',
+      ease: 'none',
+    }, 0);
+
+    // Title 2 moves slower than rocket but moves
+    tl.from('#title2', {
+      y: '20vh',
+      ease: 'none',
+    }, 0);
+
+    // Rocket comes up from down (Significant movement)
+    tl.from('#rocket', {
+      y: '100vh',
+      ease: 'none',
+    }, 0);
+
+    // Cave Outer is static (No animation applied, scrolls naturally with the container)
+
   }, []);
 
   return (
@@ -323,15 +296,15 @@ export default function Home() {
       </div>
       <div id="second-section" className='w-full h-screen bg-white relative overflow-hidden'>
         <div
-          className="absolute top-0 left-0"
-          id="cave"
+          className="absolute -bottom-[2vh] -left-[2vw]"
+          id="cave-inner"
           style={{
-            width: '100vw',
-            height: '100vh',
+            width: '104vw',
+            height: '104vh',
             marginLeft: '0',
-            backgroundImage: 'url(/homelayer/cave.png)',
+            backgroundImage: 'url(/homelayer/caveinner.png)',
             backgroundSize: 'cover',
-            backgroundPosition: 'bottom center',
+            backgroundPosition: 'center center',
             backgroundRepeat: 'no-repeat',
             willChange: 'transform'
           }}
@@ -354,6 +327,19 @@ export default function Home() {
             backgroundPosition: 'center center',
             backgroundRepeat: 'no-repeat',
             willChange: 'transform'
+          }}
+        ></div>
+        <div
+          className="absolute top-0 left-0"
+          id="cave-outer"
+          style={{
+            width: '100vw',
+            height: '100vh',
+            marginLeft: '0',
+            backgroundImage: 'url(/homelayer/caveouter.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'bottom center',
+            backgroundRepeat: 'no-repeat',
           }}
         ></div>
       </div>
