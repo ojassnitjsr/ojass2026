@@ -103,18 +103,22 @@ export default function Home() {
         duration: 0.5,
       });
 
+      // Rocket: Only apply mouse parallax to X axis (horizontal)
+      // Y axis is controlled by scroll animation
       gsap.to('#rocket', {
         x: x * rocketSpeed * 80,
-        y: y * rocketSpeed * 60,
         duration: 0.5,
+        overwrite: 'auto', // Don't overwrite Y from scroll animation
       });
 
+      // Title2: Only apply mouse parallax to X axis (horizontal)
+      // Y axis is controlled by scroll animation
       gsap.to('#title2', {
         x: x * title2Speed * 70,
-        y: y * title2Speed * 50,
         rotationY: x * title2Speed * 1.0,
         transformOrigin: 'center center',
         duration: 0.5,
+        overwrite: 'auto', // Don't overwrite Y from scroll animation
       });
       // Cave Outer is static as per previous request
     };
@@ -124,6 +128,8 @@ export default function Home() {
 
   useGSAP(() => {
     if (!containerRef.current) return;
+
+    const firstSectionHeight = window.innerHeight; // Height of first section
 
     ScrollTrigger.create({
       trigger: containerRef.current,
@@ -138,7 +144,7 @@ export default function Home() {
         // Parallax speeds: 
         // We use negative Y to move elements UP as the user scrolls DOWN (Natural scroll direction).
 
-        // Title (Floating text) 
+        // Title (Floating text) - Moves down with scroll, will go behind bottom layer
         gsap.set('#title', {
           y: scrollY,
           scale: 1 + progress * 0.05,
@@ -169,6 +175,24 @@ export default function Home() {
           rotationX: progress * 2,
           transformOrigin: 'center center'
         });
+
+        // Title2 (Second section) - Synced with first title's movement
+        // When scrollY reaches the second section, title2 should appear from behind cave
+        const secondSectionStart = firstSectionHeight;
+
+        if (scrollY >= secondSectionStart * 0.5) {
+          // Start showing title2 after 50% scroll of first section
+          const title2Progress = Math.min(1, (scrollY - secondSectionStart * 0.5) / (secondSectionStart * 0.5));
+          // CSS position is -20vh, we need to move it to 40vh (40%)
+          // Total movement: 40vh - (-20vh) = 60vh
+          gsap.set('#title2', {
+            y: title2Progress * 60 * window.innerHeight / 100, // From 0 to 60vh (CSS -20vh + 60vh = 40vh)
+          });
+        } else {
+          gsap.set('#title2', {
+            y: 0, // Keep at CSS position -20vh
+          });
+        }
       }
     });
   }, []);
@@ -178,7 +202,7 @@ export default function Home() {
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: '#second-section',
-        start: 'top bottom', // Start when the top of the section enters the bottom of viewport
+        start: 'top 50%', // Start when the top of the section enters the middle of the viewport
         end: 'bottom bottom',   // End when the bottom of the section hits the bottom of viewport
         scrub: true,
       }
@@ -190,17 +214,19 @@ export default function Home() {
       ease: 'none',
     }, 0);
 
-    // Title 2 moves slower than rocket but moves
-    tl.from('#title2', {
-      y: '20vh',
+    // Rocket comes up from down (Significant movement)
+    // CSS position: top: 150vh (rocket is below the viewport, hidden)
+    // Transform from y:0 to y:-120vh (moves UP by 120vh)
+    tl.fromTo('#rocket', {
+      y: 0,
+    }, {
+      y: '-125vh',
       ease: 'none',
     }, 0);
 
-    // Rocket comes up from down (Significant movement)
-    tl.from('#rocket', {
-      y: '100vh',
-      ease: 'none',
-    }, 0);
+    // Title 2 Y-axis is controlled by the main ScrollTrigger above for sync with first title
+    // Rocket Y-axis is controlled by timeline above
+    // Mouse parallax controls X-axis for both (horizontal movement only)
 
     // Cave Outer is static (No animation applied, scrolls naturally with the container)
 
@@ -294,7 +320,7 @@ export default function Home() {
           }}
         ></div>
       </div>
-      <div id="second-section" className='w-full h-screen bg-white relative overflow-hidden'>
+      <div id="second-section" className='w-full h-screen bg-white relative overflow-hidden z-10'>
         <div
           className="absolute -bottom-[2vh] -left-[2vw]"
           id="cave-inner"
@@ -311,12 +337,12 @@ export default function Home() {
         ></div>
         <div
           id="title2"
-          className='absolute top-[40%] font-bold text-[200px] text-center w-full bg-[url(/layers/text.png)] bg-contain bg-center bg-no-repeat h-[20vh]'
+          className='absolute -top-[20vh] font-bold text-[200px] text-center w-full bg-[url(/layers/text.png)] bg-contain bg-center bg-no-repeat h-[20vh]'
           style={{ willChange: 'transform', pointerEvents: 'none', filter: isDystopia ? 'hue-rotate(180deg)' : 'hue-rotate(0deg)', }}
         >
         </div>
         <div
-          className="absolute bottom-[10vh] left-0"
+          className="absolute top-[150vh] left-0"
           id="rocket"
           style={{
             width: '100vw',
