@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 
 // --- Components ---
@@ -136,61 +136,126 @@ function SnowfallBackground() {
   );
 }
 
-function CountdownTimer({ targetDate }: { targetDate: string }) {
-  const [timeLeft, setTimeLeft] = useState<{
-    days: number;
-    hours: number;
-    minutes: number;
-    seconds: number;
-  } | null>(null);
+// --- Flip Clock Components ---
+
+function FlipCard({ value, label }: { value: number; label: string }) {
+  const [currentValue, setCurrentValue] = useState(value);
+  const [previousValue, setPreviousValue] = useState(value);
+  const [isFlipping, setIsFlipping] = useState(false);
+
+  // Sync prop changes to state
+  if (value !== currentValue && !isFlipping) {
+    setPreviousValue(currentValue);
+    setCurrentValue(value);
+    setIsFlipping(true);
+  }
 
   useEffect(() => {
-    const calculateTimeLeft = () => {
-      const difference = +new Date(targetDate) - +new Date();
-      if (difference > 0) {
-        return {
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-        };
-      }
-      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-    };
+    if (isFlipping) {
+      const timer = setTimeout(() => {
+        setIsFlipping(false);
+      }, 600); // match animation duration
+      return () => clearTimeout(timer);
+    }
+  }, [isFlipping]);
 
-    setTimeLeft(calculateTimeLeft());
+  const currentFormatted = currentValue.toString().padStart(2, "0");
+  const previousFormatted = previousValue.toString().padStart(2, "0");
 
+  return (
+    <div className="flex flex-col items-center mx-1 md:mx-3 z-40">
+      <div className="relative w-14 h-20 md:w-20 md:h-28 bg-[#1e1e24] rounded-lg shadow-xl font-mono text-4xl md:text-5xl flip-clock-container group">
+
+        {/*
+            FLIP LOGIC (4 LAYERS):
+            1. Static Top: Show CURRENT (Next Value)
+            2. Static Bottom: Show PREVIOUS (Old Value)
+            3. Anim Top (Front): Show PREVIOUS... Flips down to become...
+            4. Anim Bottom (Back): Show CURRENT... Flips down on top of Static Bottom
+        */}
+
+        {/* STATIC LAYER TOP: CURRENT */}
+        <div className="flip-half flip-top z-0">
+          <div className="flip-text">{currentFormatted}</div>
+        </div>
+        {/* STATIC LAYER BOTTOM: PREVIOUS (Only visible when Anim Top flips down?) 
+            Actually: 
+            If we are flipping 10 -> 09.
+            Static Top: 09.
+            Static Bottom: 10 (Wait, eventually Static Bottom must be 09).
+            
+            Let's stick to the "Falling Leaf" model:
+            - Background Top: CURRENT (09)
+            - Background Bottom: PREVIOUS (10) -> Covered by Anim Bottom (09)
+            - Anim Top: PREVIOUS (10) -> Covers Background Top (09), flips down.
+            - Anim Bottom: CURRENT (09) -> Backface of Anim Top? Or separate element?
+              In our CSS, we use separate elements.
+         */}
+        <div className="flip-half flip-bottom z-0">
+          <div className="flip-text">{isFlipping ? previousFormatted : currentFormatted}</div>
+        </div>
+
+
+        {/* DYNAMIC LAYERS */}
+        {isFlipping && (
+          <>
+            {/* TOP LEAF (Old Value): Starts at 0, flips to -180 */}
+            <div className="flip-half flip-top anim-flip-top">
+              <div className="flip-text">{previousFormatted}</div>
+              <div className="absolute inset-0 bg-black/10"></div>
+            </div>
+
+            {/* BOTTOM LEAF (New Value): Starts at 180, flips to 0 */}
+            <div className="flip-half flip-bottom anim-flip-bottom">
+              <div className="flip-text">{currentFormatted}</div>
+              {/* Shadow */}
+              <div className="absolute inset-0 bg-black/10"></div>
+            </div>
+          </>
+        )}
+
+        {/* Middle Line */}
+        <div className="absolute top-1/2 left-0 w-full h-[1px] bg-black/80 z-50 shadow-[0_1px_0_rgba(255,255,255,0.05)]" />
+      </div>
+
+      <span className="mt-3 text-[10px] md:text-xs font-bold tracking-[0.2em] text-cyan-200/60 uppercase">
+        {label}
+      </span>
+    </div>
+  );
+}
+
+function CountdownTimer({ targetDate }: { targetDate: string }) {
+  const calculateTimeLeft = useCallback(() => {
+    const difference = +new Date(targetDate) - +new Date();
+    if (difference > 0) {
+      return {
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+      };
+    }
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }, [targetDate]);
+
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+
+  useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
-
     return () => clearInterval(timer);
-  }, [targetDate]);
+  }, [calculateTimeLeft]);
 
   if (!timeLeft) return null;
 
-  const format = (n: number) => n.toString().padStart(2, "0");
-
   return (
-    <div className="grid grid-cols-4 gap-2 md:gap-4 mt-6 w-full max-w-2xl px-2">
-      {[
-        { label: "Days", value: timeLeft.days },
-        { label: "Hours", value: timeLeft.hours },
-        { label: "Mins", value: timeLeft.minutes },
-        { label: "Secs", value: timeLeft.seconds },
-      ].map((item, idx) => (
-        <div
-          key={idx}
-          className="flex flex-col items-center justify-center p-3 md:p-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:border-cyan-300/50 transition-colors group"
-        >
-          <span className="text-2xl md:text-4xl font-black text-transparent bg-clip-text bg-linear-to-b from-white to-cyan-200 font-sans tracking-tight group-hover:scale-110 transition-transform drop-shadow-sm">
-            {format(item.value)}
-          </span>
-          <span className="text-[10px] md:text-xs uppercase tracking-wider text-cyan-100/70 mt-1 font-medium">
-            {item.label}
-          </span>
-        </div>
-      ))}
+    <div className="flex justify-center flex-wrap mt-8 md:mt-12 scale-90 md:scale-100">
+      <FlipCard value={timeLeft.days} label="Days" />
+      <FlipCard value={timeLeft.hours} label="Hours" />
+      <FlipCard value={timeLeft.minutes} label="Minutes" />
+      <FlipCard value={timeLeft.seconds} label="Seconds" />
     </div>
   );
 }
@@ -270,12 +335,12 @@ export default function Home() {
         </header>
 
         {/* Main Content */}
-        <main className="flex-grow flex flex-col items-center justify-center text-center px-4 md:pt-0 pb-16 w-full">
+        <main className="grow flex flex-col items-center justify-center text-center px-4 pb-16 w-full">
 
           {/* Website Launch Pill */}
           <div className="mb-4 md:mb-6 animate-fade-in opacity-0 [animation-delay:0.5s]">
             <span className="px-3 py-1 md:py-1.5 rounded-full bg-blue-500/10 border border-cyan-400/30 text-cyan-200 font-bold tracking-widest text-[10px] md:text-xs uppercase shadow-[0_0_15px_-3px_rgba(34,211,238,0.2)]">
-              ❄️ Website Launching: 14th Dec 2025
+              ❄️ Website Launching: 15<sup className="lowercase">th</sup> Dec, 2025
             </span>
           </div>
 
@@ -312,43 +377,23 @@ export default function Home() {
                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            <span>Feb 18 – Feb 21, 2026</span>
+            <span>Feb 19 – Feb 21, 2026</span>
           </div>
 
-          <CountdownTimer targetDate="2026-02-18T09:00:00" />
+          <CountdownTimer targetDate="2026-02-19T09:00:00" />
 
           <p className="mt-4 md:mt-6 text-[10px] md:text-xs text-cyan-200/50 font-mono tracking-widest">
             EVENT STARTS IN
           </p>
-
-          {/* <div className="mt-6 md:mt-8 w-full max-w-sm">
-            {!notified ? (
-              <form onSubmit={handleNotify} className="relative flex items-center">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="w-full px-4 py-2.5 pr-32 rounded-full bg-blue-950/30 border border-cyan-500/20 focus:border-cyan-400 focus:bg-blue-900/40 outline-none transition-all placeholder:text-cyan-200/30 text-white text-sm backdrop-blur-sm"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-                <button
-                  type="submit"
-                  className="absolute right-1 top-1 bottom-1 px-4 rounded-full bg-linear-to-r from-cyan-500 to-blue-600 font-bold text-xs md:text-sm hover:shadow-[0_0_15px_rgba(6,182,212,0.6)] text-white transition-all active:scale-95 border border-cyan-400/20"
-                >
-                  Notify Me
-                </button>
-              </form>
-            ) : (
-              <div className="px-4 py-2.5 bg-green-500/20 border border-green-500/50 rounded-full text-green-300 text-sm font-medium animate-fade-in">
-                Success! You're on the list.
-              </div>
-            )}
-          </div> */}
         </main>
 
-        <footer className="absolute bottom-3 md:bottom-4 text-cyan-200/40 text-[10px] md:text-xs text-center w-full p-2">
-          &copy; 2026 Ojass Team, NIT Jamshedpur.
+        <footer className="absolute bottom-2 text-cyan-200/40 text-[10px] md:text-xs text-center w-full px-2 flex justify-between">
+         <div>
+           &copy; 2026 Ojass Team, NIT Jamshedpur.
+         </div>
+         <div>
+          powered by <a href="https://www.digicraft.one" className="underline" target="_blank">DigiCraft</a>
+         </div>
         </footer>
       </div>
     </div>

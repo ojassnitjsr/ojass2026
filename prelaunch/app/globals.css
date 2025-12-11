@@ -26,10 +26,112 @@ body {
 }
 
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in {
   animation: fade-in 0.5s ease-out forwards;
+}
+
+/* Clean Flip Clock CSS */
+.flip-clock-container {
+  perspective: 400px;
+}
+
+/* Common half-card styles */
+.flip-half {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50%;
+  overflow: hidden;
+  background: #1e1e24;
+  color: #22d3ee;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+/* Top halves */
+.flip-top {
+  top: 0;
+  border-radius: 0.5rem 0.5rem 0 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+  transform-origin: 50% 100%;
+  /* Pivot at bottom edge */
+}
+
+/* Bottom halves */
+.flip-bottom {
+  bottom: 0;
+  border-radius: 0 0 0.5rem 0.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.5);
+  transform-origin: 50% 0%;
+  /* Pivot at top edge */
+}
+
+/* Text Positioning */
+.flip-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 200%;
+  /* Double height to fit both halves */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flip-top .flip-text {
+  top: 0;
+}
+
+.flip-bottom .flip-text {
+  bottom: 0;
+}
+
+/* Animations */
+/* Top Leaf: 0 -> -90deg (First Half) */
+.anim-flip-top {
+  z-index: 20;
+  animation: flip-top-fn 0.3s ease-in forwards;
+}
+
+/* Bottom Leaf: 90deg -> 0deg (Second Half) - Delayed */
+.anim-flip-bottom {
+  z-index: 20;
+  transform: rotateX(90deg);
+  /* Start perpendicular (invisible) */
+  opacity: 0;
+  /* Hide strictly until anim starts */
+  animation: flip-bottom-fn 0.3s ease-out 0.3s forwards;
+}
+
+@keyframes flip-top-fn {
+  0% {
+    transform: rotateX(0deg);
+  }
+
+  100% {
+    transform: rotateX(-90deg);
+  }
+}
+
+@keyframes flip-bottom-fn {
+  0% {
+    transform: rotateX(90deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
 }
