@@ -215,7 +215,7 @@ function FlipCard({ value, label }: { value: number; label: string }) {
         )}
 
         {/* Middle Line */}
-        <div className="absolute top-1/2 left-0 w-full h-[1px] bg-black/80 z-50 shadow-[0_1px_0_rgba(255,255,255,0.05)]" />
+        <div className="absolute top-1/2 left-0 w-full h-px bg-black/80 z-50 shadow-[0_1px_0_rgba(255,255,255,0.05)]" />
       </div>
 
       <span className="mt-3 text-[10px] md:text-xs font-bold tracking-[0.2em] text-cyan-200/60 uppercase">
@@ -283,14 +283,6 @@ function LogoVideo() {
 }
 
 export default function Home() {
-  const [email, setEmail] = useState("");
-  const [notified, setNotified] = useState(false);
-
-  const handleNotify = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-    setTimeout(() => setNotified(true), 500);
-  };
 
   return (
     <div className="relative h-screen overflow-hidden text-white selection:bg-cyan-300/30 font-sans bg-[#050a14]">
