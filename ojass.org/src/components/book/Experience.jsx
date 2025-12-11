@@ -10,7 +10,12 @@ export const Experience = () => {
                 rotationIntensity={2}>
                 <Book />
             </Float>
-            <OrbitControls />
+            <OrbitControls
+                maxAzimuthAngle={Math.PI / 4}
+                minAzimuthAngle={0}
+                minPolarAngle={Math.PI / 4}
+                maxPolarAngle={Math.PI / 4}
+            />
             <Environment preset="studio"></Environment>
             <directionalLight
                 position={[2, 5, 2]}

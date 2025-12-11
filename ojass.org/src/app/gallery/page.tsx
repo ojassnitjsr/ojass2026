@@ -1,13 +1,15 @@
 "use client";
 
-import Galaxy from "@/components/Gallery/Galaxy";
+import Galaxy from "@/components/gallery/Galaxy";
 import "@/components/Gallery/gallery.css";
-import { InfiniteGrid } from "@/components/Gallery/InfiniteGallery";
+import { InfiniteGrid } from "@/components/gallery/InfiniteGallery";
+import { useTheme } from "@/contexts/ThemeContext";
 import { galleryImages, galleryLayout } from "@/lib/constants";
 import { useEffect, useRef } from "react";
 
 const Gallery = () => {
     const containerRef = useRef<HTMLDivElement>(null);
+    const { theme } = useTheme();
 
     useEffect(() => {
         const el = containerRef.current;
@@ -44,7 +46,10 @@ const Gallery = () => {
                 density={1.5}
                 glowIntensity={0.5}
                 saturation={0.8}
-                hueShift={240}>
+                hueShift={theme === "dystopia" ? 240 : 60}
+                starSpeed={0.1}
+                transparent={theme === "dystopia"}
+                backgroundImage="/gallery/image.png">
                 <section className="gallery-container">
                     <div className="gallery-hero">
                         <div
