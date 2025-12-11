@@ -1,6 +1,6 @@
 "use client";
 
-import { Renderer, Program, Mesh, Color, Triangle } from "ogl";
+import { Renderer, Program, Mesh, Color, Triangle, Texture } from "ogl";
 import { JSX, useEffect, useRef } from "react";
 
 const vertexShader = `
@@ -36,6 +36,10 @@ uniform float uRepulsionStrength;
 uniform float uMouseActiveFactor;
 uniform float uAutoCenterRepulsion;
 uniform bool uTransparent;
+
+uniform sampler2D uTexture;
+uniform vec2 uTextureResolution;
+uniform bool uHasTexture;
 
 varying vec2 vUv;
 
@@ -124,6 +128,22 @@ vec3 StarLayer(vec2 uv) {
   return col;
 }
 
+vec2 getCoverUV(vec2 uv, vec2 resolution, vec2 texResolution) {
+  float screenAspect = resolution.x / resolution.y;
+  float texAspect = texResolution.x / texResolution.y;
+  
+  vec2 scale;
+  if (screenAspect > texAspect) {
+    scale = vec2(screenAspect / texAspect, 1.0);
+  } else {
+    scale = vec2(1.0, texAspect / screenAspect);
+  }
+
+  vec2 scaledUv = uv * scale;
+  scaledUv.x -= (scale.x - 1.0);
+  return scaledUv;
+}
+
 void main() {
   vec2 focalPx = uFocal * uResolution.xy;
   vec2 uv = (vUv * uResolution.xy - focalPx) / uResolution.y;
@@ -153,6 +173,14 @@ void main() {
 
   vec3 col = vec3(0.0);
 
+  if (uHasTexture) {
+    vec2 bgUv = getCoverUV(vUv, uResolution.xy, uTextureResolution);
+    if (bgUv.x >= 0.0 && bgUv.x <= 1.0 && bgUv.y >= 0.0 && bgUv.y <= 1.0) {
+      vec4 texColor = texture2D(uTexture, bgUv);
+      col = texColor.rgb;
+    }
+  }
+
   for (float i = 0.0; i < 1.0; i += 1.0 / NUM_LAYER) {
     float depth = fract(i + uStarSpeed * uSpeed);
     float scale = mix(20.0 * uDensity, 0.5 * uDensity, depth);
@@ -164,6 +192,9 @@ void main() {
     float alpha = length(col);
     alpha = smoothstep(0.0, 0.3, alpha);
     alpha = min(alpha, 1.0);
+    if (uHasTexture) {
+      alpha = 1.0;
+    }
     gl_FragColor = vec4(col, alpha);
   } else {
     gl_FragColor = vec4(col, 1.0);
@@ -188,6 +219,7 @@ interface GalaxyProps {
     repulsionStrength?: number;
     autoCenterRepulsion?: number;
     transparent?: boolean;
+    backgroundImage?: string;
     children?: JSX.Element;
 }
 
@@ -208,6 +240,7 @@ export default function Galaxy({
     rotationSpeed = 0.1,
     autoCenterRepulsion = 0,
     transparent = true,
+    backgroundImage = "",
     children,
 }: GalaxyProps) {
     const ctnDom = useRef<HTMLDivElement>(null);
@@ -234,6 +267,31 @@ export default function Galaxy({
         }
 
         const geometry = new Triangle(gl);
+
+        const texture = new Texture(gl, {
+            wrapS: gl.CLAMP_TO_EDGE,
+            wrapT: gl.CLAMP_TO_EDGE,
+        });
+
+        const textureResolution = new Float32Array([1, 1]);
+        let hasTextureVal = false;
+
+        if (backgroundImage) {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.src = backgroundImage;
+            img.onload = () => {
+                texture.image = img;
+                textureResolution[0] = img.width;
+                textureResolution[1] = img.height;
+                hasTextureVal = true;
+                if (program) {
+                    program.uniforms.uTextureResolution.value =
+                        textureResolution;
+                    program.uniforms.uHasTexture.value = true;
+                }
+            };
+        }
         const program = new Program(gl, {
             vertex: vertexShader,
             fragment: fragmentShader,
@@ -267,12 +325,16 @@ export default function Galaxy({
                 uMouseActiveFactor: { value: 0.0 },
                 uAutoCenterRepulsion: { value: autoCenterRepulsion },
                 uTransparent: { value: transparent },
+                uTexture: { value: texture },
+                uTextureResolution: { value: textureResolution },
+                uHasTexture: { value: hasTextureVal },
             },
         });
 
         const mesh = new Mesh(gl, { geometry, program });
 
         function resize() {
+            if (!ctn) return;
             const scale = 1;
             renderer.setSize(ctn.offsetWidth * scale, ctn.offsetHeight * scale);
             if (program) {
@@ -342,7 +404,7 @@ export default function Galaxy({
                 ctn.removeEventListener("mousemove", handleMouseMove);
                 ctn.removeEventListener("mouseleave", handleMouseLeave);
             }
-            ctn.removeChild(gl.canvas);
+            if (ctn && gl.canvas.parentNode === ctn) ctn.removeChild(gl.canvas);
             gl.getExtension("WEBGL_lose_context")?.loseContext();
         };
     }, [
@@ -362,6 +424,7 @@ export default function Galaxy({
         repulsionStrength,
         autoCenterRepulsion,
         transparent,
+        backgroundImage,
     ]);
 
     return (

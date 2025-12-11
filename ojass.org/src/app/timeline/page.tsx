@@ -1,12 +1,6 @@
 "use client";
-import TimelinePage from "@/components/Timeline";
-import React from "react";
+import TimelinePage from "@/components/timeline/Timeline";
 
 export default function TimelineDialWrapper() {
-  return (
-    <div>
-   {/* <TimelineDialPage/> */}
-   <TimelinePage/>
-    </div>
-  );
+    return <TimelinePage />;
 }
