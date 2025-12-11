@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { eventAPI, authAPI, userAPI, teamAPI, registrationAPI, User, Team, Event, CreateEventData } from '@/lib/api';
+import { eventAPI, authAPI, userAPI, teamAPI, registrationAPI, notificationAPI, User, Team, Event, CreateEventData, Notification, CreateNotificationData } from '@/lib/api';
 import EventForm from '@/components/EventForm';
 
 export default function Dashboard() {
   const router = useRouter();
-  const [activeSection, setActiveSection] = useState<'events' | 'students' | 'ambassadors' | 'team' | 'individual'>('events');
+  const [activeSection, setActiveSection] = useState<'events' | 'students' | 'ambassadors' | 'team' | 'individual' | 'notifications'>('events');
   const [events, setEvents] = useState<Event[]>([]);
   const [eventSearch, setEventSearch] = useState('');
   const [loading, setLoading] = useState(true);
@@ -39,6 +39,11 @@ export default function Dashboard() {
   const [individualEventFilter, setIndividualEventFilter] = useState<string | 'all'>('all');
   const [studentsPage, setStudentsPage] = useState(1);
   const [teamsPage, setTeamsPage] = useState(1);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [loadingNotifications, setLoadingNotifications] = useState(false);
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
+  const [notificationForm, setNotificationForm] = useState<CreateNotificationData>({ title: '', description: '' });
+  const [sendingNotification, setSendingNotification] = useState(false);
 
   // Set mounted state after hydration
   useEffect(() => {
@@ -74,6 +79,14 @@ export default function Dashboard() {
       loadIndividualRegistrations();
     }
   }, [individualEventFilter, activeSection, mounted]);
+
+  // Load notifications when section is active
+  useEffect(() => {
+    if (mounted && activeSection === 'notifications') {
+      loadNotifications();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeSection, mounted]);
 
   // Fetch full student details when modal opens
   useEffect(() => {
@@ -185,6 +198,44 @@ export default function Dashboard() {
       setError(err.message || 'Failed to load individual registrations');
     } finally {
       setLoadingIndividual(false);
+    }
+  };
+
+  const loadNotifications = async () => {
+    try {
+      setLoadingNotifications(true);
+      const response = await notificationAPI.getAll();
+      if (response.success) {
+        setNotifications(response.data);
+      }
+    } catch (err: any) {
+      console.error('Error loading notifications:', err);
+      setError(err.message || 'Failed to load notifications');
+    } finally {
+      setLoadingNotifications(false);
+    }
+  };
+
+  const handleCreateNotification = async () => {
+    if (!notificationForm.title || !notificationForm.description) {
+      setError('Title and description are required');
+      return;
+    }
+
+    try {
+      setSendingNotification(true);
+      setError('');
+      const response = await notificationAPI.create(notificationForm);
+      if (response.success) {
+        setShowNotificationModal(false);
+        setNotificationForm({ title: '', description: '' });
+        await loadNotifications();
+        alert(`Notification sent successfully! Sent to ${response.data.recipients} users. Push notifications: ${response.data.pushNotifications.sent} sent, ${response.data.pushNotifications.failed} failed.`);
+      }
+    } catch (err: any) {
+      setError(err.message || 'Failed to send notification');
+    } finally {
+      setSendingNotification(false);
     }
   };
 
@@ -419,6 +470,7 @@ export default function Dashboard() {
               { key: 'ambassadors', label: 'Ambassadors' },
               { key: 'team', label: 'Teams' },
               { key: 'individual', label: 'Individual Events' },
+              { key: 'notifications', label: 'Notifications' },
             ].map((tab) => (
               <button
                 key={tab.key}
@@ -1745,8 +1797,162 @@ export default function Dashboard() {
               )}
             </div>
           )}
+
+          {/* Notifications Section */}
+          {activeSection === 'notifications' && (
+            <div>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-800">Notifications</h2>
+                <button
+                  onClick={() => {
+                    setShowNotificationModal(true);
+                    setNotificationForm({ title: '', description: '' });
+                    setError('');
+                  }}
+                  className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg"
+                >
+                  + Send Notification
+                </button>
+              </div>
+
+              {error && (
+                <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                  {error}
+                </div>
+              )}
+
+              {loadingNotifications ? (
+                <div className="text-center py-8">
+                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                  <p className="mt-2 text-gray-600">Loading notifications...</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {notifications.length === 0 ? (
+                    <div className="text-center py-12 bg-gray-50 rounded-lg">
+                      <p className="text-gray-500">No notifications sent yet.</p>
+                    </div>
+                  ) : (
+                    notifications.map((notification) => (
+                      <div
+                        key={notification._id}
+                        className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"
+                      >
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                              {notification.title}
+                            </h3>
+                            <p className="text-gray-600 mb-3">{notification.description}</p>
+                            <div className="flex items-center gap-4 text-sm text-gray-500">
+                              <span>
+                                Sent: {new Date(notification.createdAt).toLocaleString()}
+                              </span>
+                              {notification.recipients && notification.recipients.length > 0 && (
+                                <span>
+                                  Recipients: {notification.recipients.length} user(s)
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Notification Modal */}
+      {showNotificationModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-800">Send Notification</h2>
+                <button
+                  onClick={() => {
+                    setShowNotificationModal(false);
+                    setNotificationForm({ title: '', description: '' });
+                    setError('');
+                  }}
+                  className="text-gray-500 hover:text-gray-700 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              {error && (
+                <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                  {error}
+                </div>
+              )}
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Title *
+                  </label>
+                  <input
+                    type="text"
+                    value={notificationForm.title}
+                    onChange={(e) =>
+                      setNotificationForm({ ...notificationForm, title: e.target.value })
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    placeholder="Enter notification title"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Description *
+                  </label>
+                  <textarea
+                    value={notificationForm.description}
+                    onChange={(e) =>
+                      setNotificationForm({ ...notificationForm, description: e.target.value })
+                    }
+                    rows={6}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    placeholder="Enter notification description"
+                  />
+                </div>
+
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                  <p className="text-sm text-blue-800">
+                    <strong>Note:</strong> This notification will be sent to all users as a push notification and stored in their dashboard.
+                  </p>
+                </div>
+
+                <div className="flex justify-end gap-3 pt-4">
+                  <button
+                    onClick={() => {
+                      setShowNotificationModal(false);
+                      setNotificationForm({ title: '', description: '' });
+                      setError('');
+                    }}
+                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all"
+                    disabled={sendingNotification}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleCreateNotification}
+                    disabled={sendingNotification || !notificationForm.title || !notificationForm.description}
+                    className="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium hover:from-indigo-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {sendingNotification ? 'Sending...' : 'Send Notification'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

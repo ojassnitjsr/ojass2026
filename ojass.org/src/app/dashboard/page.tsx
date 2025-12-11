@@ -10,6 +10,7 @@ import Team from "@/components/OverlayLayout/dashboard/Team";
 import Certificate from "@/components/OverlayLayout/dashboard/Certificate";
 import Notification from "@/components/OverlayLayout/dashboard/Notification";
 import EmailVerificationModal from "@/components/OverlayLayout/dashboard/EmailVerificationModal";
+import Loader from "@/components/Loader";
 
 export default function OjassDashboard() {
   const router = useRouter();
@@ -215,8 +216,7 @@ export default function OjassDashboard() {
 
 
   const certificates = [
-    { id: 1, event: "Web Development Workshop", type: "Participation", date: "Nov 10, 2024" },
-    { id: 2, event: "Coding Competition 2023", type: "Winner - 2nd Place", date: "Nov 5, 2023" },
+    
   ];
 
   const stars = useMemo(
@@ -232,11 +232,7 @@ export default function OjassDashboard() {
   );
 
   if (loading) {
-    return (
-      <div className="bg-black h-screen flex items-center justify-center">
-        <div className="text-cyan-400 text-2xl animate-pulse">Loading...</div>
-      </div>
-    );
+    return <Loader />;
   }
 
   if (!profileData) {

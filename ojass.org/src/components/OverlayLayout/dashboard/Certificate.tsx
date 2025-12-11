@@ -21,8 +21,6 @@ export default function Certificate({ certificates }: { certificates: any[] }) {
     theme === "utopia" ? "hover:to-blue-500/10" : "hover:to-orange-500/10";
   const textAccent =
     theme === "utopia" ? "text-cyan-400" : "text-amber-400";
-  const textLight =
-    theme === "utopia" ? "text-cyan-300" : "text-amber-300";
   const iconHover =
     theme === "utopia"
       ? "hover:text-cyan-300"
@@ -45,52 +43,74 @@ export default function Certificate({ certificates }: { certificates: any[] }) {
 
   return (
     <div className={`space-y-3 overflow-y-auto ${scrollbarThumb} scrollbar-thin scrollbar-track-transparent`}>
-      {certificates.map((cert) => (
+      {certificates && certificates.length > 0 ? (
+        certificates.map((cert) => (
+          <div
+            key={cert.id}
+            className={`p-4 border ${borderColor} bg-gradient-to-r ${gradientFrom} ${gradientTo} ${hoverFrom} ${hoverTo} transition-all backdrop-blur-sm`}
+            style={{
+              clipPath:
+                "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
+              boxShadow: `0 0 15px ${glow}20`,
+            }}
+          >
+            <div className="flex items-start gap-3">
+              <Award
+                size={18}
+                className={`${textAccent} mt-1 flex-shrink-0 drop-shadow-[0_0_4px_${glow}]`}
+              />
+              <div className="flex-1 min-w-0">
+                <div className={`text-sm font-semibold text-white`}>
+                  {cert.event}
+                </div>
+                <div className={`text-xs ${textAccent} mb-1`}>
+                  {cert.type}
+                </div>
+                <div className="flex items-center gap-2 text-xs text-gray-400">
+                  <Calendar size={12} />
+                  {cert.date}
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handleView(cert.url)}
+                  className={`p-2 ${textAccent} ${iconHover} transition`}
+                  title="View Certificate"
+                >
+                  <FaEye size={14} />
+                </button>
+                <button
+                  onClick={() => handleDownload(cert.url, cert.event)}
+                  className={`p-2 ${textAccent} ${iconHover} transition`}
+                  title="Download Certificate"
+                >
+                  <FaDownload size={14} />
+                </button>
+              </div>
+            </div>
+          </div>
+        ))
+      ) : (
         <div
-          key={cert.id}
-          className={`p-4 border ${borderColor} bg-gradient-to-r ${gradientFrom} ${gradientTo} ${hoverFrom} ${hoverTo} transition-all backdrop-blur-sm`}
+          className={`p-6 border ${borderColor} bg-gradient-to-r ${gradientFrom} ${gradientTo} transition-all backdrop-blur-sm text-center`}
           style={{
             clipPath:
               "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
             boxShadow: `0 0 15px ${glow}20`,
           }}
         >
-          <div className="flex items-start gap-3">
-            <Award
-              size={18}
-              className={`${textAccent} mt-1 flex-shrink-0 drop-shadow-[0_0_4px_${glow}]`}
-            />
-            <div className="flex-1 min-w-0">
-              <div className={`text-sm font-semibold text-white`}>
-                {cert.event}
-              </div>
-              <div className={`text-xs ${textAccent} mb-1`}>
-                {cert.type}
-              </div>
-              <div className="flex items-center gap-2 text-xs text-gray-400">
-                <Calendar size={12} />
-                {cert.date}
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => handleView(cert.url)}
-                className={`p-2 ${textAccent} ${iconHover} transition`}
-                title="View Certificate"
-              >
-                <FaEye size={14} />
-              </button>
-              <button
-                onClick={() => handleDownload(cert.url, cert.event)}
-                className={`p-2 ${textAccent} ${iconHover} transition`}
-                title="Download Certificate"
-              >
-                <FaDownload size={14} />
-              </button>
-            </div>
+          <Award
+            size={32}
+            className={`${textAccent} mx-auto mb-3 drop-shadow-[0_0_8px_${glow}]`}
+          />
+          <div className={`text-base font-semibold ${textAccent} mb-2`}>
+            Certificates
+          </div>
+          <div className="text-sm text-gray-300">
+            Certificates will be released after event is OVER
           </div>
         </div>
-      ))}
+      )}
     </div>
   );
 }

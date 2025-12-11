@@ -392,3 +392,46 @@ export const statsAPI = {
   },
 };
 
+// Notification API Types
+export interface Notification {
+  _id: string;
+  title: string;
+  description: string;
+  recipients?: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateNotificationData {
+  title: string;
+  description: string;
+  recipientIds?: string[]; // Optional: specific user IDs, or omit to send to all
+}
+
+export interface NotificationResponse {
+  success: boolean;
+  message: string;
+  data: {
+    notification: Notification;
+    recipients: number;
+    pushNotifications: {
+      sent: number;
+      failed: number;
+    };
+  };
+}
+
+// Notification API
+export const notificationAPI = {
+  getAll: async (): Promise<{ success: boolean; data: Notification[] }> => {
+    return apiRequest<{ success: boolean; data: Notification[] }>('/api/admin/notification');
+  },
+
+  create: async (notificationData: CreateNotificationData): Promise<NotificationResponse> => {
+    return apiRequest<NotificationResponse>('/api/admin/notification', {
+      method: 'POST',
+      body: JSON.stringify(notificationData),
+    });
+  },
+};
+

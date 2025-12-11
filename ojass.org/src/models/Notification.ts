@@ -4,6 +4,7 @@ import mongoose, { Schema, Document, models } from "mongoose";
 export interface INotification extends Document {
     title: string;
     description: string;
+    recipients?: mongoose.Types.ObjectId[]; // Users who should receive this notification
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -21,6 +22,10 @@ const NotificationSchema = new Schema<INotification>(
             required: true,
             trim: true,
         },
+        recipients: [{
+            type: Schema.Types.ObjectId,
+            ref: "User",
+        }],
     },
     { timestamps: true }, // auto adds createdAt and updatedAt
 );

@@ -43,8 +43,8 @@ const Responsibilities = () => {
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-[#FF8C00] to-[#FF6B00] mx-auto mb-4"></div>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Be the link between our college and OJASS — driving innovation
-and engagement!
+            Be the link between our college and OJASS — driving innovation
+            and engagement!
           </p>
         </motion.div>
 
