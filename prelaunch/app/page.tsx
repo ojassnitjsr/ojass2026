@@ -369,13 +369,13 @@ export default function Home() {
                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
-            <span>Feb 19 – Feb 21, 2026</span>
+            <span>Feb 19 – Feb 22, 2026</span>
           </div>
 
           <CountdownTimer targetDate="2026-02-19T09:00:00" />
 
           <p className="mt-4 md:mt-6 text-[10px] md:text-xs text-cyan-200/50 font-mono tracking-widest">
-            EVENT STARTS IN
+            LEFT FOR EVENT
           </p>
         </main>
 
