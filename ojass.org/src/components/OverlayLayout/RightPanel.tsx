@@ -20,7 +20,7 @@ export default function RightPanel() {
         );
     }, []);
 
-    
+
     const socialLinks: Record<string, string> = {
         Instagram: "https://instagram.com/ojass_nitjsr",
         Twitter: "https://twitter.com/ojass_nitjsr",
@@ -31,9 +31,8 @@ export default function RightPanel() {
     return (
         <div
             ref={panelRef}
-            className={`layout-panel w-[60px] h-[50vh] fixed bottom-0 right-0 flex flex-col items-center justify-center hud-grid py-10 pt-14 pl-3 ${
-                isDystopia ? "is-dystopia" : ""
-            }`}
+            className={`layout-panel w-[60px] h-[50vh] fixed bottom-0 right-0 flex flex-col items-center justify-center hud-grid py-10 pt-14 pl-3 z-[100] ${isDystopia ? "is-dystopia" : ""
+                }`}
             style={{
                 position: "fixed",
                 bottom: "0",
@@ -43,28 +42,26 @@ export default function RightPanel() {
             }}
         >
             <div className="flex flex-col items-center justify-between h-full py-2">
-               
+
                 <Link
                     href="/login"
-                    className={`layout-text cursor-pointer hover:scale-110 transition-transform ${
-                        isDystopia ? "is-dystopia" : ""
-                    } text-center`}
+                    className={`layout-text cursor-pointer hover:scale-110 transition-transform ${isDystopia ? "is-dystopia" : ""
+                        } text-center`}
                     title="Login "
                 >
                     <RiLoginBoxFill className="size-6 mx-auto" />
                     <div className="text-[10px]">LOGIN</div>
                 </Link>
 
-                
+
                 {SocialMediaItems.map((item, idx) => (
                     <a
                         key={idx}
                         href={socialLinks[item.title] || "#"}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`layout-text cursor-pointer hover:scale-110 transition-transform ${
-                            isDystopia ? "is-dystopia" : ""
-                        }`}
+                        className={`layout-text cursor-pointer hover:scale-110 transition-transform ${isDystopia ? "is-dystopia" : ""
+                            }`}
                         title={item.title}
                     >
                         <item.element className="size-6" />

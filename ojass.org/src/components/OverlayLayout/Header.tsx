@@ -67,14 +67,13 @@ export default function Header() {
   return (
     <div
       ref={headerRef}
-      className="fixed top-0 left-0 w-full flex items-center justify-center z-50 px-2 sm:px-4 " style={{
+      className="fixed top-0 left-0 w-full flex items-center justify-center z-[100] px-2 sm:px-4 " style={{
         pointerEvents: "none"
       }}
     >
       <div
-        className={`layout-panel layout-text font-bold relative px-4 sm:px-6 md:px-9 py-2 sm:py-3 ${
-          isDystopia ? "is-dystopia" : ""
-        }`}
+        className={`layout-panel layout-text font-bold relative px-4 sm:px-6 md:px-9 py-2 sm:py-3 ${isDystopia ? "is-dystopia" : ""
+          }`}
         style={{
           clipPath:
             "polygon(0% 0%, 100% 0%, 97% 65%, 80% 100%, 63% 100%, 60% 95%, 40% 95%, 37% 100%, 20% 100%, 3% 65%)",
@@ -90,7 +89,7 @@ export default function Header() {
                 <ChevronUp size={18} className="-rotate-90 sm:w-5 sm:h-5" />
               </button>
 
-              
+
               <div className="flex-1 max-w-[15vw]">
                 <Swiper
                   onSwiper={(swiper) => (swiperRef.current = swiper)}

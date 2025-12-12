@@ -22,9 +22,8 @@ export default function LeftPanel() {
     return (
         <div
             ref={panelRef}
-            className={`layout-panel w-[60px] h-[50vh] fixed bottom-0 left-0 flex flex-col items-center justify-center hud-grid py-10 pt-14 pr-3 ${
-                isDystopia ? "is-dystopia" : ""
-            }`}
+            className={`layout-panel w-[60px] h-[50vh] fixed bottom-0 left-0 flex flex-col items-center justify-center hud-grid py-10 pt-14 pr-3 z-[100] ${isDystopia ? "is-dystopia" : ""
+                }`}
             style={{
                 position: "fixed",
                 bottom: "0",
@@ -37,10 +36,9 @@ export default function LeftPanel() {
                 {NavItems.map((item, idx) => (
                     <Link
                         key={idx}
-                        href={item.title==="Home"? "/":item.title.toLowerCase().replace(" ", "-")}
-                        className={`layout-text cursor-pointer hover:scale-110 transition-transform ${
-                            isDystopia ? "is-dystopia" : ""
-                        }`}
+                        href={item.title === "Home" ? "/" : item.title.toLowerCase().replace(" ", "-")}
+                        className={`layout-text cursor-pointer hover:scale-110 transition-transform ${isDystopia ? "is-dystopia" : ""
+                            }`}
                         title={item.title}
                     >
                         <item.element className="size-6" />
