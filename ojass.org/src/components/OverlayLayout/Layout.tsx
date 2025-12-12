@@ -29,7 +29,8 @@ export default function OverlayLayout() {
         (item) =>
             item.title.toLowerCase() === path ||
             path === "/" ||
-            path === "/login",
+            path === "/login" ||
+            path === "/team"
     );
 
     return (

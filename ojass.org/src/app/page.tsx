@@ -306,7 +306,7 @@ export default function Home() {
 
         <div
           className="fixed -bottom-[5vh] left-0"
-          id="bottom"
+          // id="bottom"
           style={{
             width: '120vw',
             height: '64vh',
@@ -320,7 +320,7 @@ export default function Home() {
           }}
         ></div>
       </div>
-      <div id="second-section" className='w-full h-screen bg-white relative overflow-hidden z-10'>
+      <div id="second-section" className='w-full h-screen bg-white relative overflow-hidden'>
         <div
           className="absolute -bottom-[2vh] -left-[2vw]"
           id="cave-inner"

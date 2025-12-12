@@ -3,6 +3,7 @@ import { BiSolidCalendarEvent } from "react-icons/bi";
 import { FaGithub, FaHome, FaLinkedin, FaTwitter } from "react-icons/fa";
 import { FaHandshakeAngle, FaSquareInstagram } from "react-icons/fa6";
 import { MdMail } from "react-icons/md";
+import { IoPeopleSharp } from "react-icons/io5";
 import { RiGalleryFill } from "react-icons/ri";
 
 export type Theme = "utopia" | "dystopia";
@@ -16,7 +17,7 @@ export const NavItems: Icons = [
     { title: "Events", element: BiSolidCalendarEvent },
     { title: "Gallery", element: RiGalleryFill },
     { title: "Sponsors", element: FaHandshakeAngle },
-    { title: "Contact", element: MdMail },
+    { title: "Team", element: IoPeopleSharp },
 ];
 
 export const SocialMediaItems: Icons = [
