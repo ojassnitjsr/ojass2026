@@ -5,7 +5,7 @@ import { UI } from "@/components/book/UI";
 import { Loader } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useEffect, useState } from "react";
-import Link from 'next/link';
+import Link from "next/link";
 import { IoExitOutline } from "react-icons/io5";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -15,11 +15,13 @@ function App() {
     const isDystopia = theme === "dystopia";
 
     useEffect(() => {
-        let styleElement = document.getElementById('policy-clip-styles') as HTMLStyleElement;
+        let styleElement = document.getElementById(
+            "policy-clip-styles",
+        ) as HTMLStyleElement;
 
         if (!styleElement) {
-            styleElement = document.createElement('style');
-            styleElement.id = 'policy-clip-styles';
+            styleElement = document.createElement("style");
+            styleElement.id = "policy-clip-styles";
             document.head.appendChild(styleElement);
         }
 
@@ -41,9 +43,9 @@ function App() {
         window.addEventListener("resize", handleResize);
 
         return () => {
-             window.removeEventListener("resize", handleResize);
-             styleElement?.remove();
-        }
+            window.removeEventListener("resize", handleResize);
+            styleElement?.remove();
+        };
     }, []);
 
     return (
@@ -53,11 +55,11 @@ function App() {
 
             <Link
                 href="/"
-                className={`clip-left absolute top-6 left-6 z-50 flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 ${isDystopia
-                    ? 'bg-[#ee8f59]/20 hover:bg-[#ee8f59]/40 text-white'
-                    : 'bg-cyan-500/20 hover:bg-cyan-500/40 text-white'
-                    }`}
-            >
+                className={`clip-left absolute top-6 left-6 z-50 flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 ${
+                    isDystopia
+                        ? "bg-[#ee8f59]/20 hover:bg-[#ee8f59]/40 text-white"
+                        : "bg-cyan-500/20 hover:bg-cyan-500/40 text-white"
+                }`}>
                 <IoExitOutline size={20} />
                 <span className="font-semibold tracking-wider">EXIT</span>
             </Link>
