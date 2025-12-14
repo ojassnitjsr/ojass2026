@@ -299,7 +299,7 @@ export default function Home() {
 
         <div
           id="title"
-          className='fixed top-[40%] font-bold text-[200px] text-center w-full bg-[url(/layers/text.png)] bg-contain bg-center bg-no-repeat h-[20vh]'
+          className='fixed top-[40%] font-bold text-[200px] text-center w-full bg-[url(/text_main_eut_nobg.png)] bg-contain bg-center bg-no-repeat h-[35vh]'
           style={{ willChange: 'transform', pointerEvents: 'none', filter: isDystopia ? 'hue-rotate(180deg)' : 'hue-rotate(0deg)', }}
         >
         </div>

@@ -18,25 +18,26 @@ function App() {
     }, []);
 
     return (
-        <div
-            className="h-screen w-screen"
-            style={{
-                background: "radial-gradient(#5a47ce, #232323 80%)",
-            }}>
-            <UI />
-            <Loader />
-            <Canvas
-                shadows
-                camera={{
-                    position: [-0.5, 1, cameraZ],
-                    fov: 45,
-                }}>
-                <group position-y={0}>
-                    <Suspense fallback={null}>
-                        <Experience />
-                    </Suspense>
-                </group>
-            </Canvas>
+        <div className="relative h-screen w-screen overflow-hidden">
+            <div className="absolute inset-0 bg-[url('/bg_main_eut.jpg')] z-1 bg-center bg-cover blur-xs" />
+            <div className="absolute inset-0 bg-[url('/book/book_bg_eut_nobg.png')] z-2 bg-center bg-cover" />
+
+            <div className="relative z-10 h-full w-full">
+                <UI />
+                <Loader />
+                <Canvas
+                    shadows
+                    camera={{
+                        position: [-0.5, 1, cameraZ],
+                        fov: 45,
+                    }}>
+                    <group position-y={0}>
+                        <Suspense fallback={null}>
+                            <Experience />
+                        </Suspense>
+                    </group>
+                </Canvas>
+            </div>
         </div>
     );
 }

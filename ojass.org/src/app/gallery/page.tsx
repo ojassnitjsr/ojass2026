@@ -49,7 +49,8 @@ const Gallery = () => {
                 hueShift={theme === "dystopia" ? 240 : 60}
                 starSpeed={0.1}
                 transparent={theme === "dystopia"}
-                backgroundImage="/gallery/image.png">
+                backgroundImage="/gallery/image.png"
+                backgroundImage2="/gallery/image3.jpg">
                 <section className="gallery-container">
                     <div className="gallery-hero">
                         <div
