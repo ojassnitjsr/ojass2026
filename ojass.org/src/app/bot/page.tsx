@@ -4,10 +4,15 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { useTheme } from "@/contexts/ThemeContext";
+
+import { useRouter } from 'next/navigation';
 
 export default function FuturisticHUD() {
   const { theme } = useTheme();
+  const router = useRouter();
   const [scanProgress, setScanProgress] = useState(0);
   const [coordinates, setCoordinates] = useState({ x: -73.99308, y: 40.75058 });
   const [isScanning, setIsScanning] = useState(true);
@@ -87,6 +92,25 @@ export default function FuturisticHUD() {
     return () => clearInterval(coordInterval);
   }, []);
 
+  // Load chat history from localStorage on mount
+  useEffect(() => {
+    const savedMessages = localStorage.getItem('ojass-chat-history');
+    if (savedMessages) {
+      try {
+        setMessages(JSON.parse(savedMessages));
+      } catch (e) {
+        console.error("Failed to parse chat history:", e);
+      }
+    }
+  }, []);
+
+  // Save chat history to localStorage whenever messages change
+  useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem('ojass-chat-history', JSON.stringify(messages));
+    }
+  }, [messages]);
+
   // Auto-scroll chat
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -97,20 +121,42 @@ export default function FuturisticHUD() {
     }
   }, [messages]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return;
+    const userMessage = input.trim();
     setChatState('generating');
-    setMessages((prev) => [...prev, { role: 'user', content: input }]);
+    setMessages((prev) => [...prev, { role: 'user', content: userMessage }]);
     setInput('');
 
-    // Simulated AI delay
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMessage }),
+      });
+
+      const data = await response.json();
+
+      if (data.reply) {
+        setMessages((prev) => [
+          ...prev,
+          { role: 'assistant', content: data.reply },
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          { role: 'assistant', content: "Error: Could not get response." },
+        ]);
+      }
+    } catch (error) {
+      console.error("Chat error:", error);
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: 'This is an AI-generated response.' },
+        { role: 'assistant', content: "System Error: Connection failed." },
       ]);
+    } finally {
       setChatState('idle');
-    }, 3000);
+    }
   };
 
   return (
@@ -137,7 +183,18 @@ export default function FuturisticHUD() {
                 {/* Top Bar */}
                 <div className={`absolute top-0 left-0 right-0 h-10 sm:h-12 border-b ${colors.borderHeavy} bg-black/50 backdrop-blur-sm z-10 flex items-center justify-between px-4`}>
                   <div className={`${colors.text500}/70 text-lg font-mono`}>OJASS 2026</div>
-                  <div className={`${colors.text400} text-xs font-mono tracking-wider`}>
+
+                  {/* Exit Button */}
+                  <button
+                    onClick={() => router.back()}
+                    className={`flex items-center gap-2 border ${colors.border}/50 px-3 py-1 rounded hover:${colors.bgLight} transition-all duration-300 group`}
+                  >
+                    <span className={`${colors.text400} text-xs font-mono tracking-widest group-hover:text-white`}>
+                      EXIT
+                    </span>
+                  </button>
+
+                  <div className={`${colors.text400} text-xs font-mono tracking-wider hidden sm:block`}>
                     SYSTEM ONLINE
                   </div>
                 </div>
@@ -255,7 +312,15 @@ export default function FuturisticHUD() {
                             : `${colors.aiResponse} text-left`
                             }`}
                         >
-                          {msg.content}
+                          {msg.role === 'assistant' ? (
+                            <div className="prose prose-invert prose-sm max-w-none text-current [&>ul]:list-disc [&>ul]:pl-5 [&>ol]:list-decimal [&>ol]:pl-5 [&>h3]:text-lg [&>h3]:font-bold [&>h3]:mt-2 [&>h3]:mb-1 [&>p]:leading-relaxed">
+                              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {msg.content}
+                              </ReactMarkdown>
+                            </div>
+                          ) : (
+                            msg.content
+                          )}
                         </div>
                       ))}
 
