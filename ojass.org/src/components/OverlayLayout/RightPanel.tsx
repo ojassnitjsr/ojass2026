@@ -22,10 +22,10 @@ export default function RightPanel() {
 
 
     const socialLinks: Record<string, string> = {
-        Instagram: "https://instagram.com/ojass_nitjsr",
-        Twitter: "https://twitter.com/ojass_nitjsr",
-        LinkedIn: "https://linkedin.com/company/ojass",
-        GitHub: "https://github.com/ojass-nitjsr",
+        Instagram: "https://www.instagram.com/ojass.nitjsr",
+        YouTube: "https://youtube.com/@ojass.nitjsr",
+        LinkedIn: "https://www.linkedin.com/company/ojassnitjsr/",
+        Facebook: "https://www.facebook.com/share/1CfzSfszvm/",
     };
 
     return (

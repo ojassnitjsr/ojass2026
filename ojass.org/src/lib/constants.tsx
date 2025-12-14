@@ -1,6 +1,6 @@
 import { IconType } from "react-icons";
 import { BiSolidCalendarEvent } from "react-icons/bi";
-import { FaGithub, FaHome, FaLinkedin, FaTwitter } from "react-icons/fa";
+import { FaFacebook, FaGithub, FaHome, FaLinkedin, FaTwitter, FaYoutube } from "react-icons/fa";
 import { FaHandshakeAngle, FaSquareInstagram } from "react-icons/fa6";
 import { MdMail } from "react-icons/md";
 import { IoPeopleSharp } from "react-icons/io5";
@@ -22,9 +22,9 @@ export const NavItems: Icons = [
 
 export const SocialMediaItems: Icons = [
     { title: "Instagram", element: FaSquareInstagram },
-    { title: "Twitter", element: FaTwitter },
+    { title: "YouTube", element: FaYoutube },
     { title: "LinkedIn", element: FaLinkedin },
-    { title: "GitHub", element: FaGithub },
+    { title: "Facebook", element: FaFacebook },
 ];
 
 export interface GalleryImage {
