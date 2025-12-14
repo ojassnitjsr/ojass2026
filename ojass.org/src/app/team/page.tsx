@@ -36,7 +36,7 @@ export default function TeamPage() {
                     left: 0,
                     width: '100%',
                     height: '100%',
-                    backgroundImage: !isDystopia ? 'url("/team_bg_eut.png")' : 'url("/bg_main_dys.png")',
+                    backgroundImage: !isDystopia ? 'url("/team_bg_eut.png")' : 'url("/team_bg_dys.png")',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     zIndex: 1,
