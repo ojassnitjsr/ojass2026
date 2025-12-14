@@ -285,7 +285,7 @@ export default function Home() {
           id="layer3"
           style={{
             width: '110vw',
-            height: '65vh',
+            height: '72vh',
             marginLeft: '0vw',
             transformStyle: 'preserve-3d',
             willChange: 'transform',
