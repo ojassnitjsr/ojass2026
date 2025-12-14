@@ -15,7 +15,8 @@ import { z } from "zod";
 // =========================================================
 // CONFIG
 // =========================================================
-const BASE_URL = process.env.BASE_URL || "https://ojass.org";
+// const BASE_URL = process.env.BASE_URL || "https://ojass.org";
+const BASE_URL = "https://ojass.org";
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY!;
 
 // =========================================================
