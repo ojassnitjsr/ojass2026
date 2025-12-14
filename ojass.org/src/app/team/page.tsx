@@ -36,7 +36,7 @@ export default function TeamPage() {
                     left: 0,
                     width: '100%',
                     height: '100%',
-                    backgroundImage: !isDystopia ? 'url("/bg_main_eut.jpg")' : 'url("/bg_main_dys.png")',
+                    backgroundImage: !isDystopia ? 'url("/team_bg_eut.png")' : 'url("/bg_main_dys.png")',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     zIndex: 1,
@@ -54,16 +54,17 @@ export default function TeamPage() {
                     background: isDystopia
                         ? 'rgba(40, 20, 10, 0.15)'
                         : 'rgba(0, 20, 40, 0.15)',
-                    backdropFilter: 'blur(20px) saturate(180%)',
+                    // backdropFilter: 'blur(20px) saturate(180%)',
                     WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-                    border: isDystopia
-                        ? '2px solid rgba(255, 100, 0, 0.6)'
-                        : '2px solid rgba(0, 255, 255, 0.6)',
+                    // border: isDystopia
+                    //     ? '2px solid rgba(255, 100, 0, 0.6)'
+                    //     : '2px solid rgba(0, 255, 255, 0.6)',
                     boxShadow: isDystopia
-                        ? '0 0 40px rgba(255, 100, 0, 0.4), inset 0 0 40px rgba(255, 100, 0, 0.1)'
-                        : '0 0 40px rgba(0, 255, 255, 0.4), inset 0 0 40px rgba(0, 255, 255, 0.1)',
+                        ? '0 0 40px rgba(255, 100, 0, 1), inset 0 0 40px rgba(255, 100, 0, 0.4)'
+                        : '0 0 40px rgba(0, 255, 255, 1), inset 0 0 40px rgba(0, 255, 255, 0.4)',
                     zIndex: 2,
                     overflow: 'hidden',
+                    clipPath: 'polygon(0 0, 100% 0, 100% 20%, calc(100% - 15px) 24%, calc(100% - 15px) 100%, 0 100%, 0 90%, 15px 87%, 15px 13%, 0 10%)',
                 }}
             >
                 {/* Animated scan line effect */}
