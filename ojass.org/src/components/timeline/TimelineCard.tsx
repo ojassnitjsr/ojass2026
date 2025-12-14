@@ -1,6 +1,6 @@
 import { DayKey } from "@/lib/constants";
 import { AnimatePresence, motion, Variants } from "framer-motion";
-import SciFiEventMap from "./Map";
+import EventMap from "./Map";
 
 function TimelineCard({
     selectedDay,
@@ -43,7 +43,7 @@ function TimelineCard({
                 animate="animate"
                 exit="exit"
                 className="min-h-screen bg-transparent absolute inset-0">
-                <SciFiEventMap selectedDay={selectedDay} />
+                <EventMap selectedDay={selectedDay} />
             </motion.div>
         </AnimatePresence>
     );
