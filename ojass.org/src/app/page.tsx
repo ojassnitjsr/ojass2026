@@ -252,7 +252,7 @@ export default function Home() {
             marginLeft: '-2vw',
             marginTop: '-2vh',
             backgroundImage: isDystopia ? 'url(/homelayer/sky.png)' : 'url(/homelayer/sky.png)',
-            backgroundSize: 'contain',
+            backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             transformStyle: 'preserve-3d',
@@ -261,14 +261,14 @@ export default function Home() {
         ></div>
 
         <div
-          className="fixed top-[32vh] left-0"
+          className="fixed top-[42vh] left-0"
           id="layer2"
           style={{
             width: '110vw',
             height: '80vh',
             marginLeft: '-5vw',
             backgroundImage: isDystopia ? 'url(/homelayer/behindmountain2.png)' : 'url(/homelayer/behindmountain2.png)',
-            backgroundSize: 'contain',
+            backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             // filter: isDystopia ? 'brightness(1.2) hue-rotate(180deg)' : 'blur(0px) brightness(1.2) hue-rotate(0deg)',
@@ -281,17 +281,17 @@ export default function Home() {
 
 
         <div
-          className="fixed bottom-[5vh] left-0 flex flex-row justify-between"
+          className="fixed bottom-[5vh] -left-[5vw] flex flex-row justify-between"
           id="layer3"
           style={{
             width: '110vw',
             height: '65vh',
-            marginLeft: '-5vw',
+            marginLeft: '0vw',
             transformStyle: 'preserve-3d',
             willChange: 'transform',
             backgroundImage: 'url(/homelayer/mainmountain.png)',
-            backgroundSize: 'contain',
-            backgroundPosition: '80% 10%',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
           }}
         >
@@ -312,7 +312,7 @@ export default function Home() {
             height: '64vh',
             marginLeft: '-10vw',
             backgroundImage: 'url(/homelayer/bottom.png)',
-            backgroundSize: 'contain',
+            backgroundSize: 'cover',
             backgroundPosition: 'bottom center',
             backgroundRepeat: 'no-repeat',
             willChange: 'transform',
