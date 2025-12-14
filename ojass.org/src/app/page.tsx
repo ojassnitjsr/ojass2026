@@ -353,7 +353,7 @@ export default function Home() {
             backgroundPosition: 'center center',
             backgroundRepeat: 'no-repeat',
             willChange: 'transform'
-          }}
+          }} 
         ></div>
         <div
           className="absolute top-0 left-0"
@@ -364,7 +364,7 @@ export default function Home() {
             marginLeft: '0',
             backgroundImage: 'url(/homelayer/caveouter.png)',
             backgroundSize: 'cover',
-            backgroundPosition: 'bottom center',
+            backgroundPosition: 'top center',
             backgroundRepeat: 'no-repeat',
           }}
         ></div>

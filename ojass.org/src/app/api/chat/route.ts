@@ -1,7 +1,6 @@
 // /app/api/chat/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
-import mongoose from "mongoose";
 import * as cheerio from "cheerio";
 import { unstable_cache as cache } from "next/cache";
 
