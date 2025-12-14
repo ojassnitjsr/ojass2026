@@ -1,9 +1,9 @@
 import { IconType } from "react-icons";
 import { BiSolidCalendarEvent } from "react-icons/bi";
 import { FaFacebook, FaHome, FaLinkedin, FaYoutube } from "react-icons/fa";
-import { FaHandshakeAngle, FaSquareInstagram } from "react-icons/fa6";
+import { FaSquareInstagram } from "react-icons/fa6";
 import { IoPeopleSharp } from "react-icons/io5";
-import { RiGalleryFill } from "react-icons/ri";
+import { RiGalleryFill, RiMapPinTimeLine } from "react-icons/ri";
 
 export type Theme = "utopia" | "dystopia";
 
@@ -15,7 +15,7 @@ export const NavItems: Icons = [
     { title: "Home", element: FaHome },
     { title: "Events", element: BiSolidCalendarEvent },
     { title: "Gallery", element: RiGalleryFill },
-    { title: "Sponsors", element: FaHandshakeAngle },
+    { title: "Timeline", element: RiMapPinTimeLine },
     { title: "Team", element: IoPeopleSharp },
 ];
 

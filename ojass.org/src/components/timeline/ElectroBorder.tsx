@@ -8,6 +8,7 @@ import React, {
 } from "react";
 
 const toRGBA = (hex: string, alpha = 1): string => {
+    if (typeof document === "undefined") return `rgba(0,0,0,${alpha})`;
     if (!hex) return `rgba(0,0,0,${alpha})`;
     const ctx = document.createElement("canvas").getContext("2d");
 
@@ -128,36 +129,36 @@ export const ElectroBorder: React.FC<ElectroBorderProps> = ({
     const glowLayer1: CSSProperties =
         effects && glow
             ? {
-                  ...radiusStyle,
-                  border: `${borderWidth}px solid ${toRGBA(borderColor, 0.7)}`,
-                  filter: `blur(${borderWidth * 1.2}px)`,
-                  opacity: 0.1,
-              }
+                ...radiusStyle,
+                border: `${borderWidth}px solid ${toRGBA(borderColor, 0.7)}`,
+                filter: `blur(${borderWidth * 1.2}px)`,
+                opacity: 0.1,
+            }
             : {};
 
     const glowLayer2: CSSProperties =
         effects && glow
             ? {
-                  ...radiusStyle,
-                  border: `${borderWidth}px solid ${toRGBA(borderColor, 0.9)}`,
-                  filter: `blur(${glowBlur}px)`,
-                  opacity: 0.5,
-              }
+                ...radiusStyle,
+                border: `${borderWidth}px solid ${toRGBA(borderColor, 0.9)}`,
+                filter: `blur(${glowBlur}px)`,
+                opacity: 0.5,
+            }
             : {};
 
     const backgroundAura: CSSProperties =
         effects && aura
             ? {
-                  ...radiusStyle,
-                  transform: "scale(1.05)",
-                  background: `radial-gradient(circle at 50% 50%, ${toRGBA(
-                      borderColor,
-                      0.5,
-                  )} 0%, transparent 70%)`,
-                  filter: `blur(${glowBlur * 1.2}px)`,
-                  opacity: 0.7,
-                  zIndex: -1,
-              }
+                ...radiusStyle,
+                transform: "scale(1.05)",
+                background: `radial-gradient(circle at 50% 50%, ${toRGBA(
+                    borderColor,
+                    0.5,
+                )} 0%, transparent 70%)`,
+                filter: `blur(${glowBlur * 1.2}px)`,
+                opacity: 0.7,
+                zIndex: -1,
+            }
             : {};
 
     return (

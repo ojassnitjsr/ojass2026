@@ -2,6 +2,8 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { DayKey } from "@/lib/constants";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { IoExitOutline } from "react-icons/io5";
 import TimelineCard from "./TimelineCard";
 import TimelineDial from "./TimelineDial";
 
@@ -13,6 +15,34 @@ const TimelinePage = () => {
     const [isDragging, setIsDragging] = useState(false);
     const [showTransition, setShowTransition] = useState(false);
     const { theme } = useTheme();
+    const isDystopia = theme === "dystopia";
+
+    useEffect(() => {
+        let styleElement = document.getElementById('timeline-clip-styles') as HTMLStyleElement;
+
+        if (!styleElement) {
+            styleElement = document.createElement('style');
+            styleElement.id = 'timeline-clip-styles';
+            document.head.appendChild(styleElement);
+        }
+
+        styleElement.textContent = `
+        .clip-left {
+          clip-path: polygon(
+            20px 0, 
+            100% 0, 
+            100% calc(100% - 20px), 
+            calc(100% - 20px) 100%, 
+            0 100%, 
+            0 20px
+          );
+        }
+        `;
+
+        return () => {
+            styleElement?.remove();
+        };
+    }, []);
 
     const startAngleRef = useRef<number>(0);
     const currentAngleRef = useRef<number>(angle);
@@ -142,6 +172,16 @@ const TimelinePage = () => {
 
     return (
         <div className="min-h-screen relative overflow-hidden">
+            <Link
+                href="/"
+                className={`clip-left absolute top-6 left-6 z-50 flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 ${isDystopia
+                    ? 'bg-[#ee8f59]/20 hover:bg-[#ee8f59]/40 text-white'
+                    : 'bg-cyan-500/20 hover:bg-cyan-500/40 text-white'
+                    }`}
+            >
+                <IoExitOutline size={20} />
+                <span className="font-semibold tracking-wider">EXIT</span>
+            </Link>
             <AnimatePresence>
                 {showTransition && (
                     <motion.div
