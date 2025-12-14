@@ -1,15 +1,18 @@
 "use client"
+import EventCard from '@/components/OverlayLayout/EventCard';
+import { useTheme } from "@/contexts/ThemeContext";
 import { gsap } from 'gsap';
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
+import { IoExitOutline, IoChevronDown } from "react-icons/io5";
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { useTheme } from "@/contexts/ThemeContext";
-import EventCard from '@/components/OverlayLayout/EventCard';
+import { useEffect, useRef, useState } from 'react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { Navigation } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 
 
@@ -19,7 +22,8 @@ interface CardData {
   description: string;
   img: string;
   redirect: string;
-  cardposition: string
+  cardposition: string;
+  category: string;
 }
 type Props = {}
 
@@ -29,6 +33,10 @@ export default function Page({ }: Props) {
   const isDystopia = theme === "dystopia";
   const containerRef = useRef<HTMLDivElement>(null)
   const [allEvents, setAllEvents] = useState<CardData[][]>([]);
+  const [rawEvents, setRawEvents] = useState<CardData[]>([]);
+  const [categories, setCategories] = useState<string[]>(['All']);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedEventIndex, setSelectedEventIndex] = useState<number>(0);
   const [swiperInstance, setSwiperInstance] = useState<any>(null);
   const [selectedEvent, setSelectedEvent] = useState<CardData | null>(null);
@@ -62,6 +70,27 @@ export default function Page({ }: Props) {
       opacity: 1 !important;
       z-index: 2;
     }
+    
+    .clip-left {
+      clip-path: polygon(
+        20px 0, 
+        100% 0, 
+        100% calc(100% - 20px), 
+        calc(100% - 20px) 100%, 
+        0 100%, 
+        0 20px
+      );
+    }
+    .clip-right {
+      clip-path: polygon(
+        0 0, 
+        calc(100% - 20px) 0, 
+        100% 20px, 
+        100% 100%, 
+        20px 100%, 
+        0 calc(100% - 20px)
+      );
+    }
   `;
 
     return () => {
@@ -83,26 +112,50 @@ export default function Page({ }: Props) {
             description: event.description || '',
             img: event.img,
             redirect: `/events/${eventId}`, // Always use new format with event ID
-            cardposition: 'center'
+            cardposition: 'center',
+            category: event.organizer || 'General',
           };
         });
-        
-        // Group events into pages (3 events per page for swiper)
-        const eventsPerPage = 3;
-        const groupedEvents: CardData[][] = [];
-        for (let i = 0; i < transformedEvents.length; i += eventsPerPage) {
-          groupedEvents.push(transformedEvents.slice(i, i + eventsPerPage));
-        }
-        
-        setAllEvents(groupedEvents);
-        console.log('Event data loaded from API!', groupedEvents);
+
+        // Extract unique categories
+        const uniqueCategoriesSet = new Set<string>();
+        transformedEvents.forEach(event => {
+          const orgs = event.category.split(',').map(s => s.trim());
+          orgs.forEach(org => {
+            if (org) uniqueCategoriesSet.add(org);
+          });
+        });
+
+        const uniqueCategories = ['All', ...Array.from(uniqueCategoriesSet)].sort();
+        setCategories(uniqueCategories);
+        setRawEvents(transformedEvents);
       })
       .catch(error => {
         console.error("Error fetching event data:", error);
         // Fallback to empty array
         setAllEvents([]);
+        setRawEvents([]);
       });
   }, []);
+
+  useEffect(() => {
+    // Filter and group events whenever selectedCategory or rawEvents change
+    const filtered = selectedCategory === 'All'
+      ? rawEvents
+      : rawEvents.filter(e => {
+        const orgs = e.category.split(',').map(s => s.trim());
+        return orgs.includes(selectedCategory);
+      });
+
+    const eventsPerPage = 3;
+    const groupedEvents: CardData[][] = [];
+    for (let i = 0; i < filtered.length; i += eventsPerPage) {
+      groupedEvents.push(filtered.slice(i, i + eventsPerPage));
+    }
+
+    setAllEvents(groupedEvents);
+    setSelectedEventIndex(0); // Reset to first page on filter change
+  }, [selectedCategory, rawEvents]);
 
   useEffect(() => {
     const container = containerRef.current
@@ -167,12 +220,68 @@ export default function Page({ }: Props) {
 
   return (
     <div ref={containerRef} className='w-full h-screen relative overflow-hidden'>
+      <Link
+        href="/"
+        className={`clip-left absolute top-6 left-6 z-50 flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 ${isDystopia
+          ? 'bg-[#ee8f59]/20 hover:bg-[#ee8f59]/40 text-white'
+          : 'bg-cyan-500/20 hover:bg-cyan-500/40 text-white'
+          }`}
+      >
+        <IoExitOutline size={20} />
+        <span className="font-semibold tracking-wider">EXIT</span>
+      </Link>
+
+      {/* Category Dropdown */}
+      <div className="absolute top-6 right-6 z-50">
+        <button
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          className={`clip-right flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 w-48 justify-between ${isDystopia
+            ? 'bg-[#ee8f59]/20 hover:bg-[#ee8f59]/40 text-white'
+            : 'bg-cyan-500/20 hover:bg-cyan-500/40 text-white'
+            }`}
+        >
+          <span className="font-medium truncate">{selectedCategory}</span>
+          <IoChevronDown
+            className={`transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`}
+          />
+        </button>
+
+        <AnimatePresence>
+          {isDropdownOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className={`clip-right absolute top-full right-0 mt-2 w-48 backdrop-blur-md overflow-hidden shadow-xl max-h-60 overflow-y-auto ${isDystopia
+                ? 'bg-black/90'
+                : 'bg-black/80'
+                }`}
+            >
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => {
+                    setSelectedCategory(category);
+                    setIsDropdownOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-3 transition-colors duration-200 text-sm ${selectedCategory === category
+                    ? (isDystopia ? 'bg-[#ee8f59]/30 text-white' : 'bg-cyan-500/40 text-white')
+                    : (isDystopia ? 'text-gray-300 hover:bg-[#ee8f59]/20' : 'text-gray-300 hover:bg-cyan-500/20')
+                    }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
 
       <div id="events-bg" className="w-full h-full absolute bottom-10 left-0" style={{
         pointerEvents: 'none',
       }}>
         <Image
-          src={isDystopia ? "/events/bg_bg_dist.png" : "/events/bg_bg.png"}
+          src={isDystopia ? "/bg_main_dys.png" : "/bg_main_eut.jpg"}
           alt="Event 1"
           width={1000}
           height={1000}
@@ -186,12 +295,12 @@ export default function Page({ }: Props) {
           transform: "scale(1.1)",
         }}>
         <Image
-          src="/events/bg.png"
+          src={isDystopia ? "/events/bg_dys.png" : "/events/bg.png"}
           alt="Event 1"
           width={1000}
           height={1000}
           className="w-full h-full object-cover object-center-bottom"
-          style={{ objectPosition: "center bottom", pointerEvents: 'none', }}
+          style={{ objectPosition: "center top", pointerEvents: 'none', }}
         />
 
         <div className='absolute inset-0 flex items-center justify-center w-full md:w-1/2 -top-[10vh] pointer-events-auto left-4 md:left-[calc(50%+65px)] md:-translate-x-1/2 z-20'>
@@ -345,7 +454,7 @@ export default function Page({ }: Props) {
 
 
 
-        <div className='absolute bottom-10 mx-auto flex items-center justify-center w-full h-1/2 z-10' style={{
+        {/* <div className='absolute bottom-10 mx-auto flex items-center justify-center w-full h-1/2 z-10' style={{
           pointerEvents: 'none',
         }}>
           <Image
@@ -356,7 +465,7 @@ export default function Page({ }: Props) {
             className="h-[70vh] object-contain object-center-bottom"
             style={{ objectPosition: "center bottom" }}
           />
-        </div>
+        </div> */}
       </div>
 
 

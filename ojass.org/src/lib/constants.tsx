@@ -1,8 +1,7 @@
 import { IconType } from "react-icons";
 import { BiSolidCalendarEvent } from "react-icons/bi";
-import { FaFacebook, FaGithub, FaHome, FaLinkedin, FaTwitter, FaYoutube } from "react-icons/fa";
+import { FaFacebook, FaHome, FaLinkedin, FaYoutube } from "react-icons/fa";
 import { FaHandshakeAngle, FaSquareInstagram } from "react-icons/fa6";
-import { MdMail } from "react-icons/md";
 import { IoPeopleSharp } from "react-icons/io5";
 import { RiGalleryFill } from "react-icons/ri";
 
