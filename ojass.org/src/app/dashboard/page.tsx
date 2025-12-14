@@ -76,13 +76,7 @@ export default function OjassDashboard() {
           const paymentRes = await fetch('/api/payment/status', {
             headers: { 'Authorization': `Bearer ${token}` }
           });
-          if (paymentRes.status === 401) {
-            // Token is invalid or expired, clear storage and redirect to login
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            router.push('/login');
-            return;
-          }
+
           if (paymentRes.ok) {
             const payment = await paymentRes.json();
             setPaymentData(payment);
@@ -96,13 +90,6 @@ export default function OjassDashboard() {
           const pricingRes = await fetch('/api/pricing', {
             headers: { 'Authorization': `Bearer ${token}` }
           });
-          if (pricingRes.status === 401) {
-            // Token is invalid or expired, clear storage and redirect to login
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            router.push('/login');
-            return;
-          }
           if (pricingRes.ok) {
             const pricingData = await pricingRes.json();
             setPricing(pricingData);
@@ -114,13 +101,6 @@ export default function OjassDashboard() {
             const teamsRes = await fetch('/api/teams', {
               headers: { 'Authorization': `Bearer ${token}` }
             });
-            if (teamsRes.status === 401) {
-              // Token is invalid or expired, clear storage and redirect to login
-              localStorage.removeItem('token');
-              localStorage.removeItem('user');
-              router.push('/login');
-              return;
-            }
             if (teamsRes.ok) {
               const teams = await teamsRes.json();
               // Filter out individual teams (only show actual teams, not individual registrations)
@@ -169,13 +149,7 @@ export default function OjassDashboard() {
             const registrationsRes = await fetch('/api/events/my-registrations', {
               headers: { 'Authorization': `Bearer ${token}` }
             });
-            if (registrationsRes.status === 401) {
-              // Token is invalid or expired, clear storage and redirect to login
-              localStorage.removeItem('token');
-              localStorage.removeItem('user');
-              router.push('/login');
-              return;
-            }
+      
             if (registrationsRes.ok) {
               const registrations = await registrationsRes.json();
               // Transform registrations to match expected format
