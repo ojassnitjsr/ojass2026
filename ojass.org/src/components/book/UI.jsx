@@ -94,7 +94,7 @@ export const UI = () => {
 
     return (
         <>
-            <main className=" pointer-events-none select-none z-10 fixed inset-0 flex justify-end flex-col">
+            <main className="pointer-events-none select-none z-10 fixed inset-0 flex justify-end flex-col">
                 <div className="w-full overflow-auto pointer-events-auto flex justify-center">
                     <div className="overflow-auto flex items-center gap-4 max-w-full p-10">
                         {pages.map((pg, index) => (
@@ -121,18 +121,6 @@ export const UI = () => {
                     </div>
                 </div>
             </main>
-
-            <div className="fixed inset-0 flex items-center -rotate-2 select-none">
-                <div className="relative bg-white/0 animate-horizontal-scroll flex items-center gap-8 w-max px-8">
-                    {Array.from({ length: 12 }).map((_, idx) => (
-                        <h2
-                            key={idx}
-                            className="shrink-0 text-white text-8xl italic font-light">
-                            Ojass 2026
-                        </h2>
-                    ))}
-                </div>
-            </div>
         </>
     );
 };

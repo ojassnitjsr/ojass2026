@@ -1,6 +1,6 @@
 "use client";
 
-import { Renderer, Program, Mesh, Color, Triangle, Texture } from "ogl";
+import { Color, Mesh, Program, Renderer, Texture, Triangle } from "ogl";
 import { JSX, useEffect, useRef } from "react";
 
 const vertexShader = `
@@ -40,6 +40,10 @@ uniform bool uTransparent;
 uniform sampler2D uTexture;
 uniform vec2 uTextureResolution;
 uniform bool uHasTexture;
+
+uniform sampler2D uTexture2;
+uniform vec2 uTextureResolution2;
+uniform bool uHasTexture2;
 
 varying vec2 vUv;
 
@@ -144,6 +148,25 @@ vec2 getCoverUV(vec2 uv, vec2 resolution, vec2 texResolution) {
   return scaledUv;
 }
 
+vec2 getSpriteUV(vec2 uv, vec2 resolution, vec2 texResolution) {
+  float screenAspect = resolution.x / resolution.y;
+  float texAspect = texResolution.x / texResolution.y;
+  
+  vec2 coverScale;
+  if (screenAspect > texAspect) {
+    coverScale = vec2(screenAspect / texAspect, 1.0);
+  } else {
+    coverScale = vec2(1.0, texAspect / screenAspect);
+  }
+
+  vec2 scale = coverScale * 3.5;
+  vec2 scaledUv = uv * scale;
+  
+  scaledUv.x += (15.5 - scale.x) * 0.5;
+  scaledUv.y -= (8.5 - scale.y) * 0.5;    
+  return scaledUv;
+}
+
 void main() {
   vec2 focalPx = uFocal * uResolution.xy;
   vec2 uv = (vUv * uResolution.xy - focalPx) / uResolution.y;
@@ -178,6 +201,14 @@ void main() {
     if (bgUv.x >= 0.0 && bgUv.x <= 1.0 && bgUv.y >= 0.0 && bgUv.y <= 1.0) {
       vec4 texColor = texture2D(uTexture, bgUv);
       col = texColor.rgb;
+    }
+  }
+    
+  if (uHasTexture2) {
+    vec2 spriteUv = getSpriteUV(vUv, uResolution.xy, uTextureResolution2);
+    if (spriteUv.x >= 0.0 && spriteUv.x <= 1.0 && spriteUv.y >= 0.0 && spriteUv.y <= 1.0) {
+      vec4 tex2Color = texture2D(uTexture2, spriteUv);
+      col = mix(col, tex2Color.rgb, tex2Color.a);
     }
   }
 
@@ -220,6 +251,7 @@ interface GalaxyProps {
     autoCenterRepulsion?: number;
     transparent?: boolean;
     backgroundImage?: string;
+    backgroundImage2?: string;
     children?: JSX.Element;
 }
 
@@ -241,6 +273,7 @@ export default function Galaxy({
     autoCenterRepulsion = 0,
     transparent = true,
     backgroundImage = "",
+    backgroundImage2 = "",
     children,
 }: GalaxyProps) {
     const ctnDom = useRef<HTMLDivElement>(null);
@@ -275,7 +308,6 @@ export default function Galaxy({
 
         const textureResolution = new Float32Array([1, 1]);
         let hasTextureVal = false;
-
         if (backgroundImage) {
             const img = new Image();
             img.crossOrigin = "anonymous";
@@ -292,6 +324,30 @@ export default function Galaxy({
                 }
             };
         }
+
+        const texture2 = new Texture(gl, {
+            wrapS: gl.CLAMP_TO_EDGE,
+            wrapT: gl.CLAMP_TO_EDGE,
+        });
+        const textureResolution2 = new Float32Array([1, 1]);
+        let hasTextureVal2 = false;
+        if (backgroundImage2) {
+            const img2 = new Image();
+            img2.crossOrigin = "anonymous";
+            img2.src = backgroundImage2;
+            img2.onload = () => {
+                texture2.image = img2;
+                textureResolution2[0] = img2.width;
+                textureResolution2[1] = img2.height;
+                hasTextureVal2 = true;
+                if (program) {
+                    program.uniforms.uTextureResolution2.value =
+                        textureResolution2;
+                    program.uniforms.uHasTexture2.value = true;
+                }
+            };
+        }
+
         const program = new Program(gl, {
             vertex: vertexShader,
             fragment: fragmentShader,
@@ -328,6 +384,9 @@ export default function Galaxy({
                 uTexture: { value: texture },
                 uTextureResolution: { value: textureResolution },
                 uHasTexture: { value: hasTextureVal },
+                uTexture2: { value: texture2 },
+                uTextureResolution2: { value: textureResolution2 },
+                uHasTexture2: { value: hasTextureVal2 },
             },
         });
 
@@ -425,6 +484,7 @@ export default function Galaxy({
         autoCenterRepulsion,
         transparent,
         backgroundImage,
+        backgroundImage2,
     ]);
 
     return (
