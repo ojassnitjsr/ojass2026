@@ -4,6 +4,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { useTheme } from "@/contexts/ThemeContext";
 
 export default function FuturisticHUD() {
@@ -97,20 +99,42 @@ export default function FuturisticHUD() {
     }
   }, [messages]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return;
+    const userMessage = input.trim();
     setChatState('generating');
-    setMessages((prev) => [...prev, { role: 'user', content: input }]);
+    setMessages((prev) => [...prev, { role: 'user', content: userMessage }]);
     setInput('');
 
-    // Simulated AI delay
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMessage }),
+      });
+
+      const data = await response.json();
+
+      if (data.reply) {
+        setMessages((prev) => [
+          ...prev,
+          { role: 'assistant', content: data.reply },
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          { role: 'assistant', content: "Error: Could not get response." },
+        ]);
+      }
+    } catch (error) {
+      console.error("Chat error:", error);
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: 'This is an AI-generated response.' },
+        { role: 'assistant', content: "System Error: Connection failed." },
       ]);
+    } finally {
       setChatState('idle');
-    }, 3000);
+    }
   };
 
   return (
@@ -255,7 +279,15 @@ export default function FuturisticHUD() {
                             : `${colors.aiResponse} text-left`
                             }`}
                         >
-                          {msg.content}
+                          {msg.role === 'assistant' ? (
+                            <div className="prose prose-invert prose-sm max-w-none text-current [&>ul]:list-disc [&>ul]:pl-5 [&>ol]:list-decimal [&>ol]:pl-5 [&>h3]:text-lg [&>h3]:font-bold [&>h3]:mt-2 [&>h3]:mb-1 [&>p]:leading-relaxed">
+                              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {msg.content}
+                              </ReactMarkdown>
+                            </div>
+                          ) : (
+                            msg.content
+                          )}
                         </div>
                       ))}
 
