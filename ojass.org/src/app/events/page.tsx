@@ -26,9 +26,8 @@ interface CardData {
   cardposition: string;
   category: string;
 }
-type Props = {}
 
-export default function Page({ }: Props) {
+export default function Page() {
   const { theme } = useTheme();
   const router = useRouter();
   const isDystopia = theme === "dystopia";

@@ -1,5 +1,11 @@
 import { NextResponse, NextRequest } from "next/server";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
+
+// Define the expected JWT payload structure
+interface AdminJwtPayload extends JwtPayload {
+    role: string;
+    userId?: string;
+}
 
 // Verifies admin_token and also checks if the role is "admin"
 export function adminMiddleware(request: NextRequest) {
@@ -21,20 +27,28 @@ export function adminMiddleware(request: NextRequest) {
             );
         }
 
-
         const decoded = jwt.verify(adminToken, process.env.JWT_SECRET);
 
-        if (decoded?.role !== 'admin') {
+        // Type guard to check if decoded is an object with a role property
+        if (typeof decoded === 'string' || !decoded || typeof decoded.role !== 'string') {
+            return NextResponse.json(
+                { error: "Invalid token format" },
+                { status: 401 }
+            );
+        }
 
+        // Now TypeScript knows decoded has a role property
+        const payload = decoded as AdminJwtPayload;
+
+        if (payload.role !== 'admin') {
             return NextResponse.json(
                 { error: "Only admins can access this route!" },
                 { status: 401 }
             );
-
         }
         const response = NextResponse.next();
 
-        response.headers.set("x-admin-data", JSON.stringify(decoded));
+        response.headers.set("x-admin-data", JSON.stringify(payload));
 
         return response;
 

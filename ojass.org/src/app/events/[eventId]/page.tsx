@@ -465,6 +465,7 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
                                         {/* Tech decoration */}
                                         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-[1px] bg-white/20"></div>
 
+                                        {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
                                         <h3 className="text-xs font-bold text-gray-500 uppercase tracking-[0.2em] mb-4 text-center">
                                             // Communication Node
                                         </h3>

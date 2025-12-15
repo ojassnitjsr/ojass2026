@@ -24,7 +24,7 @@ async function connectDB() {
 // Mark notification as read
 export async function PUT(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         await connectDB();
@@ -60,7 +60,7 @@ export async function PUT(
             );
         }
 
-        const { id } = params;
+        const { id } = await params;
 
         // Update user notification
         const userNotification = await UserNotification.findOneAndUpdate(

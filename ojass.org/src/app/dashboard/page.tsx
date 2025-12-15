@@ -48,7 +48,7 @@ export default function OjassDashboard() {
         router.push('/login');
         return;
       }
-      
+
       try {
         const userData = JSON.parse(user);
         const userProfile = {
@@ -112,19 +112,19 @@ export default function OjassDashboard() {
                 eventName: team.eventId?.name || 'Unknown Event',
                 isIndividual: team.isIndividual,
                 teamName: team.teamName || 'Individual',
-                teamLeader: typeof team.teamLeader === 'object' 
-                  ? { 
-                      _id: team.teamLeader._id, 
-                      name: team.teamLeader.name || 'Unknown',
-                      ojassId: team.teamLeader.ojassId 
-                    }
+                teamLeader: typeof team.teamLeader === 'object'
+                  ? {
+                    _id: team.teamLeader._id,
+                    name: team.teamLeader.name || 'Unknown',
+                    ojassId: team.teamLeader.ojassId
+                  }
                   : team.teamLeader,
-                  teamMembers: team.teamMembers
+                teamMembers: team.teamMembers
                   .filter((member: any) => {
                     // Filter out leader from members list
                     const memberId = typeof member === 'object' ? member._id : member;
-                    const leaderId = typeof team.teamLeader === 'object' 
-                      ? team.teamLeader._id 
+                    const leaderId = typeof team.teamLeader === 'object'
+                      ? team.teamLeader._id
                       : team.teamLeader;
                     return memberId.toString() !== leaderId.toString();
                   })
@@ -149,22 +149,22 @@ export default function OjassDashboard() {
             const registrationsRes = await fetch('/api/events/my-registrations', {
               headers: { 'Authorization': `Bearer ${token}` }
             });
-      
+
             if (registrationsRes.ok) {
               const registrations = await registrationsRes.json();
               // Transform registrations to match expected format
               const transformedRegistrations = registrations.map((reg: any) => ({
                 id: reg._id,
                 name: reg.eventId?.name || 'Unknown Event',
-                date: new Date(reg.createdAt).toLocaleDateString('en-US', { 
-                  month: 'short', 
-                  day: 'numeric', 
-                  year: 'numeric' 
+                date: new Date(reg.createdAt).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric'
                 }),
-                time: new Date(reg.createdAt).toLocaleTimeString('en-US', { 
-                  hour: 'numeric', 
+                time: new Date(reg.createdAt).toLocaleTimeString('en-US', {
+                  hour: 'numeric',
                   minute: '2-digit',
-                  hour12: true 
+                  hour12: true
                 }),
                 status: reg.isVerified ? 'Confirmed' : 'Pending',
                 team: reg.isIndividual ? 'Solo' : (reg.teamName || 'Team'),
@@ -188,9 +188,17 @@ export default function OjassDashboard() {
     fetchUserData();
   }, [router]);
 
+  // Certificate type definition
+  interface Certificate {
+    id: string;
+    event: string;
+    type: string;
+    date: string;
+    url: string;
+  }
 
-  const certificates = [
-    
+  const certificates: Certificate[] = [
+
   ];
 
   const stars = useMemo(
@@ -238,8 +246,8 @@ export default function OjassDashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
             {/* PROFILE CARD */}
-            <GlassyNeonBoard 
-              title="PROFILE" 
+            <GlassyNeonBoard
+              title="PROFILE"
               isEmailVerified={profileData?.isEmailVerified || false}
               isPaid={paymentData?.isPaid || false}
               pricing={pricing}
@@ -271,7 +279,7 @@ export default function OjassDashboard() {
             <GlassyNeonBoard title="DASHBOARD">
               {/* Tabs */}
               <div className="flex gap-3 py-6 flex-wrap">
-                {["RECEIPT", "EVENTS", "TEAMS", "CERTIFICATES","NOTIFICATIONS"].map((tab) => {
+                {["RECEIPT", "EVENTS", "TEAMS", "CERTIFICATES", "NOTIFICATIONS"].map((tab) => {
                   const isActive = activeTab === tab.toLowerCase();
                   return (
                     <button
@@ -280,7 +288,7 @@ export default function OjassDashboard() {
                       className={`px-4 py-2 text-xs font-mono transition-all backdrop-blur-sm border ${buttonInactiveBorder} ${isActive
                         ? `${buttonActiveBg} ${accentText} border-2`
                         : `${accentText} opacity-70 ${buttonInactiveHover}`
-                      }`}
+                        }`}
                       style={{
                         clipPath:
                           "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
@@ -311,7 +319,7 @@ export default function OjassDashboard() {
                 {activeTab === "certificates" && (
                   <Certificate certificates={certificates} />
                 )}
-                {activeTab==="notifications" && (
+                {activeTab === "notifications" && (
                   <Notification />
                 )}
               </div>

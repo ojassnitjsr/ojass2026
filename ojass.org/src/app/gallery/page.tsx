@@ -1,8 +1,8 @@
 "use client";
 
-import Galaxy from "@/components/gallery/Galaxy";
+import Galaxy from "@/components/Gallery/Galaxy";
 import "@/components/Gallery/gallery.css";
-import { InfiniteGrid } from "@/components/gallery/InfiniteGallery";
+import { InfiniteGrid } from "@/components/Gallery/InfiniteGallery";
 import { useTheme } from "@/contexts/ThemeContext";
 import { galleryImages, galleryLayout } from "@/lib/constants";
 import Link from "next/link";

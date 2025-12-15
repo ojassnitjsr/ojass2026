@@ -3,23 +3,26 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useRouter } from "next/navigation"
 import { FaEyeSlash } from 'react-icons/fa';
 
+// Define the valid form types
+type FormType = 'participant' | 'ambassador' | 'register' | 'forgot';
+
 export default function LoginPage() {
-  const videoRef = useRef<HTMLVideoElement|null>(null);
-  const formRefs = {
-    participant: useRef(null),
-    ambassador: useRef(null),
-    register: useRef(null),
-    forgot: useRef(null)
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const formRefs: Record<FormType, React.RefObject<HTMLDivElement | null>> = {
+    participant: useRef<HTMLDivElement>(null),
+    ambassador: useRef<HTMLDivElement>(null),
+    register: useRef<HTMLDivElement>(null),
+    forgot: useRef<HTMLDivElement>(null)
   };
-  
-  const router=useRouter();
+
+  const router = useRouter();
   const [fadeOut, setFadeOut] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
-  const [activeForm, setActiveForm] = useState('participant');
+  const [activeForm, setActiveForm] = useState<FormType>('participant');
   const [showPassword, setShowPassword] = useState({ login: false, register: false });
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [otp, setOtp] = useState('');
@@ -36,9 +39,9 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [showMobileForm,setShowMobileForm]=useState(false);
+  const [showMobileForm, setShowMobileForm] = useState(false);
   const [hasPendingTeamJoin, setHasPendingTeamJoin] = useState(false);
-  
+
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.play().catch((err) => console.log("Autoplay blocked:", err));
@@ -63,11 +66,11 @@ export default function LoginPage() {
     };
   }, []);
 
-  const scrollToForm = (formType:string) => {
+  const scrollToForm = (formType: FormType) => {
     setActiveForm(formType);
     setTimeout(() => {
-      formRefs[formType]?.current?.scrollIntoView({ 
-        behavior: 'smooth', 
+      formRefs[formType]?.current?.scrollIntoView({
+        behavior: 'smooth',
         block: 'nearest'
       });
     }, 100);
@@ -80,17 +83,17 @@ export default function LoginPage() {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           email: username.includes('@') ? username : undefined,
           phone: !username.includes('@') ? username : undefined,
-          password 
+          password
         })
       });
       const data = await res.json();
       if (res.ok) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
-        
+
         // Check if there's a pending team join
         const pendingTeamJoin = localStorage.getItem('pendingTeamJoin');
         if (pendingTeamJoin) {
@@ -120,7 +123,7 @@ export default function LoginPage() {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           name: username,
           email,
           phone,
@@ -137,7 +140,7 @@ export default function LoginPage() {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         setSuccess('Registration successful! Redirecting...');
-        
+
         // Check if there's a pending team join
         const pendingTeamJoin = localStorage.getItem('pendingTeamJoin');
         if (pendingTeamJoin) {
@@ -219,19 +222,19 @@ export default function LoginPage() {
     }
   };
 
-   useEffect(() => {
-  function handleResize() {
-    if (window.innerWidth <=425) {
-      setShowMobileForm(false);
-    } else {
-      setShowMobileForm(true);
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth <= 425) {
+        setShowMobileForm(false);
+      } else {
+        setShowMobileForm(true);
+      }
     }
-  }
 
-  handleResize();
-  window.addEventListener("resize", handleResize);
-  return () => window.removeEventListener("resize", handleResize);
-}, []);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
 
   return (
@@ -284,7 +287,7 @@ export default function LoginPage() {
                   <h2 className="text-cyan-400 text-2xl font-bold mb-6 text-center tracking-wider drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]">LOGIN</h2>
                   <div className="flex flex-col gap-4">
                     <button
-                      onClick={() => {setShowMobileForm(true);scrollToForm('participant');}}
+                      onClick={() => { setShowMobileForm(true); scrollToForm('participant'); }}
                       className={`relative border-2 px-8 py-3 text-white font-medium transition-all overflow-hidden group ${activeForm === 'participant' ? 'border-cyan-400 bg-cyan-400/20' : 'border-cyan-400'}`}
                       style={{
                         boxShadow: activeForm === 'participant' ? '0 0 30px rgba(34, 211, 238, 0.5)' : '0 0 20px rgba(34, 211, 238, 0.3)',
@@ -294,7 +297,7 @@ export default function LoginPage() {
                       <span className="relative drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]">Participant Login</span>
                     </button>
                     <button
-                      onClick={() =>{setShowMobileForm(true); scrollToForm('ambassador')}}
+                      onClick={() => { setShowMobileForm(true); scrollToForm('ambassador') }}
                       className={`relative border-2 px-8 py-3 text-white font-medium transition-all overflow-hidden group ${activeForm === 'ambassador' ? 'border-cyan-400 bg-cyan-400/20' : 'border-cyan-400'}`}
                       style={{
                         boxShadow: activeForm === 'ambassador' ? '0 0 30px rgba(34, 211, 238, 0.5)' : '0 0 20px rgba(34, 211, 238, 0.3)',
@@ -316,7 +319,7 @@ export default function LoginPage() {
                   <h2 className="text-cyan-400 text-2xl font-bold mb-6 text-center tracking-wider drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]">REGISTER</h2>
                   <div className="flex flex-col gap-4">
                     <button
-                      onClick={() => {setShowMobileForm(true);scrollToForm('register')}}
+                      onClick={() => { setShowMobileForm(true); scrollToForm('register') }}
                       className={`relative border-2 px-8 py-3 text-white font-medium transition-all overflow-hidden group ${activeForm === 'register' ? 'border-cyan-400 bg-cyan-400/20' : 'border-cyan-400'}`}
                       style={{
                         boxShadow: activeForm === 'register' ? '0 0 30px rgba(34, 211, 238, 0.5)' : '0 0 20px rgba(34, 211, 238, 0.3)',
@@ -330,7 +333,7 @@ export default function LoginPage() {
               </div>
 
               {/* Right Panel - Forms */}
-             {showMobileForm &&  <div className="relative border-2 border-cyan-400/70 p-6 bg-gradient-to-br from-slate-800/40 to-slate-900/40 backdrop-blur-md w-full lg:w-96 overflow-hidden"
+              {showMobileForm && <div className="relative border-2 border-cyan-400/70 p-6 bg-gradient-to-br from-slate-800/40 to-slate-900/40 backdrop-blur-md w-full lg:w-96 overflow-hidden"
                 style={{
                   boxShadow: '0 0 30px rgba(34, 211, 238, 0.2), inset 0 0 30px rgba(34, 211, 238, 0.03)',
                   clipPath: 'polygon(8% 0, 100% 0, 100% 92%, 92% 100%, 0 100%, 0 8%)',
@@ -392,7 +395,7 @@ export default function LoginPage() {
                           onClick={() => setShowPassword({ ...showPassword, login: !showPassword.login })}
                           className="absolute right-3 top-1/2 -translate-y-1/2 text-cyan-400 hover:text-cyan-300 transition"
                         >
-                          <FaEyeSlash/>
+                          <FaEyeSlash />
                         </button>
                       </div>
 
@@ -501,7 +504,7 @@ export default function LoginPage() {
                               onClick={() => setShowForgotPassword({ ...showForgotPassword, otp: !showForgotPassword.otp })}
                               className="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 text-cyan-400 hover:text-cyan-300 transition"
                             >
-                              <FaEyeSlash/>
+                              <FaEyeSlash />
                             </button>
                           </div>
 
@@ -557,7 +560,7 @@ export default function LoginPage() {
                               onClick={() => setShowForgotPassword({ ...showForgotPassword, new: !showForgotPassword.new })}
                               className="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 text-cyan-400 hover:text-cyan-300 transition"
                             >
-                              <FaEyeSlash/>
+                              <FaEyeSlash />
                             </button>
                           </div>
 
@@ -578,7 +581,7 @@ export default function LoginPage() {
                               onClick={() => setShowForgotPassword({ ...showForgotPassword, confirm: !showForgotPassword.confirm })}
                               className="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 text-cyan-400 hover:text-cyan-300 transition"
                             >
-                              <FaEyeSlash/>
+                              <FaEyeSlash />
                             </button>
                           </div>
 
@@ -639,7 +642,7 @@ export default function LoginPage() {
                           <svg className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          <span>You have a pending team invitation. After registration, you'll be redirected to join the team.</span>
+                          <span>You have a pending team invitation. After registration, you&apos;ll be redirected to join the team.</span>
                         </div>
                       </div>
                     )}
@@ -767,7 +770,7 @@ export default function LoginPage() {
                             onClick={() => setShowPassword({ ...showPassword, register: !showPassword.register })}
                             className="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 text-cyan-400 hover:text-cyan-300 transition"
                           >
-                            <FaEyeSlash/>
+                            <FaEyeSlash />
                           </button>
                         </div>
 
@@ -788,12 +791,12 @@ export default function LoginPage() {
                             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                             className="absolute right-2 md:right-3 top-1/2 -translate-y-1/2 text-cyan-400 hover:text-cyan-300 transition"
                           >
-                           <FaEyeSlash/>
+                            <FaEyeSlash />
                           </button>
                         </div>
                       </div>
 
-                     <button
+                      <button
                         onClick={handleRegister}
                         disabled={loading}
                         className="relative flex justify-center items-center border-2 border-cyan-400 px-6 md:px-8 py-4 md:py-6 text-cyan-400 font-bold text-base md:text-lg transition-all overflow-hidden group disabled:opacity-50"
@@ -803,8 +806,8 @@ export default function LoginPage() {
                         }}
                       >
                         <div className="absolute inset-0 bg-cyan-400/0 group-hover:bg-cyan-400 transition-all duration-300"></div>
-                        <span 
-                        className="relative group-hover:text-slate-900 transition-colors duration-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]">
+                        <span
+                          className="relative group-hover:text-slate-900 transition-colors duration-300 drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]">
                           {loading ? 'REGISTERING...' : 'REGISTER'}
                         </span>
                       </button>
