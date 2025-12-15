@@ -33,49 +33,100 @@ export interface GalleryImage {
 
 export const galleryImages: GalleryImage[] = [
     {
-        src: "image-1.jpg",
-        caption:
-            "30 knots <br>12 x 16 inch C type hand print <br>Edition of 1 Plus an additional artist Proof <br>2021",
+        src: "/compressed-20241117_192238 - Copy.jpg",
+        caption: "OJASS 2025 glimps",
     },
     {
-        src: "image-2.jpg",
-        caption:
-            "Sad Mis-Step <br>12 x 16 inch C type hand print <br>Edition of 1 Plus an additional artist Proof <br>2024",
+        src: "/compressed-ASH04152 - Copy.jpg",
+        caption: "OJASS 2025 glimps",
     },
     {
-        src: "image-3.jpg",
-        caption:
-            "Mini Orange <br>12 x 16 inch C type hand print <br>Edition of 1 Plus an additional artist Proof <br>2014",
+        src: "/compressed-DSC02484 - Copy.jpg",
+        caption: "OJASS 2025 glimps",
     },
     {
-        src: "image-4.jpg",
-        caption:
-            "After Storm <br>12 x 16 inch C type hand print <br>Edition of 1 Plus an additional artist Proof <br>2022",
+        src: "/compressed-DSC02962.jpg",
+        caption: "OJASS 2025 glimps",
     },
     {
-        src: "image-5.jpg",
-        caption:
-            "Untitled <br>12 x 16 inch C type hand print <br>Edition of 1 Plus an additional artist Proof <br>2016",
+        src: "/compressed-DSC02980.jpg",
+        caption: "OJASS 2025 glimps",
     },
     {
-        src: "image-6.jpg",
-        caption:
-            "Toilet Paper <br>12 x 16 inch C type hand print <br>Edition of 1 Plus an additional artist Proof <br>2022",
+        src: "/compressed-DSC03223.jpg",
+        caption: "OJASS 2025 glimps",
     },
     {
-        src: "image-7.jpg",
-        caption:
-            "Cocoa Eggplant Tomato <br>12 x 16 inch C type hand print <br>Edition of 1 Plus an additional artist Proof <br>2025",
+        src: "/compressed-DSC03232.jpg",
+        caption: "OJASS 2025 glimps",
     },
     {
-        src: "image-8.jpg",
-        caption:
-            "Toilet Paper <br>12 x 16 inch C type hand print <br>Edition of 1 Plus an additional artist Proof <br>2022",
+        src: "/compressed-DSC03282.jpg",
+        caption: "OJASS 2025 glimps",
     },
     {
-        src: "image-9.jpg",
-        caption:
-            "Production Fun Fact (Eggs) <br>12 x 16 inch C type hand print <br>Edition of 1 Plus an additional artist Proof <br>2024",
+        src: "/compressed-DSC_0663.jpg",
+        caption: "OJASS 2025 glimps",
+    },
+    {
+        src: "/compressed-IMG_0009.jpg",
+        caption: "OJASS 2025 glimps",
+    },
+    {
+        src: "/compressed-IMG_0042 - Copy.jpg",
+        caption: "OJASS 2025 glimps",
+    },
+    {
+        src: "/compressed-IMG_0047 - Copy.jpg",
+        caption: "OJASS 2025 glimps",
+    },
+    {
+        src: "/compressed-IMG_0250 - Copy.jpg",
+        caption: "OJASS 2025 glimps",
+    },
+    {
+        src: "/compressed-IMG_0252 - Copy.jpg",
+        caption: "OJASS 2025 glimps",
+    },
+    {
+        src: "/compressed-IMG_0319.jpg",
+        caption: "OJASS 2025 glimps",
+    },
+    {
+        src: "/compressed-_DSC1322.jpg",
+        caption: "OJASS 2025 glimps",
+    },
+    {
+        src: "/compressed-_DSC1327.jpg",
+        caption: "OJASS 2025 glimps",
+    },
+    {
+        src: "/compressed-_DSC1490.jpg",
+        caption: "OJASS 2025 glimps",
+    },
+    {
+        src: "/compressed-_DSC1652.jpg",
+        caption: "OJASS 2025 glimps",
+    },
+    {
+        src: "/compressed-_DSC1653.jpg",
+        caption: "OJASS 2025 glimps",
+    },
+    {
+        src: "/compressed-_DSC1900 - Copy.jpg",
+        caption: "OJASS 2025 glimps",
+    },
+    {
+        src: "/compressed-_DSC1900.jpg",
+        caption: "OJASS 2025 glimps",
+    },
+    {
+        src: "/compressed-_DSC1964.jpg",
+        caption: "OJASS 2025 glimps",
+    },
+    {
+        src: "/compressed-_DSC2002.jpg",
+        caption: "OJASS 2025 glimps",
     },
 ];
 
