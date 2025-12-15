@@ -251,7 +251,7 @@ export default function Home() {
             height: '65vh',
             marginLeft: '-2vw',
             marginTop: '-2vh',
-            backgroundImage: isDystopia ? 'url(/homelayer/sky.png)' : 'url(/homelayer/sky.png)',
+            backgroundImage: isDystopia ? 'url(/homelayer/sky_dys.png)' : 'url(/homelayer/sky.png)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
@@ -267,7 +267,7 @@ export default function Home() {
             width: '110vw',
             height: '80vh',
             marginLeft: '-5vw',
-            backgroundImage: isDystopia ? 'url(/homelayer/behindmountain2.png)' : 'url(/homelayer/behindmountain2.png)',
+            backgroundImage: isDystopia ? 'url(/homelayer/behindmountain_dys.png)' : 'url(/homelayer/behindmountain.png)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
@@ -289,7 +289,7 @@ export default function Home() {
             marginLeft: '0vw',
             transformStyle: 'preserve-3d',
             willChange: 'transform',
-            backgroundImage: 'url(/homelayer/mainmountain.png)',
+            backgroundImage: isDystopia ? 'url(/homelayer/mainmountain_dys.png)' : 'url(/homelayer/mainmountain.png)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
@@ -299,7 +299,7 @@ export default function Home() {
 
         <div
           id="title"
-          className='fixed top-[40%] font-bold text-[200px] text-center w-full bg-[url(/text_main_eut_nobg.png)] bg-contain bg-center bg-no-repeat h-[35vh]'
+          className={`fixed top-[30%] font-bold text-[200px] text-center w-full bg-contain bg-center bg-no-repeat h-[35vh] ${isDystopia ? 'bg-[url(/text_main_dys_nobg.png)]' : 'bg-[url(/text_main_dys_nobg.png)]'}`}
           style={{ willChange: 'transform', pointerEvents: 'none', filter: isDystopia ? 'hue-rotate(180deg)' : 'hue-rotate(0deg)', }}
         >
         </div>
@@ -311,12 +311,12 @@ export default function Home() {
             width: '120vw',
             height: '64vh',
             marginLeft: '-10vw',
-            backgroundImage: 'url(/homelayer/bottom.png)',
+            backgroundImage: isDystopia ? 'url(/homelayer/bottom_dys.png)' : 'url(/homelayer/bottom.png)',
             backgroundSize: 'cover',
             backgroundPosition: 'bottom center',
             backgroundRepeat: 'no-repeat',
             willChange: 'transform',
-            filter: isDystopia ? 'hue-rotate(180deg)' : 'hue-rotate(0deg)',
+            // filter: isDystopia ? 'hue-rotate(180deg)' : 'hue-rotate(0deg)',
           }}
         ></div>
       </div>
@@ -328,7 +328,7 @@ export default function Home() {
             width: '104vw',
             height: '104vh',
             marginLeft: '0',
-            backgroundImage: 'url(/homelayer/caveinner.png)',
+            backgroundImage: isDystopia ? 'url(/homelayer/caveinner_dys.png)' : 'url(/homelayer/caveinner.png)',
             backgroundSize: 'cover',
             backgroundPosition: 'center center',
             backgroundRepeat: 'no-repeat',
@@ -337,7 +337,7 @@ export default function Home() {
         ></div>
         <div
           id="title2"
-          className='absolute -top-[35vh] font-bold text-[200px] text-center w-full bg-[url(/text_main_eut_nobg.png)] bg-contain bg-center bg-no-repeat h-[35vh]'
+          className={`absolute -top-[30vh] font-bold text-[200px] text-center w-full bg-contain bg-center bg-no-repeat h-[35vh] ${isDystopia ? 'bg-[url(/text_main_dys_nobg.png)]' : 'bg-[url(/text_main_dys_nobg.png)]'}`}
           style={{ willChange: 'transform', pointerEvents: 'none', filter: isDystopia ? 'hue-rotate(180deg)' : 'hue-rotate(0deg)', }}
         >
         </div>
@@ -348,7 +348,7 @@ export default function Home() {
             width: '100vw',
             height: '70vh',
             marginLeft: '0',
-            backgroundImage: 'url(/homelayer/rocket.png)',
+            backgroundImage: isDystopia ? 'url(/homelayer/rocket_dys.png)' : 'url(/homelayer/rocket.png)',
             backgroundSize: 'contain',
             backgroundPosition: 'center center',
             backgroundRepeat: 'no-repeat',
@@ -362,7 +362,7 @@ export default function Home() {
             width: '100vw',
             height: '100vh',
             marginLeft: '0',
-            backgroundImage: 'url(/homelayer/caveouter.png)',
+            backgroundImage: isDystopia ? 'url(/homelayer/caveouter_dys.png)' : 'url(/homelayer/caveouter.png)',
             backgroundSize: 'cover',
             backgroundPosition: 'top center',
             backgroundRepeat: 'no-repeat',
