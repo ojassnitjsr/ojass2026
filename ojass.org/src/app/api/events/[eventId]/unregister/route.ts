@@ -62,7 +62,7 @@ export async function DELETE(
 
     // If user is a member, remove them from the team
     registration.teamMembers = registration.teamMembers.filter(
-      (member: any) => member.toString() !== authResult.userId
+      (member) => member.toString() !== authResult.userId
     );
     await registration.save();
 
@@ -70,10 +70,11 @@ export async function DELETE(
       success: true,
       message: 'Successfully left the team registration',
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error unregistering:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to unregister';
     return NextResponse.json(
-      { error: error.message || 'Failed to unregister' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

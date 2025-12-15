@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
     // Check if user is team leader or member
     const isLeader = team.teamLeader.toString() === authResult.userId;
     const isMember = team.teamMembers.some(
-      (member: any) => member.toString() === authResult.userId
+      (member) => member.toString() === authResult.userId
     );
 
     if (!isLeader && !isMember) {
@@ -129,10 +129,11 @@ export async function POST(request: NextRequest) {
       message: 'Team is registered for the event',
       registration: team,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error registering for event:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to register for event';
     return NextResponse.json(
-      { error: error.message || 'Failed to register for event' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

@@ -40,7 +40,7 @@ export async function POST(
 
     // Check if user is a member
     const memberIndex = team.teamMembers.findIndex(
-      (member: any) => member.toString() === authResult.userId
+      (member: unknown) => (member as { toString: () => string }).toString() === authResult.userId
     );
 
     if (memberIndex === -1) {
@@ -58,10 +58,10 @@ export async function POST(
       success: true,
       message: 'Successfully left the team',
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error leaving team:', error);
     return NextResponse.json(
-      { error: error.message || 'Failed to leave team' },
+      { error: error instanceof Error ? error.message : 'Failed to leave team' },
       { status: 500 }
     );
   }

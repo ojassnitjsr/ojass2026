@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     try {
         // Check authentication
         const authHeader = request.headers.get('authorization') || request.headers.get('Authorization');
-        
+
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
             return NextResponse.json(
                 { error: 'Authentication required' },
@@ -72,10 +72,10 @@ export async function POST(request: NextRequest) {
         // Check if user has already paid
         if (user.isPaid) {
             return NextResponse.json(
-                { 
+                {
                     success: true,
                     message: 'Payment already verified',
-                    isPaid: true 
+                    isPaid: true
                 },
                 { status: 200 }
             );
@@ -126,12 +126,13 @@ export async function POST(request: NextRequest) {
             },
         }, { status: 200 });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Payment verification error:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         return NextResponse.json(
-            { 
+            {
                 error: 'Failed to verify payment',
-                details: error.message 
+                details: errorMessage
             },
             { status: 500 }
         );

@@ -11,12 +11,13 @@ export async function GET() {
 export async function POST(req: Request) {
   await connectToDatabase();
   try {
-  
+
     const body = await req?.json()
 
     const newEvent = await Event.create(body);
     return NextResponse.json(newEvent, { status: 201 });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 400 });
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
+    return NextResponse.json({ error: errorMessage }, { status: 400 });
   }
 }

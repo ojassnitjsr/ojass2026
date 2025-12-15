@@ -58,7 +58,7 @@ async function get_all_links(baseUrl: string): Promise<string[]> {
     const links = new Set<string>();
 
     $("a[href]").each((i, el) => {
-      let href = $(el).attr("href")?.trim();
+      const href = $(el).attr("href")?.trim();
       if (!href) return;
 
       if (href.startsWith("http") && href.includes(baseUrl)) {
@@ -221,7 +221,7 @@ async function event_info_tool(query: string): Promise<string> {
   if (query.toLowerCase().match(/event|competition|contest|list|show|what/)) {
     const all_events = await Event.find({}, 'name description').limit(20).lean();
     if (all_events.length > 0) {
-      return "**Found these events:**\n" + all_events.map((e: any) => `- ${e.name}`).join("\n");
+      return "**Found these events:**\n" + all_events.map((e) => `- ${e.name}`).join("\n");
     }
   }
 
@@ -346,7 +346,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ reply: responseText });
 
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.error("Chat Error:", e);
     return NextResponse.json(
       { error: "System malfunction. Please try again." },

@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
     const emailVerified = searchParams.get('emailVerified');
 
     // Build query
-    const query: any = {};
+    const query: Record<string, unknown> = {};
 
     if (search) {
       query.$or = [
@@ -106,11 +106,11 @@ export async function GET(req: NextRequest) {
 
     // Create a map of userId to eventCount
     const eventCountMap = new Map(
-      eventCounts.map((item: any) => [item.userId.toString(), item.eventCount])
+      eventCounts.map((item) => [item.userId.toString(), item.eventCount])
     );
 
     // Add event count to each user
-    const usersWithEventCount = users.map((user: any) => ({
+    const usersWithEventCount = users.map((user) => ({
       ...user.toObject(),
       eventCount: eventCountMap.get(user._id.toString()) || 0,
     }));
@@ -124,10 +124,11 @@ export async function GET(req: NextRequest) {
         pages: Math.ceil(total / limit),
       },
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
     return NextResponse.json(
-      { error: err.message },
-      { status: err.message.includes('Unauthorized') ? 401 : 500 }
+      { error: errorMessage },
+      { status: errorMessage.includes('Unauthorized') ? 401 : 500 }
     );
   }
 }

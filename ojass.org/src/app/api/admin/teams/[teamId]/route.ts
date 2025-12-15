@@ -32,10 +32,11 @@ export async function GET(
     }
 
     return NextResponse.json(team);
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
     return NextResponse.json(
-      { error: err.message },
-      { status: err.message.includes('Unauthorized') ? 401 : 500 }
+      { error: errorMessage },
+      { status: errorMessage.includes('Unauthorized') ? 401 : 500 }
     );
   }
 }
@@ -78,10 +79,11 @@ export async function PUT(
     await team.populate('eventId', 'name teamSizeMin teamSizeMax isTeamEvent img description');
 
     return NextResponse.json({ success: true, team });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
     return NextResponse.json(
-      { error: err.message },
-      { status: err.message.includes('Unauthorized') ? 401 : 500 }
+      { error: errorMessage },
+      { status: errorMessage.includes('Unauthorized') ? 401 : 500 }
     );
   }
 }
@@ -111,10 +113,11 @@ export async function DELETE(
     }
 
     return NextResponse.json({ success: true, message: 'Team deleted successfully' });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
     return NextResponse.json(
-      { error: err.message },
-      { status: err.message.includes('Unauthorized') ? 401 : 500 }
+      { error: errorMessage },
+      { status: errorMessage.includes('Unauthorized') ? 401 : 500 }
     );
   }
 }

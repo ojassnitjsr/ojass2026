@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     const eventId = searchParams.get('eventId');
 
     // Build query
-    const query: any = {
+    const query: Record<string, unknown> = {
       $or: [
         { teamLeader: authResult.userId },
         { teamMembers: authResult.userId },
@@ -45,10 +45,11 @@ export async function GET(request: NextRequest) {
       .sort({ createdAt: -1 });
 
     return NextResponse.json(registrations);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching registrations:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to fetch registrations';
     return NextResponse.json(
-      { error: error.message || 'Failed to fetch registrations' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

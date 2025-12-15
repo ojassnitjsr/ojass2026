@@ -31,10 +31,11 @@ export async function GET(
     }
 
     return NextResponse.json(user);
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
     return NextResponse.json(
-      { error: err.message },
-      { status: err.message.includes('Unauthorized') ? 401 : 500 }
+      { error: errorMessage },
+      { status: errorMessage.includes('Unauthorized') ? 401 : 500 }
     );
   }
 }
@@ -73,7 +74,7 @@ export async function PUT(
       'referralCount',
     ];
 
-    const updateData: any = {};
+    const updateData: Record<string, unknown> = {};
     for (const field of allowedFields) {
       if (body[field] !== undefined) {
         updateData[field] = body[field];
@@ -89,10 +90,11 @@ export async function PUT(
     }
 
     return NextResponse.json(user);
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
     return NextResponse.json(
-      { error: err.message },
-      { status: err.message.includes('Unauthorized') ? 401 : 500 }
+      { error: errorMessage },
+      { status: errorMessage.includes('Unauthorized') ? 401 : 500 }
     );
   }
 }
@@ -122,10 +124,11 @@ export async function DELETE(
     }
 
     return NextResponse.json({ success: true, message: 'User deleted successfully' });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
     return NextResponse.json(
-      { error: err.message },
-      { status: err.message.includes('Unauthorized') ? 401 : 500 }
+      { error: errorMessage },
+      { status: errorMessage.includes('Unauthorized') ? 401 : 500 }
     );
   }
 }

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
 import Team from '@/models/Team';
-import Event from '@/models/Event';
+
 import { requireAuthAndPayment } from '@/lib/auth';
 
 /**
@@ -37,17 +37,17 @@ export async function GET(
 
     // Check if user is part of the team
     const isMember = team.teamLeader.toString() === authResult.userId ||
-      team.teamMembers.some((member: any) => member._id.toString() === authResult.userId);
+      team.teamMembers.some((member: unknown) => (member as { _id: { toString: () => string } })._id.toString() === authResult.userId);
 
     if (!isMember) {
       return NextResponse.json({ error: 'Unauthorized to view this team' }, { status: 403 });
     }
 
     return NextResponse.json(team);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error fetching team:', error);
     return NextResponse.json(
-      { error: error.message || 'Failed to fetch team' },
+      { error: error instanceof Error ? error.message : 'Failed to fetch team' },
       { status: 500 }
     );
   }
@@ -101,10 +101,10 @@ export async function PUT(
     await team.populate('eventId', 'name teamSizeMin teamSizeMax isTeamEvent');
 
     return NextResponse.json(team);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error updating team:', error);
     return NextResponse.json(
-      { error: error.message || 'Failed to update team' },
+      { error: error instanceof Error ? error.message : 'Failed to update team' },
       { status: 500 }
     );
   }
@@ -136,7 +136,7 @@ export async function DELETE(
 
     const team = await Team.findById(teamId)
       .populate('eventId', 'name');
-    
+
     if (!team) {
       return NextResponse.json({ error: 'Team not found' }, { status: 404 });
     }
@@ -150,7 +150,7 @@ export async function DELETE(
     }
 
     // Store event info for response message
-    const eventName = (team.eventId as any)?.name || 'the event';
+    const eventName = (team.eventId as unknown as { name?: string })?.name || 'the event';
     const memberCount = team.teamMembers.length;
 
     // Delete the team
@@ -158,14 +158,14 @@ export async function DELETE(
     // because the Team document IS the registration record
     await Team.findByIdAndDelete(teamId);
 
-    return NextResponse.json({ 
-      success: true, 
-      message: `Team deleted successfully. All ${memberCount} member(s) including the leader have been unregistered from ${eventName}.` 
+    return NextResponse.json({
+      success: true,
+      message: `Team deleted successfully. All ${memberCount} member(s) including the leader have been unregistered from ${eventName}.`
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error deleting team:', error);
     return NextResponse.json(
-      { error: error.message || 'Failed to delete team' },
+      { error: error instanceof Error ? error.message : 'Failed to delete team' },
       { status: 500 }
     );
   }

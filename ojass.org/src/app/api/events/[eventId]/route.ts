@@ -17,8 +17,9 @@ export async function PUT(req: Request, { params }: { params: Promise<{ eventId:
     const body = await req.json();
     const updatedEvent = await Event.findByIdAndUpdate(eventId, body, { new: true });
     return NextResponse.json(updatedEvent);
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 400 });
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
+    return NextResponse.json({ error: errorMessage }, { status: 400 });
   }
 }
 
@@ -28,8 +29,9 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ event
     const { eventId } = await params;
     await Event.findByIdAndDelete(eventId);
     return NextResponse.json({ success: true });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 400 });
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
+    return NextResponse.json({ error: errorMessage }, { status: 400 });
   }
 }
 

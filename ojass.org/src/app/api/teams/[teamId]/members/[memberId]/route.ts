@@ -48,7 +48,7 @@ export async function DELETE(
 
     // Remove member
     team.teamMembers = team.teamMembers.filter(
-      (member: any) => member.toString() !== memberId
+      (member: unknown) => (member as { toString: () => string }).toString() !== memberId
     );
     await team.save();
 
@@ -56,10 +56,10 @@ export async function DELETE(
       success: true,
       message: 'Member removed successfully',
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error removing member:', error);
     return NextResponse.json(
-      { error: error.message || 'Failed to remove member' },
+      { error: error instanceof Error ? error.message : 'Failed to remove member' },
       { status: 500 }
     );
   }

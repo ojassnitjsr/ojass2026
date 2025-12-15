@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
 import Team from '@/models/Team';
 import User from '@/models/User';
-import Event from '@/models/Event';
+
 import { requireAuthAndPayment } from '@/lib/auth';
 
 /**
@@ -88,7 +88,7 @@ export async function POST(
     }
 
     // Check if user is already a member
-    if (team.teamMembers.some((member: any) => member.toString() === userToAdd._id.toString())) {
+    if (team.teamMembers.some((member: unknown) => (member as { toString: () => string }).toString() === userToAdd._id.toString())) {
       return NextResponse.json(
         { error: 'User is already a member of this team' },
         { status: 400 }
@@ -96,7 +96,7 @@ export async function POST(
     }
 
     // Check if team has reached max size
-    const event = team.eventId as any;
+    const event = team.eventId as unknown as { teamSizeMax: number };
     if (team.teamMembers.length >= event.teamSizeMax) {
       return NextResponse.json(
         { error: 'Team has reached maximum size' },
@@ -121,6 +121,7 @@ export async function POST(
     }
 
     // Add user to team
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     team.teamMembers.push(userToAdd._id as any);
     await team.save();
 
@@ -134,10 +135,10 @@ export async function POST(
       message: 'Member added successfully',
       team,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error adding team member:', error);
     return NextResponse.json(
-      { error: error.message || 'Failed to add team member' },
+      { error: error instanceof Error ? error.message : 'Failed to add team member' },
       { status: 500 }
     );
   }

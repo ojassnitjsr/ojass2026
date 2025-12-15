@@ -6,7 +6,8 @@ import { isOTPExpired } from '@/utils/otp.util';
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        let { email, otp } = body;
+        let { email } = body;
+        const { otp } = body;
 
         email = (email || '').toLowerCase().trim();
 
@@ -89,7 +90,7 @@ export async function POST(request: NextRequest) {
         delete userObject.password;
 
         return NextResponse.json(
-            { 
+            {
                 message: 'Email verified successfully',
                 user: userObject
             },

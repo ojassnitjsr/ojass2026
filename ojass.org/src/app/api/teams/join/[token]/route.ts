@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
 import Team from '@/models/Team';
-import Event from '@/models/Event';
 import { requireAuthAndPayment } from '@/lib/auth';
 
 /**
@@ -43,7 +42,7 @@ export async function POST(
     }
 
     // Check if user is already a member
-    if (team.teamMembers.some((member: any) => member.toString() === authResult.userId)) {
+    if (team.teamMembers.some((member) => member.toString() === authResult.userId)) {
       return NextResponse.json(
         { error: 'You are already a member of this team' },
         { status: 400 }
@@ -51,7 +50,10 @@ export async function POST(
     }
 
     // Check if team has reached max size
-    const event = team.eventId as any;
+    interface PopulatedEvent {
+      teamSizeMax: number;
+    }
+    const event = team.eventId as unknown as PopulatedEvent;
     if (team.teamMembers.length >= event.teamSizeMax) {
       return NextResponse.json(
         { error: 'Team has reached maximum size' },
@@ -76,7 +78,7 @@ export async function POST(
     }
 
     // Add user to team
-    team.teamMembers.push(authResult.userId as any);
+    team.teamMembers.push(authResult.userId as unknown as typeof team.teamMembers[0]);
     await team.save();
 
     // Populate and return
@@ -89,10 +91,11 @@ export async function POST(
       message: 'Successfully joined the team',
       team,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error joining team:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to join team';
     return NextResponse.json(
-      { error: error.message || 'Failed to join team' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

@@ -7,7 +7,8 @@ import { isOTPExpired } from '@/utils/otp.util';
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        let { email, otp, newPassword } = body;
+        let { email } = body;
+        const { otp, newPassword } = body;
 
         email = (email || '').toLowerCase().trim();
 

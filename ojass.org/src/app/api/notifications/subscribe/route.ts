@@ -39,10 +39,10 @@ export async function POST(req: NextRequest) {
         const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 
         // Verify token and get user ID
-        let decoded: any;
+        let decoded: { userId?: string; id?: string };
         try {
-            decoded = jwt.verify(token, JWT_SECRET);
-        } catch (error) {
+            decoded = jwt.verify(token, JWT_SECRET) as { userId?: string; id?: string };
+        } catch {
             return NextResponse.json(
                 { success: false, message: "Invalid token" },
                 { status: 401 }

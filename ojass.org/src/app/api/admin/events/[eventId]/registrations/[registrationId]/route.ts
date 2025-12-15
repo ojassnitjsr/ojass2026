@@ -28,7 +28,8 @@ export async function GET(
     }
 
     return NextResponse.json(registration, { status: 200 });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 401 });
+  } catch (error: unknown) {
+    const err = error as { message?: string };
+    return NextResponse.json({ error: err.message || "An error occurred" }, { status: 401 });
   }
 }

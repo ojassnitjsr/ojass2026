@@ -12,7 +12,7 @@ export async function PUT(request: NextRequest) {
     try {
         // Check authentication
         const authHeader = request.headers.get('authorization') || request.headers.get('Authorization');
-        
+
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
             return NextResponse.json(
                 { error: 'Authentication required' },
@@ -81,12 +81,12 @@ export async function PUT(request: NextRequest) {
             user: userObject
         }, { status: 200 });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Update ID card error:', error);
         return NextResponse.json(
-            { 
+            {
                 error: 'Failed to update ID card',
-                details: error.message 
+                details: error instanceof Error ? error.message : 'Unknown error'
             },
             { status: 500 }
         );
@@ -102,7 +102,7 @@ export async function GET(request: NextRequest) {
     try {
         // Check authentication
         const authHeader = request.headers.get('authorization') || request.headers.get('Authorization');
-        
+
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
             return NextResponse.json(
                 { error: 'Authentication required' },
@@ -151,12 +151,12 @@ export async function GET(request: NextRequest) {
             hasIdCard: !!user.idCardImageUrl
         }, { status: 200 });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Get ID card error:', error);
         return NextResponse.json(
-            { 
+            {
                 error: 'Failed to get ID card',
-                details: error.message 
+                details: error instanceof Error ? error.message : 'Unknown error'
             },
             { status: 500 }
         );

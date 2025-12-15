@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     try {
         // Check authentication
         const authHeader = request.headers.get('authorization') || request.headers.get('Authorization');
-        
+
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
             return NextResponse.json(
                 { error: 'Authentication required' },
@@ -73,12 +73,13 @@ export async function GET(request: NextRequest) {
             } : null,
         }, { status: 200 });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Get payment status error:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         return NextResponse.json(
-            { 
+            {
                 error: 'Failed to get payment status',
-                details: error.message 
+                details: errorMessage
             },
             { status: 500 }
         );

@@ -13,6 +13,7 @@ import 'swiper/css/pagination';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { motion, AnimatePresence } from 'framer-motion';
+import EventLoader from '@/components/EventLoader';
 
 
 
@@ -43,6 +44,8 @@ export default function Page({ }: Props) {
   const [user, setUser] = useState<any>(null);
   const [cardPosition, setCardPosition] = useState<{ x: number; y: number; width: number; height: number } | undefined>();
   const [animationType, setAnimationType] = useState<'fade' | 'slide' | 'flip'>('fade');
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     let styleElement = document.getElementById('events-swiper-styles') as HTMLStyleElement;
 
@@ -99,6 +102,7 @@ export default function Page({ }: Props) {
   }, [selectedEventIndex]);
 
   useEffect(() => {
+    setIsLoading(true);
     fetch('/api/events')
       .then(response => response.json())
       .then((events: any[]) => {
@@ -135,6 +139,10 @@ export default function Page({ }: Props) {
         // Fallback to empty array
         setAllEvents([]);
         setRawEvents([]);
+      })
+      .finally(() => {
+        // Add a small delay to ensure smooth transition
+        setTimeout(() => setIsLoading(false), 800);
       });
   }, []);
 
@@ -220,6 +228,19 @@ export default function Page({ }: Props) {
 
   return (
     <div ref={containerRef} className='w-full h-screen relative overflow-hidden'>
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div
+            key="loader"
+            className="fixed inset-0 z-[100]"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <EventLoader theme={theme} />
+          </motion.div>
+        )}
+      </AnimatePresence>
       <Link
         href="/"
         className={`clip-left absolute top-6 left-6 z-50 flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 ${isDystopia

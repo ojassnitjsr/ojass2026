@@ -13,7 +13,7 @@ export async function GET(
   try {
     // Get the admin token from cookies
     const cookieStore = cookies(); // NO await here
-    const tokenCookie =(await cookieStore).get("admin_token");
+    const tokenCookie = (await cookieStore).get("admin_token");
     requireAdmin(tokenCookie?.value); // Throws if invalid
 
     const { eventId } = await params;
@@ -25,7 +25,8 @@ export async function GET(
       .sort({ createdAt: -1 });
 
     return NextResponse.json(registrations, { status: 200 });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 401 });
+  } catch (error: unknown) {
+    const err = error as { message?: string };
+    return NextResponse.json({ error: err.message || "An error occurred" }, { status: 401 });
   }
 }

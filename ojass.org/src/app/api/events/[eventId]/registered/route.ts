@@ -41,10 +41,11 @@ export async function GET(
       isRegistered: !!registration,
       registration: registration || null,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error checking registration:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to check registration';
     return NextResponse.json(
-      { error: error.message || 'Failed to check registration' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

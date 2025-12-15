@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     const isIndividual = searchParams.get('isIndividual');
 
     // Build query
-    const query: any = {};
+    const query: Record<string, unknown> = {};
 
     if (eventId) {
       query.eventId = eventId;
@@ -51,11 +51,14 @@ export async function GET(req: NextRequest) {
 
     // Filter by search if provided
     if (search) {
-      teams = teams.filter((team: any) => {
+      teams = teams.filter((team) => {
         const teamName = team.teamName?.toLowerCase() || '';
-        const eventName = team.eventId?.name?.toLowerCase() || '';
-        const leaderName = team.teamLeader?.name?.toLowerCase() || '';
-        const leaderEmail = team.teamLeader?.email?.toLowerCase() || '';
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const eventName = (team.eventId as any)?.name?.toLowerCase() || '';
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const leaderName = (team.teamLeader as any)?.name?.toLowerCase() || '';
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const leaderEmail = (team.teamLeader as any)?.email?.toLowerCase() || '';
         const searchLower = search.toLowerCase();
         return (
           teamName.includes(searchLower) ||
@@ -75,10 +78,11 @@ export async function GET(req: NextRequest) {
         pages: Math.ceil(total / limit),
       },
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
     return NextResponse.json(
-      { error: err.message },
-      { status: err.message.includes('Unauthorized') ? 401 : 500 }
+      { error: errorMessage },
+      { status: errorMessage.includes('Unauthorized') ? 401 : 500 }
     );
   }
 }

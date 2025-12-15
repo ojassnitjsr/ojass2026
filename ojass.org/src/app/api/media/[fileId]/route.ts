@@ -6,7 +6,7 @@ import { getFileDetailsFromCloudinary } from '@/utils/cloudinary.util';
 import mongoose from 'mongoose';
 
 // GET /api/media/:fileId - Get file details
-export async function GET(request: NextRequest, context: any) {
+export async function GET(request: NextRequest, context: { params: Promise<{ fileId: string }> }) {
     try {
         // `context.params` may be a promise in Next.js; await it first
         const paramsPromise = context?.params;
@@ -79,7 +79,7 @@ export async function GET(request: NextRequest, context: any) {
 }
 
 // DELETE /api/media/:fileId - Delete uploaded file
-export async function DELETE(request: NextRequest, context: any) {
+export async function DELETE(request: NextRequest, context: { params: Promise<{ fileId: string }> }) {
     try {
         // `context.params` may be a promise in Next.js; await it first
         const paramsPromise = context?.params;

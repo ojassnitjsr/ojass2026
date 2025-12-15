@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     try {
         // Check authentication
         const authHeader = request.headers.get('authorization') || request.headers.get('Authorization');
-        
+
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
             return NextResponse.json(
                 { error: 'Authentication required' },
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
 
         // Get referral statistics with full user details
         const stats = await getReferralStats(user.ojassId);
-        
+
         // Get full details of referred users including phone and payment status
         const referredUsersWithDetails = await User.find({ referredBy: user.ojassId })
             .select('name email phone ojassId isPaid createdAt')
@@ -78,12 +78,13 @@ export async function GET(request: NextRequest) {
             }))
         }, { status: 200 });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Get referral stats error:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         return NextResponse.json(
-            { 
+            {
                 error: 'Failed to get referral statistics',
-                details: error.message 
+                details: errorMessage
             },
             { status: 500 }
         );

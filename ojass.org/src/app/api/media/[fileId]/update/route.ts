@@ -7,7 +7,7 @@ import mongoose from 'mongoose';
  * PUT /api/media/:fileId/update
  * Update file metadata (not the actual file, just database info)
  */
-export async function PUT(request: NextRequest, context: any) {
+export async function PUT(request: NextRequest, context: { params: Promise<{ fileId: string }> }) {
     try {
         // Get params from context
         const paramsPromise = context?.params;
@@ -53,7 +53,7 @@ export async function PUT(request: NextRequest, context: any) {
         }
 
         // Find and update file
-        const updateData: any = {};
+        const updateData: Record<string, unknown> = {};
         if (fileName) updateData.fileName = fileName;
         if (isIdCard !== undefined) updateData.isIdCard = isIdCard;
 
@@ -96,12 +96,13 @@ export async function PUT(request: NextRequest, context: any) {
             { status: 200 }
         );
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Update file error:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Failed to update file';
         return NextResponse.json(
             {
                 error: 'Failed to update file',
-                details: error.message
+                details: errorMessage
             },
             { status: 500 }
         );

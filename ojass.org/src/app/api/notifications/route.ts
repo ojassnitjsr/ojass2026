@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
-import Notification from "@/models/Notification";
 import UserNotification from "@/models/UserNotification";
 import jwt from "jsonwebtoken";
 
@@ -40,10 +39,10 @@ export async function GET(req: NextRequest) {
         const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 
         // Verify token and get user ID
-        let decoded: any;
+        let decoded: { userId?: string; id?: string };
         try {
-            decoded = jwt.verify(token, JWT_SECRET);
-        } catch (error) {
+            decoded = jwt.verify(token, JWT_SECRET) as { userId?: string; id?: string };
+        } catch {
             return NextResponse.json(
                 { success: false, message: "Invalid token" },
                 { status: 401 }
@@ -65,14 +64,20 @@ export async function GET(req: NextRequest) {
             .limit(50);
 
         // Format response
+        interface PopulatedNotification {
+            _id: unknown;
+            title: string;
+            description: string;
+            createdAt: Date;
+        }
         const notifications = userNotifications.map((un) => ({
             id: un._id,
-            notificationId: un.notificationId._id,
-            title: (un.notificationId as any).title,
-            description: (un.notificationId as any).description,
+            notificationId: (un.notificationId as PopulatedNotification)._id,
+            title: (un.notificationId as PopulatedNotification).title,
+            description: (un.notificationId as PopulatedNotification).description,
             isRead: un.isRead,
             readAt: un.readAt,
-            createdAt: (un.notificationId as any).createdAt,
+            createdAt: (un.notificationId as PopulatedNotification).createdAt,
         }));
 
         return NextResponse.json({

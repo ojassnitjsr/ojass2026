@@ -25,9 +25,9 @@ export async function POST(request: NextRequest) {
         // Validate format
         if (!isValidOjassId(referralCode)) {
             return NextResponse.json(
-                { 
+                {
                     valid: false,
-                    error: 'Invalid referral code format. Format should be OJASS26XXXX' 
+                    error: 'Invalid referral code format. Format should be OJASS26XXXX'
                 },
                 { status: 200 }
             );
@@ -41,9 +41,9 @@ export async function POST(request: NextRequest) {
 
         if (!exists) {
             return NextResponse.json(
-                { 
+                {
                     valid: false,
-                    error: 'Referral code does not exist' 
+                    error: 'Referral code does not exist'
                 },
                 { status: 200 }
             );
@@ -61,12 +61,13 @@ export async function POST(request: NextRequest) {
             }
         }, { status: 200 });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Validate referral code error:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         return NextResponse.json(
-            { 
+            {
                 error: 'Failed to validate referral code',
-                details: error.message 
+                details: errorMessage
             },
             { status: 500 }
         );

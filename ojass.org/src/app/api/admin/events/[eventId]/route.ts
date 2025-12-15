@@ -3,7 +3,7 @@ import connectToDatabase from "@/lib/mongodb";
 import Event from "@/models/Event";
 import { requireAdmin } from "@/lib/admin";
 import { cookies } from "next/headers";
-import { IPrizes, IEventHead } from "@/models/Event";
+
 
 // Define the correct type for the route parameters based on the file name [eventId]
 interface RouteParams {
@@ -13,7 +13,7 @@ interface RouteParams {
 }
 
 // Validation helper function for updates (basic validation only)
-function validateEventUpdateData(data: any): { isValid: boolean; errors: string[] } {
+function validateEventUpdateData(data: Record<string, unknown>): { isValid: boolean; errors: string[] } {
     const errors: string[] = [];
 
     // Basic type checks only - let Mongoose handle the rest
@@ -89,7 +89,7 @@ export async function GET(
         const { eventId } = await params;
 
         const event = await Event.findById(eventId);
-        
+
         if (!event) {
             return NextResponse.json(
                 { error: "Event not found" },
@@ -98,7 +98,8 @@ export async function GET(
         }
 
         return NextResponse.json(event);
-    } catch (err: any) {
+    } catch (error: unknown) {
+        const err = error as { message?: string };
         return NextResponse.json(
             { error: err.message || "Failed to fetch event" },
             { status: 500 }
@@ -132,7 +133,7 @@ export async function PUT(
         }
 
         // Prepare update data - merge with existing event
-        const updateData: any = { ...body };
+        const updateData: Record<string, unknown> = { ...body };
 
         // For individual events, ensure team sizes are set to 1
         if (updateData.isTeamEvent === false) {
@@ -150,21 +151,21 @@ export async function PUT(
 
         // Clean up arrays first (filter out empty strings) before validation
         if (updateData.details !== undefined && Array.isArray(updateData.details)) {
-            updateData.details = updateData.details.filter((item: any) => 
+            updateData.details = (updateData.details as unknown[]).filter((item: unknown) =>
                 item !== null && item !== undefined && typeof item === 'string' && item.trim().length > 0
             );
             // If all items were filtered out, remove the field (don't update)
-            if (updateData.details.length === 0) {
+            if ((updateData.details as unknown[]).length === 0) {
                 delete updateData.details;
             }
         }
 
         if (updateData.rules !== undefined && Array.isArray(updateData.rules)) {
-            updateData.rules = updateData.rules.filter((item: any) => 
+            updateData.rules = (updateData.rules as unknown[]).filter((item: unknown) =>
                 item !== null && item !== undefined && typeof item === 'string' && item.trim().length > 0
             );
             // If all items were filtered out, remove the field (don't update)
-            if (updateData.rules.length === 0) {
+            if ((updateData.rules as unknown[]).length === 0) {
                 delete updateData.rules;
             }
         }
@@ -192,20 +193,27 @@ export async function PUT(
         // For team size validation to work properly, we need to update the document
         // and save it so validators can see both values together
         Object.keys(updateData).forEach(key => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (existingEvent as any)[key] = updateData[key];
         });
-        
+
         // Validate before saving (this ensures team size validators see both values)
         await existingEvent.validate();
-        
+
         // Save the updated event
         const updatedEvent = await existingEvent.save();
 
         return NextResponse.json(updatedEvent);
-    } catch (err: any) {
+    } catch (error: unknown) {
+        const err = error as {
+            name?: string;
+            message?: string;
+            errors?: Record<string, { message: string }>;
+        };
+
         // Handle Mongoose validation errors
-        if (err.name === "ValidationError") {
-            const errors = Object.values(err.errors).map((e: any) => e.message);
+        if (err.name === "ValidationError" && err.errors) {
+            const errors = Object.values(err.errors).map((e) => e.message);
             return NextResponse.json(
                 { error: "Validation failed", errors },
                 { status: 400 }
@@ -242,7 +250,7 @@ export async function DELETE(
         requireAdmin(tokenCookie?.value);
 
         const deletedEvent = await Event.findByIdAndDelete(eventId);
-        
+
         if (!deletedEvent) {
             return NextResponse.json(
                 { error: "Event not found" },
@@ -254,7 +262,9 @@ export async function DELETE(
             success: true,
             message: "Event deleted successfully",
         });
-    } catch (err: any) {
+    } catch (error: unknown) {
+        const err = error as { message?: string };
+
         // Handle authentication errors
         if (err.message?.includes("Unauthorized") || err.message?.includes("token") || err.message?.includes("No token")) {
             return NextResponse.json(

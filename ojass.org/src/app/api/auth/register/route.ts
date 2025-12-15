@@ -12,16 +12,14 @@ export async function POST(request: NextRequest) {
             name,
             email,
             phone,
-            password,
             gender,
             collegeName,
             city,
             state,
             referralCode, // OJASS ID of referrer
-            idCardImageUrl,
-            idCardCloudinaryId,
             isNitJsrStudent,
         } = body;
+        const { password, idCardImageUrl, idCardCloudinaryId } = body;
 
         // Basic normalization/coercion
         name = (name || "").trim();
@@ -210,12 +208,12 @@ export async function POST(request: NextRequest) {
             },
             { status: 201 },
         );
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Registration error:", error);
 
         // Handle duplicate key error
-        if (error.code === 11000) {
-            const field = Object.keys(error.keyPattern)[0];
+        if (error && typeof error === 'object' && 'code' in error && error.code === 11000) {
+            const field = 'keyPattern' in error && error.keyPattern ? Object.keys(error.keyPattern as Record<string, unknown>)[0] : 'field';
             return NextResponse.json(
                 { error: `User with this ${field} already exists` },
                 { status: 409 },

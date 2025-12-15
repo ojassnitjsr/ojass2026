@@ -35,8 +35,9 @@ export async function POST(
       success: true,
       message: "Registration verified",
     });
-  } catch (err: any) {
-    const status = err.message.includes("Unauthorized") ? 401 : 400;
-    return NextResponse.json({ error: err.message }, { status });
+  } catch (error: unknown) {
+    const err = error as { message?: string };
+    const status = err.message?.includes("Unauthorized") ? 401 : 400;
+    return NextResponse.json({ error: err.message || "An error occurred" }, { status });
   }
 }

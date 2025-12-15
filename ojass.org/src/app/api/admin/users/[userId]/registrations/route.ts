@@ -35,10 +35,11 @@ export async function GET(
       .sort({ createdAt: -1 });
 
     return NextResponse.json(registrations);
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'An unexpected error occurred';
     return NextResponse.json(
-      { error: err.message },
-      { status: err.message.includes('Unauthorized') ? 401 : 500 }
+      { error: errorMessage },
+      { status: errorMessage.includes('Unauthorized') ? 401 : 500 }
     );
   }
 }

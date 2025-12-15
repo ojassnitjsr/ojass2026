@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
-import mongoose, { Types } from 'mongoose'; 
 import connectToDatabase from "@/lib/mongodb";
-import Team from "@/models/Team"; 
-import Event from "@/models/Event"; 
+import Event from "@/models/Event";
+import Team from "@/models/Team";
+import { Types } from 'mongoose';
+import { NextResponse } from "next/server";
 
 // --- Interface Definitions for Type Safety ---
 
@@ -21,13 +21,26 @@ interface PopulatedTeam {
     teamMembers: { _id: Types.ObjectId, name: string; email: string; isNitJsrStudent: boolean; }[];
 }
 
+interface CertificateEntry {
+    eventId: string;
+    teamId: string;
+    memberId: string;
+    eventTitle: string;
+    teamName: string;
+    memberFullName: string;
+    memberEmail: string;
+    isNitJsrStudent: boolean;
+    certificateType: string;
+    isLeader: boolean;
+}
+
 // --- Helper Function ---
 
 /**
  * Checks if a specific team ID exists in the event's winners array.
  */
 const isWinner = (
-    teamId: Types.ObjectId, 
+    teamId: Types.ObjectId,
     eventWinners: Types.ObjectId[]
 ): boolean => {
     // Uses Mongoose's .equals() for robust ObjectId comparison
@@ -40,44 +53,44 @@ const isWinner = (
  * GET handler to fetch data for all verified participating teams and winners 
  * for certificate generation.
  */
-export async function GET(req: Request) {
+export async function GET() {
     await connectToDatabase();
-    
+
     try {
         // 1. Fetch all verified teams (participants)
         const teams = await Team.find({ isVerified: true })
-            .select('eventId teamName teamLeader teamMembers isIndividual') 
+            .select('eventId teamName teamLeader teamMembers isIndividual')
             .populate([
                 // Populate event details (Title and Winners list)
-                { 
-                    path: 'eventId', 
+                {
+                    path: 'eventId',
                     select: 'title winners',
-                    model: Event 
+                    model: Event
                 },
                 // Populate team leader details
-                { 
-                    path: 'teamLeader', 
+                {
+                    path: 'teamLeader',
                     // FIX: Use 'name' instead of 'fullName', remove 'college', add 'isNitJsrStudent'
-                    select: 'name email isNitJsrStudent', 
-                    model: 'User' 
+                    select: 'name email isNitJsrStudent',
+                    model: 'User'
                 },
                 // Populate team member details
-                { 
-                    path: 'teamMembers', 
+                {
+                    path: 'teamMembers',
                     // FIX: Use 'name' instead of 'fullName', remove 'college', add 'isNitJsrStudent'
-                    select: 'name email isNitJsrStudent', 
-                    model: 'User' 
+                    select: 'name email isNitJsrStudent',
+                    model: 'User'
                 }
             ])
             // FINAL FIX: Cast to 'unknown' first to resolve the Mongoose FlattenMaps error
-            .lean() as unknown as PopulatedTeam[]; 
+            .lean() as unknown as PopulatedTeam[];
 
         if (teams.length === 0) {
             return NextResponse.json({ message: "No verified teams or participants found." }, { status: 200 });
         }
 
         // 2. Process the data into individual certificate entries
-        const certificateData: any[] = [];
+        const certificateData: CertificateEntry[] = [];
 
         for (const team of teams) {
             // Safety check for successful population
@@ -85,24 +98,24 @@ export async function GET(req: Request) {
 
             const eventWinners = team.eventId.winners || [];
             const isTeamWinner = isWinner(team._id, eventWinners);
-            
+
             const certificateType = isTeamWinner ? 'Winner' : 'Participation';
             const eventTitle = team.eventId.title;
-            
+
             // Iterate over all populated members to create an entry for each certificate
             for (const member of team.teamMembers) {
                 // Ensure the member object is populated and has an ID
                 if (!member || !member._id) continue;
-                
+
                 // Determine if this specific member is the leader
                 // Using .equals() on the populated leader's ID and the member's ID
                 const isLeader = team.teamLeader._id.equals(member._id);
-                
+
                 // Use the member's name (which is the full name) as the "Team Name" for individual events
                 const displayTeamName = team.isIndividual ? member.name : (team.teamName || 'N/A');
 
                 certificateData.push({
-                    eventId: team.eventId._id.toHexString(), 
+                    eventId: team.eventId._id.toHexString(),
                     teamId: team._id.toHexString(),
                     memberId: member._id.toHexString(),
                     eventTitle: eventTitle,
@@ -110,7 +123,7 @@ export async function GET(req: Request) {
                     memberFullName: member.name, // FIX: Use member.name
                     memberEmail: member.email,
                     isNitJsrStudent: member.isNitJsrStudent, // FIX: Include available User field
-                    certificateType: certificateType, 
+                    certificateType: certificateType,
                     isLeader: isLeader,
                 });
             }

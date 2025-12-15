@@ -3,10 +3,10 @@ import connectToDatabase from "@/lib/mongodb";
 import Event from "@/models/Event";
 import { requireAdmin } from "@/lib/admin";
 import { cookies } from "next/headers";
-import { IPrizes, IEventHead } from "@/models/Event";
+import { IPrizes, IEventHead, IEvent } from "@/models/Event";
 
 // Validation helper function
-function validateEventData(data: any): { isValid: boolean; errors: string[] } {
+function validateEventData(data: Partial<IEvent>): { isValid: boolean; errors: string[] } {
   const errors: string[] = [];
 
   // Required string fields
@@ -76,7 +76,7 @@ function validateEventData(data: any): { isValid: boolean; errors: string[] } {
   if (!Array.isArray(data.details) || data.details.length === 0) {
     errors.push("Event details must be a non-empty array of strings");
   } else {
-    const invalidDetails = data.details.some((detail: any) => typeof detail !== "string");
+    const invalidDetails = data.details.some((detail: unknown) => typeof detail !== "string");
     if (invalidDetails) {
       errors.push("All event details must be strings");
     }
@@ -86,7 +86,7 @@ function validateEventData(data: any): { isValid: boolean; errors: string[] } {
   if (!Array.isArray(data.rules) || data.rules.length === 0) {
     errors.push("Event rules must be a non-empty array of strings");
   } else {
-    const invalidRules = data.rules.some((rule: any) => typeof rule !== "string");
+    const invalidRules = data.rules.some((rule: unknown) => typeof rule !== "string");
     if (invalidRules) {
       errors.push("All event rules must be strings");
     }
@@ -125,9 +125,9 @@ export async function GET() {
     await connectToDatabase();
     const events = await Event.find().sort({ createdAt: -1 });
     return NextResponse.json(events);
-  } catch (err: any) {
+  } catch (err: unknown) {
     return NextResponse.json(
-      { error: err.message || "Failed to fetch events" },
+      { error: err instanceof Error ? err.message : "Failed to fetch events" },
       { status: 500 }
     );
   }
@@ -156,10 +156,17 @@ export async function POST(req: NextRequest) {
     // Create the event
     const newEvent = await Event.create(body);
     return NextResponse.json(newEvent, { status: 201 });
-  } catch (err: any) {
+  } catch (error: unknown) {
+    const err = error as {
+      name?: string;
+      message?: string;
+      code?: number;
+      errors?: Record<string, { message: string }>;
+    };
+
     // Handle Mongoose validation errors
-    if (err.name === "ValidationError") {
-      const errors = Object.values(err.errors).map((e: any) => e.message);
+    if (err.name === "ValidationError" && err.errors) {
+      const errors = Object.values(err.errors).map((e) => e.message);
       return NextResponse.json(
         { error: "Validation failed", errors },
         { status: 400 }

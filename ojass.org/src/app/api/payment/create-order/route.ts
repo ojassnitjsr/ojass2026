@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     try {
         // Check authentication
         const authHeader = request.headers.get('authorization') || request.headers.get('Authorization');
-        
+
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
             return NextResponse.json(
                 { error: 'Authentication required' },
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
         const userIdStr = user._id.toString();
         const timestamp = Date.now().toString();
         const receipt = `OJASS26${userIdStr.slice(-12)}${timestamp.slice(-6)}`;
-        
+
         const orderOptions = {
             receipt: receipt,
             notes: {
@@ -105,12 +105,13 @@ export async function POST(request: NextRequest) {
         let order;
         try {
             order = await createOrder(pricing.amountInPaise, 'INR', orderOptions);
-        } catch (razorpayError: any) {
+        } catch (razorpayError: unknown) {
             console.error('Razorpay order creation error:', razorpayError);
+            const errorMessage = razorpayError instanceof Error ? razorpayError.message : 'Razorpay API error. Please check your Razorpay credentials and configuration.';
             return NextResponse.json(
-                { 
+                {
                     error: 'Failed to create payment order',
-                    details: razorpayError.message || 'Razorpay API error. Please check your Razorpay credentials and configuration.'
+                    details: errorMessage
                 },
                 { status: 500 }
             );
@@ -138,28 +139,30 @@ export async function POST(request: NextRequest) {
             razorpayKeyId: process.env.RAZORPAY_KEY_ID,
         }, { status: 201 });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Create order error:', error);
-        console.error('Error stack:', error.stack);
-        
+        if (error instanceof Error) {
+            console.error('Error stack:', error.stack);
+        }
+
         // Check for specific error types
         let errorMessage = 'Failed to create payment order';
-        let errorDetails = error.message || 'Unknown error';
+        let errorDetails = error instanceof Error ? error.message : 'Unknown error';
 
         // Check if it's a Razorpay credential error
-        if (error.message?.includes('Razorpay credentials') || error.message?.includes('RAZORPAY')) {
+        if (error instanceof Error && (error.message?.includes('Razorpay credentials') || error.message?.includes('RAZORPAY'))) {
             errorMessage = 'Payment gateway configuration error';
             errorDetails = 'Razorpay credentials are not properly configured. Please contact support.';
         }
-        
+
         // Check if it's a pricing error
-        if (error.message?.includes('pricing') || error.message?.includes('amount')) {
+        if (error instanceof Error && (error.message?.includes('pricing') || error.message?.includes('amount'))) {
             errorMessage = 'Pricing configuration error';
             errorDetails = error.message;
         }
 
         return NextResponse.json(
-            { 
+            {
                 error: errorMessage,
                 details: errorDetails
             },

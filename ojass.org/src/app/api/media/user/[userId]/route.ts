@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import connectToDatabase from '@/lib/mongodb';
 import Media from '@/models/Media';
 import mongoose from 'mongoose';
 
@@ -19,7 +18,7 @@ export async function GET(
             );
         }
 
-    // DB connection is initialized on module import (see src/lib/mongodb.ts)
+        // DB connection is initialized on module import (see src/lib/mongodb.ts)
 
         // Get query parameters for filtering
         const { searchParams } = new URL(request.url);
@@ -27,12 +26,12 @@ export async function GET(
         const resourceType = searchParams.get('resourceType');
 
         // Build query
-        const query: any = { userId: userId };
-        
+        const query: Record<string, unknown> = { userId: userId };
+
         if (isIdCard !== null) {
             query.isIdCard = isIdCard === 'true';
         }
-        
+
         if (resourceType) {
             query.resourceType = resourceType;
         }

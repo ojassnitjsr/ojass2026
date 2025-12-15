@@ -19,8 +19,9 @@ export async function GET(req: Request, { params }: { params: Promise<{ eventId:
       .sort({ createdAt: -1 });
 
     return NextResponse.json(verified);
-  } catch (err: any) {
-    const status = err.message.includes("Unauthorized") ? 401 : 400;
-    return NextResponse.json({ error: err.message }, { status });
+  } catch (error: unknown) {
+    const err = error as { message?: string };
+    const status = err.message?.includes("Unauthorized") ? 401 : 400;
+    return NextResponse.json({ error: err.message || "An error occurred" }, { status });
   }
 }
