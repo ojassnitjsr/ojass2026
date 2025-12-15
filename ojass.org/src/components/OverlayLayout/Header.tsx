@@ -77,7 +77,7 @@ export default function Header() {
           href="https://sponsors.ojass.org" target="_blank"
           className={`clip-left layout-panel layout-text !border-0 pointer-events-auto px-6 py-3 font-bold text-sm md:text-lg hover:scale-105 active:scale-95 transition-all duration-300 ${isDystopia ? "is-dystopia" : ""}`}
         >
-          SPONSORS
+          SPONSOR US
         </Link>
       </div>
 
@@ -87,7 +87,7 @@ export default function Header() {
           href="https://ambassadors.ojass.org" target="_blank"
           className={`clip-right layout-panel layout-text !border-0 pointer-events-auto px-6 py-3 font-bold text-sm md:text-lg hover:scale-105 active:scale-95 transition-all duration-300 ${isDystopia ? "is-dystopia" : ""}`}
         >
-          AMBASSADORS
+          CA PROGRAM
         </Link>
       </div>
     </div>

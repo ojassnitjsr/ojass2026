@@ -10,7 +10,7 @@ import TimelineDial from "./TimelineDial";
 const TimelinePage = () => {
     const [selectedDay, setSelectedDay] = useState<DayKey>(2);
     const [isAnimating, setIsAnimating] = useState(false);
-    const [angle, setAngle] = useState(120);
+    const [angle, setAngle] = useState(90);
     const [isThrottled, setIsThrottled] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const [showTransition, setShowTransition] = useState(false);
@@ -54,21 +54,21 @@ const TimelinePage = () => {
 
     const getDayFromAngle = (ang: number): DayKey => {
         const norm = ((ang % 360) + 360) % 360;
-        let index = Math.round(norm / 120) % 3;
-        if (index < 0) index += 3;
-        return [1, 2, 3][index] as DayKey;
+        let index = Math.round(norm / 90) % 4;
+        if (index < 0) index += 4;
+        return [1, 2, 3, 4][index] as DayKey;
     };
 
     const rotate = (dir: number) => {
         if (isAnimating || isThrottled) return;
         setShowTransition(true);
 
-        const newAngle = angle + dir * 120;
+        const newAngle = angle + dir * 90;
         const newDay = getDayFromAngle(newAngle);
 
         const currentDay = getDayFromAngle(angle);
-        const diff = (newDay - currentDay + 3) % 3;
-        const actualDirection = diff === 1 || diff === -2 ? "left" : "right";
+        const diff = (newDay - currentDay + 4) % 4;
+        const actualDirection = diff === 1 || diff === -3 ? "left" : "right";
         setDirection(actualDirection);
 
         setAngle(newAngle);
@@ -135,14 +135,14 @@ const TimelinePage = () => {
         if (!isDragging) return;
         setIsDragging(false);
 
-        const snap = Math.round(angle / 120) * 120;
+        const snap = Math.round(angle / 90) * 90;
         setAngle(snap);
         currentAngleRef.current = snap;
 
         const newDay = getDayFromAngle(snap);
         const currentDay = getDayFromAngle(angle);
-        const diff = (newDay - currentDay + 3) % 3;
-        const actualDirection = diff === 1 || diff === -2 ? "left" : "right";
+        const diff = (newDay - currentDay + 4) % 4;
+        const actualDirection = diff === 1 || diff === -3 ? "left" : "right";
         setDirection(actualDirection);
 
         if (newDay !== selectedDay && !isAnimating) {

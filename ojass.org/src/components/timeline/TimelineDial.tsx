@@ -27,8 +27,9 @@ const TimelineDial = ({
 }: TimelineDialProps) => {
     const dayLabels = [
         { angle: 0, day: 1, label: "DAY 1", subtext: "Monday" },
-        { angle: 120, day: 2, label: "DAY 2", subtext: "Tuesday" },
-        { angle: 240, day: 3, label: "DAY 3", subtext: "Wednesday" },
+        { angle: 90, day: 2, label: "DAY 2", subtext: "Tuesday" },
+        { angle: 180, day: 3, label: "DAY 3", subtext: "Wednesday" },
+        { angle: 270, day: 4, label: "DAY 4", subtext: "Thursday" },
     ];
 
     return (
@@ -42,7 +43,7 @@ const TimelineDial = ({
             role="slider"
             aria-valuenow={selectedDay}
             aria-valuemin={1}
-            aria-valuemax={3}
+            aria-valuemax={4}
             aria-label={`Select timeline day: Day ${selectedDay}`}
             style={{
                 cursor: isDragging ? "grabbing" : "grab",
@@ -57,9 +58,8 @@ const TimelineDial = ({
                     width: "100%",
                     height: "100%",
                     transform: `rotate(${angle}deg)`,
-                    transition: `transform ${
-                        isDragging ? "0s" : "1s"
-                    } ease-out`,
+                    transition: `transform ${isDragging ? "0s" : "1s"
+                        } ease-out`,
                     pointerEvents: "none",
                     filter:
                         theme === "utopia"
@@ -350,110 +350,66 @@ const TimelineDial = ({
                         strokeDasharray="3,3"
                     />
 
-                    {/* Timeline markers with enhanced glow */}
-                    <line
-                        x1="465"
-                        y1="265"
-                        x2="538"
-                        y2="265"
-                        stroke="url(#ringGradient)"
-                        strokeWidth="6"
-                        filter="url(#strongGlow)"
-                    />
-                    <line
-                        x1="465"
-                        y1="265"
-                        x2="538"
-                        y2="265"
-                        stroke={
-                            theme === "utopia"
-                                ? "rgba(0,255,255,0.6)"
-                                : "rgba(255,0,0,0.6)"
-                        }
-                        strokeWidth="3"
-                    />
+                    {/* Dynamic 8-section Spokes and Nodes */}
+                    {[0, 45, 90, 135, 180, 225, 270, 315].map((ang, i) => {
+                        const rad = (ang * Math.PI) / 180;
+                        const isPrimary = i % 2 === 0; // 0, 90, 180, 270
 
-                    <line
-                        y1="265"
-                        x2="73"
-                        y2="265"
-                        stroke="url(#ringGradient)"
-                        strokeWidth="6"
-                        filter="url(#strongGlow)"
-                    />
-                    <line
-                        y1="265"
-                        x2="73"
-                        y2="265"
-                        stroke={
-                            theme === "utopia"
-                                ? "rgba(0,255,255,0.6)"
-                                : "rgba(255,0,0,0.6)"
-                        }
-                        strokeWidth="3"
-                    />
+                        // Radii
+                        const rInner = 196;
+                        const rOuter = 269;
 
-                    {/* Diagonal markers */}
-                    <path
-                        d="M406.961 38.06L367 104"
-                        stroke="url(#ringGradient)"
-                        strokeWidth="4"
-                        filter="url(#glow)"
-                    />
-                    <line
-                        x1="174.474"
-                        y1="439.982"
-                        x2="137.979"
-                        y2="503.951"
-                        stroke="url(#ringGradient)"
-                        strokeWidth="4"
-                        filter="url(#glow)"
-                    />
-                    <line
-                        x1="371.497"
-                        y1="436.059"
-                        x2="407.002"
-                        y2="500.022"
-                        stroke="url(#ringGradient)"
-                        strokeWidth="4"
-                        filter="url(#glow)"
-                    />
-                    <path
-                        d="M137.936 33.987L178.5 99.5"
-                        stroke="url(#ringGradient)"
-                        strokeWidth="4"
-                        filter="url(#glow)"
-                    />
+                        // Calculate coords relative to center 269, 269
+                        const x1 = 269 + rInner * Math.cos(rad);
+                        const y1 = 269 + rInner * Math.sin(rad);
+                        const x2 = 269 + rOuter * Math.cos(rad);
+                        const y2 = 269 + rOuter * Math.sin(rad);
 
-                    {/* Energy nodes at endpoints */}
-                    {[
-                        { cx: 538, cy: 265 },
-                        { cx: 0, cy: 265 },
-                        { cx: 407, cy: 38 },
-                        { cx: 138, cy: 34 },
-                        { cx: 407, cy: 500 },
-                        { cx: 138, cy: 504 },
-                    ].map((p, i) => (
-                        <g key={i}>
-                            <circle
-                                cx={p.cx}
-                                cy={p.cy}
-                                r="8"
-                                fill={
-                                    theme === "utopia" ? "#00ffff" : "#ff0000"
-                                }
-                                filter="url(#strongGlow)"
-                            />
-                            <circle
-                                cx={p.cx}
-                                cy={p.cy}
-                                r="5"
-                                fill={
-                                    theme === "utopia" ? "#ffffff" : "#ffcccc"
-                                }
-                            />
-                        </g>
-                    ))}
+                        return (
+                            <g key={i}>
+                                {/* Glow Line */}
+                                <line
+                                    x1={x1}
+                                    y1={y1}
+                                    x2={x2}
+                                    y2={y2}
+                                    stroke="url(#ringGradient)"
+                                    strokeWidth={isPrimary ? 6 : 4}
+                                    filter={isPrimary ? "url(#strongGlow)" : "url(#glow)"}
+                                    strokeLinecap="round"
+                                />
+                                {/* Core Line */}
+                                <line
+                                    x1={x1}
+                                    y1={y1}
+                                    x2={x2}
+                                    y2={y2}
+                                    stroke={
+                                        theme === "utopia"
+                                            ? "rgba(0,255,255,0.6)"
+                                            : "rgba(255,0,0,0.6)"
+                                    }
+                                    strokeWidth={isPrimary ? 3 : 2}
+                                    strokeLinecap="round"
+                                />
+
+                                {/* Node at endpoint */}
+                                <circle
+                                    cx={x2}
+                                    cy={y2}
+                                    r={isPrimary ? 8 : 6}
+                                    fill={theme === "utopia" ? "#00ffff" : "#ff0000"}
+                                    filter="url(#strongGlow)"
+                                />
+                                <circle
+                                    cx={x2}
+                                    cy={y2}
+                                    r={isPrimary ? 5 : 3}
+                                    fill={theme === "utopia" ? "#ffffff" : "#ffcccc"}
+                                />
+                            </g>
+                        );
+                    })}
 
                     {/* Center power core */}
                     <circle
@@ -509,8 +465,8 @@ const TimelineDial = ({
                     />
 
                     {/* Tick marks around the dial */}
-                    {[...Array(60)].map((_, i) => {
-                        const tickAngle = (i * 6 * Math.PI) / 180;
+                    {[...Array(80)].map((_, i) => {
+                        const tickAngle = (i * 4.5 * Math.PI) / 180;
                         const innerR = i % 5 === 0 ? 240 : 250;
                         const outerR = 260;
                         const x1 = 269 + innerR * Math.cos(tickAngle);
