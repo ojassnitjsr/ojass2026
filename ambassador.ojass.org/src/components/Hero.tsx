@@ -1,9 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Award, Users } from "lucide-react";
+import { Award } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 
 const Hero = () => {
 

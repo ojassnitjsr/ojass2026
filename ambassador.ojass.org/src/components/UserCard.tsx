@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { User, Phone, Code } from "lucide-react";
+import { Code, Phone, User } from "lucide-react";
 
 interface UserCardProps {
   ojassId: string;
@@ -10,7 +10,7 @@ interface UserCardProps {
   referralCode: string;
 }
 
-const UserCard = ({ ojassId, name, phone, referralCode }: UserCardProps) => {
+const UserCard = ({ name, phone, referralCode }: UserCardProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

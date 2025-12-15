@@ -10,7 +10,7 @@ interface LoginResponse {
     phone: string;
     ojassId: string;
     referralCount?: number;
-    [key: string]: any;
+    [key: string]: unknown;
   };
   token: string;
 }
