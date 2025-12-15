@@ -332,7 +332,7 @@ export default function Home() {
           {/* Website Launch Pill */}
           <div className="mb-4 md:mb-6 animate-fade-in opacity-0 [animation-delay:0.5s]">
             <span className="px-3 py-1 md:py-1.5 rounded-full bg-blue-500/10 border border-cyan-400/30 text-cyan-200 font-bold tracking-widest text-[10px] md:text-xs uppercase shadow-[0_0_15px_-3px_rgba(34,211,238,0.2)]">
-              ❄️ Website Launching: 15<sup className="lowercase">th</sup> Dec, 2025
+              ❄️ Website Launching: 17<sup className="lowercase">th</sup> Dec, 2025
             </span>
           </div>
 
