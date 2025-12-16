@@ -1,7 +1,7 @@
 'use client';
 
 import { useTheme } from '@/contexts/ThemeContext';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface Particle {
   x: number;
@@ -20,8 +20,20 @@ export default function CursorEffect() {
   const animationFrameRef = useRef<number | undefined>(undefined);
   const { theme } = useTheme();
   const isDystopia = theme === 'dystopia';
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile on mount
+  useEffect(() => {
+    const checkMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    setIsMobile(checkMobile);
+  }, []);
 
   useEffect(() => {
+    // Skip entire effect on mobile
+    if (isMobile) {
+      return;
+    }
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -40,7 +52,7 @@ export default function CursorEffect() {
     // Track mouse position
     const handleMouseMove = (e: MouseEvent) => {
       mouseRef.current = { x: e.clientX, y: e.clientY };
-      
+
       // Add new particles at cursor position for fire trail
       for (let i = 0; i < 3; i++) {
         const angle = Math.random() * Math.PI * 2;
@@ -57,10 +69,10 @@ export default function CursorEffect() {
       }
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+
     // Also track on document to catch mouse movements
-    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mousemove', handleMouseMove, { passive: true });
 
     // Animation loop
     const animate = () => {
@@ -124,7 +136,7 @@ export default function CursorEffect() {
           mouse.y,
           30
         );
-        
+
         if (isDystopia) {
           // Fire red glow
           glowGradient.addColorStop(0, 'rgba(255, 200, 100, 0.6)');
@@ -151,7 +163,7 @@ export default function CursorEffect() {
           mouse.y,
           12
         );
-        
+
         if (isDystopia) {
           // Fire red inner circle
           circleGradient.addColorStop(0, 'rgba(255, 255, 200, 1)');
@@ -194,14 +206,19 @@ export default function CursorEffect() {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [isDystopia]);
+  }, [isDystopia, isMobile]);
+
+  // Don't render canvas on mobile devices
+  if (isMobile) {
+    return null;
+  }
 
   return (
     <canvas
       ref={canvasRef}
       className="fixed top-0 left-0 pointer-events-none"
-      style={{ 
-        width: '100vw', 
+      style={{
+        width: '100vw',
         height: '100vh',
         display: 'block',
         visibility: 'visible',

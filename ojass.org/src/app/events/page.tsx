@@ -44,6 +44,7 @@ export default function Page() {
   const [cardPosition, setCardPosition] = useState<{ x: number; y: number; width: number; height: number } | undefined>();
   const [animationType, setAnimationType] = useState<'fade' | 'slide' | 'flip'>('fade');
   const [isLoading, setIsLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     let styleElement = document.getElementById('events-swiper-styles') as HTMLStyleElement;
@@ -99,6 +100,22 @@ export default function Page() {
       styleElement?.remove();
     };
   }, [selectedEventIndex]);
+
+  // Detect if device is mobile/touch-based
+  useEffect(() => {
+    const checkMobile = () => {
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isSmallScreen = window.matchMedia('(max-width: 1024px)').matches;
+      setIsMobile(isTouchDevice || isSmallScreen);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
@@ -165,53 +182,68 @@ export default function Page() {
   }, [selectedCategory, rawEvents]);
 
   useEffect(() => {
-    const container = containerRef.current
-    if (!container) return
+    const container = containerRef.current;
+    if (!container || isMobile) return; // Skip on mobile
+
+    let rafId: number;
+    let lastTime = 0;
+    const throttleMs = 16; // ~60fps
 
     const handleMouseMove = (e: MouseEvent) => {
-      const rect = container.getBoundingClientRect()
-      const x = (e.clientX - rect.left) / rect.width
-      const y = (e.clientY - rect.top) / rect.height
-      const normalizedX = (x - 0.5) * 2
-      const normalizedY = (y - 0.5) * 2
+      const now = performance.now();
+      if (now - lastTime < throttleMs) return;
+      lastTime = now;
 
-      const maxX = 40
-      const maxY = 20
-      const targetX = -normalizedX * maxX
-      const targetY = -normalizedY * maxY
+      if (rafId) cancelAnimationFrame(rafId);
 
-      gsap.to('#events-bg', {
-        x: targetX,
-        y: targetY,
-        duration: 0.2,
-        ease: 'none'
-      })
+      rafId = requestAnimationFrame(() => {
+        const rect = container.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width;
+        const y = (e.clientY - rect.top) / rect.height;
+        const normalizedX = (x - 0.5) * 2;
+        const normalizedY = (y - 0.5) * 2;
 
-      const fgMaxX = 10
-      const fgMaxY = 5
-      const fgX = -normalizedX * fgMaxX
-      const fgY = -normalizedY * fgMaxY
-      gsap.to('#events-fg', {
-        x: fgX,
-        y: fgY,
-        duration: 0.2,
-        ease: 'none'
-      })
-    }
+        const maxX = 40;
+        const maxY = 20;
+        const targetX = -normalizedX * maxX;
+        const targetY = -normalizedY * maxY;
+
+        gsap.to('#events-bg', {
+          x: targetX,
+          y: targetY,
+          duration: 0.3,
+          ease: 'power2.out',
+          force3D: true,
+        });
+
+        const fgMaxX = 10;
+        const fgMaxY = 5;
+        const fgX = -normalizedX * fgMaxX;
+        const fgY = -normalizedY * fgMaxY;
+        gsap.to('#events-fg', {
+          x: fgX,
+          y: fgY,
+          duration: 0.3,
+          ease: 'power2.out',
+          force3D: true,
+        });
+      });
+    };
 
     const handleMouseLeave = () => {
-      gsap.to('#events-bg', { x: 0, y: 0, duration: 0.4, ease: 'power2.out' })
-      gsap.to('#events-fg', { x: 0, y: 0, duration: 0.4, ease: 'power2.out' })
-    }
+      gsap.to('#events-bg', { x: 0, y: 0, duration: 0.4, ease: 'power2.out', force3D: true });
+      gsap.to('#events-fg', { x: 0, y: 0, duration: 0.4, ease: 'power2.out', force3D: true });
+    };
 
-    container.addEventListener('mousemove', handleMouseMove)
-    container.addEventListener('mouseleave', handleMouseLeave)
+    container.addEventListener('mousemove', handleMouseMove, { passive: true });
+    container.addEventListener('mouseleave', handleMouseLeave, { passive: true });
 
     return () => {
-      container.removeEventListener('mousemove', handleMouseMove)
-      container.removeEventListener('mouseleave', handleMouseLeave)
-    }
-  }, [])
+      container.removeEventListener('mousemove', handleMouseMove);
+      container.removeEventListener('mouseleave', handleMouseLeave);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [isMobile]);
 
   const dropdownOptions = allEvents.map((_, index) => ({
     value: index,
@@ -299,6 +331,8 @@ export default function Page() {
 
       <div id="events-bg" className="w-full h-full absolute bottom-10 left-0" style={{
         pointerEvents: 'none',
+        willChange: 'transform',
+        backfaceVisibility: 'hidden',
       }}>
         <Image
           src={isDystopia ? "/bg_main_dys.png" : "/bg_main_eut.jpg"}
@@ -313,6 +347,8 @@ export default function Page() {
       <div id="events-fg" className="w-full h-full absolute bottom-0 left-0 pointer-events-none"
         style={{
           transform: "scale(1.1)",
+          willChange: 'transform',
+          backfaceVisibility: 'hidden',
         }}>
         <Image
           src={isDystopia ? "/events/bg_dys.png" : "/events/bg.png"}
@@ -335,14 +371,12 @@ export default function Page() {
               watchSlidesProgress={true}
               onSwiper={(swiper) => {
                 setSwiperInstance(swiper);
-                console.log('✅ Swiper mounted! Active:', swiper.activeIndex);
-
+                // Batch updates in single RAF for better performance
                 requestAnimationFrame(() => {
                   swiper.update();
                   swiper.updateSlides();
                   swiper.updateProgress();
                   swiper.updateSlidesClasses();
-                  console.log('✅ Classes updated!');
                 });
               }}
               className="w-full h-full events-swiper"
@@ -404,7 +438,8 @@ export default function Page() {
                  px-3 py-2 rounded-full 
                  bg-cyan-500/20 backdrop-blur-sm
                  transition-all duration-300 ease-in-out
-                 hover:bg-cyan-500/40 hover:scale-105 active:scale-95"
+                 hover:bg-cyan-500/40 hover:scale-105 active:scale-95
+                 hidden md:block"
               aria-label="Previous"
             >
               <Image
@@ -421,7 +456,8 @@ export default function Page() {
                  px-3 py-2 rounded-full 
                  bg-cyan-500/20 backdrop-blur-sm
                  transition-all duration-300 ease-in-out
-                 hover:bg-cyan-500/40 hover:scale-105 active:scale-95"
+                 hover:bg-cyan-500/40 hover:scale-105 active:scale-95
+                 hidden md:block"
               aria-label="Next"
             >
               <Image
@@ -441,7 +477,8 @@ export default function Page() {
                  px-3 py-2 rounded-full 
                  bg-[#ee8f59]/10 backdrop-blur-sm
                  transition-all duration-300 ease-in-out
-                 hover:bg-[#ee8f59]/30 hover:scale-105 active:scale-95"
+                 hover:bg-[#ee8f59]/30 hover:scale-105 active:scale-95
+                 hidden md:block"
               aria-label="Previous"
             >
               <Image
@@ -458,7 +495,8 @@ export default function Page() {
                  px-3 py-2 rounded-full 
                  bg-[#ee8f59]/10 backdrop-blur-sm
                  transition-all duration-300 ease-in-out
-                 hover:bg-[#ee8f59]/30 hover:scale-105 active:scale-95"
+                 hover:bg-[#ee8f59]/30 hover:scale-105 active:scale-95
+                 hidden md:block"
               aria-label="Next"
             >
               <Image
