@@ -4,7 +4,15 @@ import { Award, Calendar } from "lucide-react";
 import { FaEye, FaDownload } from "react-icons/fa";
 import { useTheme } from "@/contexts/ThemeContext";
 
-export default function Certificate({ certificates }: { certificates: any[] }) {
+interface Certificate {
+  id: string;
+  event: string;
+  type: string;
+  date: string;
+  url: string;
+}
+
+export default function Certificate({ certificates }: { certificates: Certificate[] }) {
   const { theme } = useTheme();
 
   // 🌗 Theme-based color mapping

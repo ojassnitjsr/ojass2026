@@ -48,7 +48,7 @@ export default function DashboardPage() {
 
       try {
         const data: ReferralStatsResponse = await referralAPI.getStats();
-        
+
         // Transform referred users to match Referral interface
         const referralList: Referral[] = data.referredUsers.map((ref) => ({
           name: ref.name,
@@ -60,21 +60,22 @@ export default function DashboardPage() {
         }));
 
         setReferrals(referralList);
-        
+
         // Calculate stats
         const totalPaid = referralList.filter((r) => r.status === "Paid").length;
         const totalUnpaid = referralList.filter((r) => r.status === "Unpaid").length;
-        
+
         setStats({
           totalReferrals: data.referralCount,
           totalPaid,
           totalUnpaid,
         });
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Error fetching referrals:", err);
-        setError(err.message || "Failed to load referrals");
+        const message = err instanceof Error ? err.message : "Failed to load referrals";
+        setError(message);
         // If 401, user might need to re-login
-        if (err.message?.includes("401") || err.message?.includes("Unauthorized")) {
+        if (message.includes("401") || message.includes("Unauthorized")) {
           router.push("/login");
         }
       } finally {
@@ -109,7 +110,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-blue-50">
       <DashboardNavbar />
-      
+
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12">
         {/* Dashboard Header */}
         <motion.div

@@ -1,8 +1,7 @@
 'use client';
 
+import { CreateEventData, Event, mediaAPI } from '@/lib/api';
 import { useState } from 'react';
-import { Event, CreateEventData, EventPrizes, EventHead } from '@/lib/api';
-import { mediaAPI } from '@/lib/api';
 
 interface EventFormProps {
   event?: Event;
@@ -40,29 +39,29 @@ export default function EventForm({ event, onSubmit, onCancel, loading }: EventF
   const [uploading, setUploading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const handleChange = (field: string, value: any) => {
+  const handleChange = (field: string, value: string | number | boolean | Record<string, unknown>) => {
     setFormData((prev) => {
       let updatedData: CreateEventData;
-      
+
       if (field.includes('.')) {
         const [parent, child] = field.split('.');
         updatedData = {
           ...prev,
           [parent]: {
-            ...(prev[parent as keyof CreateEventData] as any),
+            ...(prev[parent as keyof CreateEventData] as unknown as Record<string, unknown>),
             [child]: value,
           },
         };
       } else {
         updatedData = { ...prev, [field]: value };
       }
-      
+
       // If changing to individual event, automatically set both team sizes to 1
       if (field === 'isTeamEvent' && value === false) {
         updatedData.teamSizeMin = 1;
         updatedData.teamSizeMax = 1;
       }
-      
+
       return updatedData;
     });
     // Clear error for this field
@@ -107,8 +106,8 @@ export default function EventForm({ event, onSubmit, onCancel, loading }: EventF
       if (response.files && response.files.length > 0) {
         handleChange('img', response.files[0].url);
       }
-    } catch (error: any) {
-      setErrors({ img: error.message || 'Failed to upload image' });
+    } catch (error: unknown) {
+      setErrors({ img: error instanceof Error ? error.message : 'Failed to upload image' });
     } finally {
       setUploading(false);
     }
@@ -154,8 +153,8 @@ export default function EventForm({ event, onSubmit, onCancel, loading }: EventF
 
     try {
       await onSubmit(cleanedData);
-    } catch (error: any) {
-      setErrors({ submit: error.message || 'Failed to save event' });
+    } catch (error: unknown) {
+      setErrors({ submit: error instanceof Error ? error.message : 'Failed to save event' });
     }
   };
 
@@ -176,9 +175,8 @@ export default function EventForm({ event, onSubmit, onCancel, loading }: EventF
             type="text"
             value={formData.name}
             onChange={(e) => handleChange('name', e.target.value)}
-            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-              errors.name ? 'border-red-500' : 'border-gray-300'
-            }`}
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${errors.name ? 'border-red-500' : 'border-gray-300'
+              }`}
           />
           {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
         </div>
@@ -208,9 +206,8 @@ export default function EventForm({ event, onSubmit, onCancel, loading }: EventF
                 min="1"
                 value={formData.teamSizeMin}
                 onChange={(e) => handleChange('teamSizeMin', parseInt(e.target.value) || 1)}
-                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                  errors.teamSizeMin ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${errors.teamSizeMin ? 'border-red-500' : 'border-gray-300'
+                  }`}
               />
               {errors.teamSizeMin && <p className="text-red-500 text-sm mt-1">{errors.teamSizeMin}</p>}
             </div>
@@ -224,9 +221,8 @@ export default function EventForm({ event, onSubmit, onCancel, loading }: EventF
                 min={formData.teamSizeMin}
                 value={formData.teamSizeMax}
                 onChange={(e) => handleChange('teamSizeMax', parseInt(e.target.value) || 1)}
-                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                  errors.teamSizeMax ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${errors.teamSizeMax ? 'border-red-500' : 'border-gray-300'
+                  }`}
               />
               {errors.teamSizeMax && <p className="text-red-500 text-sm mt-1">{errors.teamSizeMax}</p>}
             </div>
@@ -261,9 +257,8 @@ export default function EventForm({ event, onSubmit, onCancel, loading }: EventF
             type="url"
             value={formData.rulebookurl}
             onChange={(e) => handleChange('rulebookurl', e.target.value)}
-            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-              errors.rulebookurl ? 'border-red-500' : 'border-gray-300'
-            }`}
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${errors.rulebookurl ? 'border-red-500' : 'border-gray-300'
+              }`}
           />
           {errors.rulebookurl && <p className="text-red-500 text-sm mt-1">{errors.rulebookurl}</p>}
         </div>
@@ -276,9 +271,8 @@ export default function EventForm({ event, onSubmit, onCancel, loading }: EventF
             type="text"
             value={formData.redirect}
             onChange={(e) => handleChange('redirect', e.target.value)}
-            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-              errors.redirect ? 'border-red-500' : 'border-gray-300'
-            }`}
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${errors.redirect ? 'border-red-500' : 'border-gray-300'
+              }`}
           />
           {errors.redirect && <p className="text-red-500 text-sm mt-1">{errors.redirect}</p>}
         </div>
@@ -312,9 +306,8 @@ export default function EventForm({ event, onSubmit, onCancel, loading }: EventF
           value={formData.description}
           onChange={(e) => handleChange('description', e.target.value)}
           rows={4}
-          className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-            errors.description ? 'border-red-500' : 'border-gray-300'
-          }`}
+          className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${errors.description ? 'border-red-500' : 'border-gray-300'
+            }`}
         />
         {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
       </div>
@@ -331,9 +324,8 @@ export default function EventForm({ event, onSubmit, onCancel, loading }: EventF
               type="text"
               value={formData.prizes.total}
               onChange={(e) => handleChange('prizes.total', e.target.value)}
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                errors['prizes.total'] ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${errors['prizes.total'] ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
             {errors['prizes.total'] && <p className="text-red-500 text-sm mt-1">{errors['prizes.total']}</p>}
           </div>
@@ -345,9 +337,8 @@ export default function EventForm({ event, onSubmit, onCancel, loading }: EventF
               type="text"
               value={formData.prizes.winner}
               onChange={(e) => handleChange('prizes.winner', e.target.value)}
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                errors['prizes.winner'] ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${errors['prizes.winner'] ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
             {errors['prizes.winner'] && <p className="text-red-500 text-sm mt-1">{errors['prizes.winner']}</p>}
           </div>
@@ -359,9 +350,8 @@ export default function EventForm({ event, onSubmit, onCancel, loading }: EventF
               type="text"
               value={formData.prizes.first_runner_up}
               onChange={(e) => handleChange('prizes.first_runner_up', e.target.value)}
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                errors['prizes.first_runner_up'] ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${errors['prizes.first_runner_up'] ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
             {errors['prizes.first_runner_up'] && <p className="text-red-500 text-sm mt-1">{errors['prizes.first_runner_up']}</p>}
           </div>
@@ -373,9 +363,8 @@ export default function EventForm({ event, onSubmit, onCancel, loading }: EventF
               type="text"
               value={formData.prizes.second_runner_up}
               onChange={(e) => handleChange('prizes.second_runner_up', e.target.value)}
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                errors['prizes.second_runner_up'] ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${errors['prizes.second_runner_up'] ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
             {errors['prizes.second_runner_up'] && <p className="text-red-500 text-sm mt-1">{errors['prizes.second_runner_up']}</p>}
           </div>
@@ -464,9 +453,8 @@ export default function EventForm({ event, onSubmit, onCancel, loading }: EventF
               type="text"
               value={formData.event_head.name}
               onChange={(e) => handleChange('event_head.name', e.target.value)}
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                errors['event_head.name'] ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${errors['event_head.name'] ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
             {errors['event_head.name'] && <p className="text-red-500 text-sm mt-1">{errors['event_head.name']}</p>}
           </div>
@@ -478,9 +466,8 @@ export default function EventForm({ event, onSubmit, onCancel, loading }: EventF
               type="text"
               value={formData.event_head.Phone}
               onChange={(e) => handleChange('event_head.Phone', e.target.value)}
-              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                errors['event_head.Phone'] ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${errors['event_head.Phone'] ? 'border-red-500' : 'border-gray-300'
+                }`}
             />
             {errors['event_head.Phone'] && <p className="text-red-500 text-sm mt-1">{errors['event_head.Phone']}</p>}
           </div>

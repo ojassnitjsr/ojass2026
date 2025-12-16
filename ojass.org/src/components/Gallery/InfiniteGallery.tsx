@@ -178,9 +178,13 @@ export class InfiniteGrid {
         this.winW = window.innerWidth;
         this.winH = window.innerHeight;
 
+        // Mobile optimization: make images larger on small screens
+        const isMobile = this.winW <= 768;
+        const mobileMultiplier = isMobile ? 2.5 : 1; // 2.5x larger on mobile
+
         this.tileSize = {
-            w: this.winW,
-            h: this.winW * (this.baseSize.h / this.baseSize.w),
+            w: this.winW * mobileMultiplier,
+            h: this.winW * mobileMultiplier * (this.baseSize.h / this.baseSize.w),
         };
 
         this.scroll.current = { x: 0, y: 0 };
@@ -271,11 +275,11 @@ export class InfiniteGrid {
         this.scroll.current.x =
             this.scroll.target.x =
             this.scroll.last.x =
-                -this.winW * 0.1;
+            -this.winW * 0.1;
         this.scroll.current.y =
             this.scroll.target.y =
             this.scroll.last.y =
-                -this.winH * 0.1;
+            -this.winH * 0.1;
     }
 
     private onWheel(e: WheelEvent) {
@@ -403,11 +407,9 @@ export class InfiniteGrid {
             const fy = item.y + scrollY + item.extraY + moveY;
 
             item.el.style.transform = `translate(${fx}px, ${fy}px)`;
-            item.img.style.transform = `scale(${
-                1.2 + 0.2 * this.mouse.press.c * item.ease
-            }) translate(${-this.mouse.x.c * item.ease * 10}%, ${
-                -this.mouse.y.c * item.ease * 10
-            }%)`;
+            item.img.style.transform = `scale(${1.2 + 0.2 * this.mouse.press.c * item.ease
+                }) translate(${-this.mouse.x.c * item.ease * 10}%, ${-this.mouse.y.c * item.ease * 10
+                }%)`;
         });
 
         this.scroll.last.x = this.scroll.current.x;

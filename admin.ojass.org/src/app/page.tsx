@@ -1,19 +1,36 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { authAPI } from '@/lib/api';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function AuthPage() {
-  const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        // Try to get current user - if successful, user is logged in
+        const token = localStorage.getItem('token');
+        if (token) {
+          // Redirect to dashboard if already logged in
+          router.push('/dashboard');
+        }
+      } catch (err) {
+        // User is not logged in, stay on login page
+        console.log('Not authenticated');
+      }
+    };
+
+    checkAuth();
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,12 +54,14 @@ export default function AuthPage() {
         setError('Admin signup is not available. Please contact system administrator.');
         setLoading(false);
       }
-    } catch (err: any) {
-      setError(err.message || 'Login failed. Please check your credentials.');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Login failed. Please check your credentials.');
       setLoading(false);
     }
   };
 
+  const isLogin = true;
+  const email = '';
   const isFormValid = isLogin
     ? (username.trim() !== '' || email.trim() !== '') && password.length >= 6
     : username.trim() !== '' && email.trim() !== '' && password.length >= 6;
@@ -53,7 +72,7 @@ export default function AuthPage() {
       <div className="absolute inset-0 overflow-hidden">
         {/* Atmospheric Haze Layer */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-transparent to-gray-950/90 z-10" />
-        
+
         {/* Sky with slight fog */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-gray-950 to-black" />
 
@@ -65,11 +84,11 @@ export default function AuthPage() {
             <div className="absolute left-12 top-32 w-3 h-32 bg-gradient-to-b from-pink-500 to-pink-600 rounded-full blur-sm animate-pulse shadow-[0_0_20px_pink]" />
             <div className="absolute left-20 top-20 w-3 h-40 bg-gradient-to-b from-cyan-500 to-blue-500 rounded-full blur-sm animate-pulse shadow-[0_0_20px_cyan]" style={{ animationDelay: '0.5s' }} />
             <div className="absolute left-28 top-40 w-3 h-28 bg-gradient-to-b from-pink-500 to-pink-600 rounded-full blur-sm animate-pulse shadow-[0_0_20px_pink]" style={{ animationDelay: '1s' }} />
-            
+
             {/* Horizontal screens */}
             <div className="absolute left-8 top-64 w-24 h-4 bg-gradient-to-r from-cyan-500/50 to-blue-500/50 blur-sm rounded" />
             <div className="absolute left-8 top-80 w-32 h-3 bg-gradient-to-r from-pink-500/50 to-cyan-500/50 blur-sm rounded" />
-            
+
             {/* Window lights */}
             {Array.from({ length: 15 }).map((_, i) => (
               <div
@@ -95,13 +114,13 @@ export default function AuthPage() {
               <div className="absolute inset-8 rounded-full border border-cyan-300/40" />
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-cyan-400/40 rounded-full blur-sm" />
             </div>
-            
+
             {/* Second holographic screen */}
             <div className="absolute right-8 top-72 w-40 h-24 bg-gradient-to-br from-blue-500/30 via-cyan-500/20 to-transparent rounded-lg border border-blue-400/50 backdrop-blur-sm">
               <div className="absolute inset-3 rounded-full border border-blue-400/60" />
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-blue-400/50 rounded-full" />
             </div>
-            
+
             {/* Window lights */}
             {Array.from({ length: 20 }).map((_, i) => (
               <div
@@ -154,7 +173,7 @@ export default function AuthPage() {
           <div className="absolute bottom-8 left-[20%] w-24 h-2 bg-cyan-500/30 blur-md rounded-full" />
           <div className="absolute bottom-12 right-[30%] w-32 h-3 bg-pink-500/30 blur-lg rounded-full" />
           <div className="absolute bottom-6 left-[60%] w-20 h-2 bg-blue-500/30 blur-md rounded-full" />
-          
+
           {/* Ground neon circles */}
           <div className="absolute bottom-16 left-[15%] w-16 h-16 border-2 border-orange-500/50 rounded-full blur-sm animate-pulse" />
           <div className="absolute bottom-20 right-[25%] w-12 h-12 border-2 border-cyan-500/50 rounded-full blur-sm animate-pulse" style={{ animationDelay: '0.5s' }} />
@@ -265,11 +284,10 @@ export default function AuthPage() {
             <button
               type="submit"
               disabled={loading || !isFormValid}
-              className={`w-full py-3 rounded-lg text-sm font-semibold mt-6 transition-all relative overflow-hidden ${
-                isFormValid && !loading
-                  ? 'bg-gradient-to-r from-cyan-500/80 to-blue-500/80 text-white hover:from-cyan-500 hover:to-blue-500 border border-cyan-400/50 shadow-[0_0_20px_rgba(34,211,238,0.3)]'
-                  : 'bg-gray-800 text-gray-600 cursor-not-allowed border border-gray-700'
-              }`}
+              className={`w-full py-3 rounded-lg text-sm font-semibold mt-6 transition-all relative overflow-hidden ${isFormValid && !loading
+                ? 'bg-gradient-to-r from-cyan-500/80 to-blue-500/80 text-white hover:from-cyan-500 hover:to-blue-500 border border-cyan-400/50 shadow-[0_0_20px_rgba(34,211,238,0.3)]'
+                : 'bg-gray-800 text-gray-600 cursor-not-allowed border border-gray-700'
+                }`}
             >
               <span className="relative z-10">
                 {loading ? 'Logging in...' : 'Login'}

@@ -5,7 +5,7 @@ import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
 import useEmblaCarousel from "embla-carousel-react";
 import type { EmblaCarouselType, EmblaOptionsType, EmblaPluginType } from "embla-carousel";
 import { cn } from "@/lib/utils";
-import { Button ,type ButtonProps} from "./button";
+import { Button, type ButtonProps } from "./button";
 
 // 🧠 Inferred hook return types
 type UseEmblaReturn = ReturnType<typeof useEmblaCarousel>;
@@ -167,9 +167,7 @@ const CarouselItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLD
 CarouselItem.displayName = "CarouselItem";
 
 // ⬅ Carousel Previous Button
-interface CarouselButtonProps extends ButtonProps {}
-
-const CarouselPrevious = React.forwardRef<HTMLButtonElement, CarouselButtonProps>(
+const CarouselPrevious = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "outline", size = "icon", ...props }, ref) => {
     const { orientation, scrollPrev, canScrollPrev } = useCarousel();
 
@@ -198,7 +196,7 @@ const CarouselPrevious = React.forwardRef<HTMLButtonElement, CarouselButtonProps
 CarouselPrevious.displayName = "CarouselPrevious";
 
 // ➡ Carousel Next Button
-const CarouselNext = React.forwardRef<HTMLButtonElement, CarouselButtonProps>(
+const CarouselNext = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "outline", size = "icon", ...props }, ref) => {
     const { orientation, scrollNext, canScrollNext } = useCarousel();
 

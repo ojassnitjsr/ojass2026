@@ -2,7 +2,7 @@
 
 import { atom, useAtom } from "jotai";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 
 const pictures = [
     "DSC00680",
@@ -53,7 +53,7 @@ const toKebabCase = (str) => {
         .replace(/\s+/g, "-");
 };
 
-export const UI = () => {
+const UIContent = () => {
     const [page, setPage] = useAtom(pageAtom);
     const searchParams = useSearchParams();
 
@@ -100,21 +100,19 @@ export const UI = () => {
                         {pages.map((pg, index) => (
                             <button
                                 key={index}
-                                className={`border-transparent hover:border-white transition-all duration-300 px-4 py-1 rounded-full  text-md uppercase shrink-0 border ${
-                                    index === page
+                                className={`border-transparent hover:border-white transition-all duration-300 px-4 py-1 rounded-full  text-md uppercase shrink-0 border ${index === page
                                         ? "bg-white/90 text-black"
                                         : "bg-black/30 text-white"
-                                }`}
+                                    }`}
                                 onClick={() => setPage(index)}>
                                 {pg.name}
                             </button>
                         ))}
                         <button
-                            className={`border-transparent hover:border-white transition-all duration-300 px-4 py-1 rounded-full  text-md uppercase shrink-0 border ${
-                                page === pages.length
+                            className={`border-transparent hover:border-white transition-all duration-300 px-4 py-1 rounded-full  text-md uppercase shrink-0 border ${page === pages.length
                                     ? "bg-white/90 text-black"
                                     : "bg-black/30 text-white"
-                            }`}
+                                }`}
                             onClick={() => setPage(pages.length)}>
                             Back Cover
                         </button>
@@ -122,5 +120,13 @@ export const UI = () => {
                 </div>
             </main>
         </>
+    );
+};
+
+export const UI = () => {
+    return (
+        <Suspense fallback={<div className="fixed inset-0 z-10" />}>
+            <UIContent />
+        </Suspense>
     );
 };

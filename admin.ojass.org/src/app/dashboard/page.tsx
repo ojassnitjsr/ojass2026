@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { eventAPI, authAPI, userAPI, teamAPI, registrationAPI, notificationAPI, User, Team, Event, CreateEventData, Notification, CreateNotificationData } from '@/lib/api';
 import EventForm from '@/components/EventForm';
+import { authAPI, CreateEventData, CreateNotificationData, Event, eventAPI, Notification, notificationAPI, Team, teamAPI, User, userAPI } from '@/lib/api';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -37,8 +37,8 @@ export default function Dashboard() {
   const [loadingTeams, setLoadingTeams] = useState(false);
   const [loadingIndividual, setLoadingIndividual] = useState(false);
   const [individualEventFilter, setIndividualEventFilter] = useState<string | 'all'>('all');
-  const [studentsPage, setStudentsPage] = useState(1);
-  const [teamsPage, setTeamsPage] = useState(1);
+  const studentsPage = 1;
+  const teamsPage = 1;
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loadingNotifications, setLoadingNotifications] = useState(false);
   const [showNotificationModal, setShowNotificationModal] = useState(false);
@@ -57,6 +57,7 @@ export default function Dashboard() {
       loadStudents();
       loadTeams();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mounted]);
 
   // Load students when filters change
@@ -64,6 +65,7 @@ export default function Dashboard() {
     if (mounted) {
       loadStudents();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [studentSearch, paymentFilter, studentsPage, mounted]);
 
   // Load teams when filters change
@@ -71,6 +73,7 @@ export default function Dashboard() {
     if (mounted) {
       loadTeams();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [teamEventFilter, teamsPage, mounted]);
 
   // Load individual registrations when filters change or section is active
@@ -78,6 +81,7 @@ export default function Dashboard() {
     if (mounted && activeSection === 'individual') {
       loadIndividualRegistrations();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [individualEventFilter, activeSection, mounted]);
 
   // Load notifications when section is active
@@ -85,7 +89,7 @@ export default function Dashboard() {
     if (mounted && activeSection === 'notifications') {
       loadNotifications();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [activeSection, mounted]);
 
   // Fetch full student details when modal opens
@@ -102,7 +106,7 @@ export default function Dashboard() {
           setLoadingStudentDetails(false);
         });
     }
-  }, [selectedStudentDetails]);
+  }, [selectedStudentDetails, selectedStudentFullData, loadingStudentDetails]);
 
   // Fetch student registrations when modal opens
   useEffect(() => {
@@ -118,7 +122,7 @@ export default function Dashboard() {
           setLoadingStudentRegistrations(false);
         });
     }
-  }, [selectedStudentDetails]);
+  }, [selectedStudentDetails, loadingStudentRegistrations]);
 
   // Clear full data when modal closes
   useEffect(() => {
@@ -136,8 +140,8 @@ export default function Dashboard() {
       setError('');
       const data = await eventAPI.getAll();
       setEvents(data);
-    } catch (err: any) {
-      setError(err.message || 'Failed to load events');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to load events');
       console.error('Error loading events:', err);
     } finally {
       setLoading(false);
@@ -154,9 +158,9 @@ export default function Dashboard() {
         paymentStatus: paymentFilter,
       });
       setStudents(response.users);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error loading students:', err);
-      setError(err.message || 'Failed to load students');
+      setError(err instanceof Error ? err.message : 'Failed to load students');
     } finally {
       setLoadingStudents(false);
     }
@@ -173,10 +177,10 @@ export default function Dashboard() {
         isIndividual: 'false', // Only get teams, not individual registrations
       });
       // Filter out individual registrations
-      setTeams(response.teams.filter((team: Team) => !team.isIndividual));
-    } catch (err: any) {
+      setTeams(response.teams.filter((team) => !team.isIndividual));
+    } catch (err: unknown) {
       console.error('Error loading teams:', err);
-      setError(err.message || 'Failed to load teams');
+      setError(err instanceof Error ? err.message : 'Failed to load teams');
     } finally {
       setLoadingTeams(false);
     }
@@ -192,10 +196,10 @@ export default function Dashboard() {
         eventId,
         isIndividual: 'true', // Only get individual registrations
       });
-      setIndividualRegistrations(response.teams.filter((team: Team) => team.isIndividual));
-    } catch (err: any) {
+      setIndividualRegistrations(response.teams.filter((team) => team.isIndividual));
+    } catch (err: unknown) {
       console.error('Error loading individual registrations:', err);
-      setError(err.message || 'Failed to load individual registrations');
+      setError(err instanceof Error ? err.message : 'Failed to load individual registrations');
     } finally {
       setLoadingIndividual(false);
     }
@@ -208,9 +212,9 @@ export default function Dashboard() {
       if (response.success) {
         setNotifications(response.data);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error loading notifications:', err);
-      setError(err.message || 'Failed to load notifications');
+      setError(err instanceof Error ? err.message : 'Failed to load notifications');
     } finally {
       setLoadingNotifications(false);
     }
@@ -232,8 +236,8 @@ export default function Dashboard() {
         await loadNotifications();
         alert(`Notification sent successfully! Sent to ${response.data.recipients} users. Push notifications: ${response.data.pushNotifications.sent} sent, ${response.data.pushNotifications.failed} failed.`);
       }
-    } catch (err: any) {
-      setError(err.message || 'Failed to send notification');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to send notification');
     } finally {
       setSendingNotification(false);
     }
@@ -275,8 +279,8 @@ export default function Dashboard() {
       }
       await loadEvents();
       handleCloseAddEvent();
-    } catch (err: any) {
-      setError(err.message || 'Failed to save event');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to save event');
       throw err;
     } finally {
       setSubmitting(false);
@@ -292,9 +296,10 @@ export default function Dashboard() {
       setError('');
       await eventAPI.delete(eventId);
       await loadEvents();
-    } catch (err: any) {
-      setError(err.message || 'Failed to delete event');
-      alert(err.message || 'Failed to delete event');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to delete event';
+      setError(message);
+      alert(message);
     }
   };
 
@@ -306,34 +311,14 @@ export default function Dashboard() {
     setViewingEvent(null);
   };
 
-  const getEventParticipants = async (eventId: string) => {
-    try {
-      const registrations = await registrationAPI.getByEvent(eventId);
-      return registrations.map((reg: Team) => {
-        const leader = typeof reg.teamLeader === 'object' ? reg.teamLeader : null;
-        return {
-          student: leader ? {
-            _id: leader._id,
-            name: leader.name,
-            email: leader.email,
-            ojassId: leader.ojassId,
-          } : null,
-          teamName: reg.teamName || 'Individual',
-          teamOjassId: reg._id,
-        };
-      }).filter((p: any) => p.student !== null);
-    } catch (err) {
-      console.error('Error fetching participants:', err);
-      return [];
-    }
-  };
+
 
   // Fetch ambassador referrals when modal opens
   useEffect(() => {
     if (selectedAmbassadorReferrals) {
       const ambassadors = students.filter(s => s.referralCount > 0);
       const ambassador = ambassadors[(selectedAmbassadorReferrals || 1) - 1];
-      
+
       if (ambassador && !loadingAmbassadorReferrals) {
         setLoadingAmbassadorReferrals(true);
         userAPI.getReferrals(ambassador._id)
@@ -348,7 +333,7 @@ export default function Dashboard() {
           });
       }
     }
-  }, [selectedAmbassadorReferrals, students]);
+  }, [selectedAmbassadorReferrals, students, loadingAmbassadorReferrals]);
 
   // Clear referrals data when modal closes
   useEffect(() => {
@@ -361,8 +346,8 @@ export default function Dashboard() {
   const getTeamMembers = (teamId: string) => {
     const team = teams.find(t => t._id === teamId);
     if (!team || !team.teamMembers) return [];
-    
-    return team.teamMembers.map((member: any) => {
+
+    return team.teamMembers.map((member) => {
       if (typeof member === 'object') {
         return member;
       }
@@ -372,17 +357,17 @@ export default function Dashboard() {
 
   const filteredEvents = events.filter((event) => {
     if (!event || !event.name) return false;
-    
+
     // If search is empty, show all events
     const searchTerm = eventSearch || '';
     if (searchTerm.trim() === '') {
       return true;
     }
-    
+
     const searchLower = searchTerm.toLowerCase().trim();
     return (event.name?.toLowerCase().includes(searchLower) ?? false) ||
-           (event._id?.toLowerCase().includes(searchLower) ?? false) ||
-           (event.description?.toLowerCase().includes(searchLower) ?? false);
+      (event._id?.toLowerCase().includes(searchLower) ?? false) ||
+      (event.description?.toLowerCase().includes(searchLower) ?? false);
   });
 
   const filteredStudents = students.filter((student) => {
@@ -391,16 +376,16 @@ export default function Dashboard() {
       // If no search term, only filter by payment status
       return paymentFilter === 'all' || (paymentFilter === 'paid' ? student.isPaid : !student.isPaid);
     }
-    
+
     const searchLower = searchTerm.toLowerCase();
     const matchesSearch = student.name?.toLowerCase().includes(searchLower) ||
       student.ojassId?.toLowerCase().includes(searchLower) ||
       student.email?.toLowerCase().includes(searchLower) ||
       student.collegeName?.toLowerCase().includes(searchLower);
-    
+
     const matchesPayment = paymentFilter === 'all' ||
       (paymentFilter === 'paid' ? student.isPaid : !student.isPaid);
-    
+
     return matchesSearch && matchesPayment;
   });
 
@@ -474,12 +459,11 @@ export default function Dashboard() {
             ].map((tab) => (
               <button
                 key={tab.key}
-                onClick={() => setActiveSection(tab.key as any)}
-                className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all ${
-                  activeSection === tab.key
-                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
+                onClick={() => setActiveSection(tab.key as typeof activeSection)}
+                className={`flex-1 px-4 py-3 rounded-lg font-medium transition-all ${activeSection === tab.key
+                  ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
+                  : 'text-gray-600 hover:bg-gray-100'
+                  }`}
               >
                 {tab.label}
               </button>
@@ -501,7 +485,7 @@ export default function Dashboard() {
                   + Add Event
                 </button>
               </div>
-              
+
               {error && (
                 <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
                   {error}
@@ -539,9 +523,8 @@ export default function Dashboard() {
                       )}
                       <div className="flex justify-between items-start mb-3">
                         <h3 className="text-xl font-semibold text-gray-800">{event.name}</h3>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          event.isTeamEvent ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'
-                        }`}>
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${event.isTeamEvent ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'
+                          }`}>
                           {event.isTeamEvent ? 'Team' : 'Individual'}
                         </span>
                       </div>
@@ -552,7 +535,7 @@ export default function Dashboard() {
                       {event.description && (
                         <p className="text-gray-600 mb-4 text-sm line-clamp-2"><strong>Description:</strong> {event.description}</p>
                       )}
-                      
+
                       {/* Action Buttons */}
                       <div className="flex gap-2 mb-2">
                         <button
@@ -638,9 +621,9 @@ export default function Dashboard() {
                       {/* Event Image */}
                       {viewingEvent.img && (
                         <div>
-                          <img 
-                            src={viewingEvent.img} 
-                            alt={viewingEvent.name} 
+                          <img
+                            src={viewingEvent.img}
+                            alt={viewingEvent.name}
                             className="w-full h-64 object-cover rounded-lg"
                           />
                         </div>
@@ -654,9 +637,8 @@ export default function Dashboard() {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">Event Type</label>
-                          <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
-                            viewingEvent.isTeamEvent ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'
-                          }`}>
+                          <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${viewingEvent.isTeamEvent ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'
+                            }`}>
                             {viewingEvent.isTeamEvent ? 'Team Event' : 'Individual Event'}
                           </span>
                         </div>
@@ -741,9 +723,9 @@ export default function Dashboard() {
                         {viewingEvent.rulebookurl && (
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Rulebook URL</label>
-                            <a 
-                              href={viewingEvent.rulebookurl} 
-                              target="_blank" 
+                            <a
+                              href={viewingEvent.rulebookurl}
+                              target="_blank"
                               rel="noopener noreferrer"
                               className="text-blue-600 hover:text-blue-800 underline break-all"
                             >
@@ -827,7 +809,7 @@ export default function Dashboard() {
           {activeSection === 'students' && (
             <div>
               <h2 className="text-2xl font-bold text-gray-800 mb-6">Students</h2>
-              
+
               {/* Search Bar and Filter */}
               <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -887,9 +869,8 @@ export default function Dashboard() {
                           <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{student.email}</td>
                           <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{student.collegeName}</td>
                           <td className="px-4 py-4 whitespace-nowrap">
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                              student.isPaid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                            }`}>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${student.isPaid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                              }`}>
                               {student.isPaid ? 'Paid' : 'Unpaid'}
                             </span>
                           </td>
@@ -949,7 +930,7 @@ export default function Dashboard() {
                     </div>
                     {(() => {
                       const studentFromList = students.find(s => s._id === selectedStudentDetails);
-                      
+
                       if (loadingStudentDetails) {
                         return (
                           <div className="text-center py-8">
@@ -992,9 +973,8 @@ export default function Dashboard() {
                             <div>
                               <label className="text-sm font-medium text-gray-500">Payment Status</label>
                               <p className="text-lg">
-                                <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                                  student.isPaid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                                }`}>
+                                <span className={`px-3 py-1 rounded-full text-sm font-medium ${student.isPaid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                  }`}>
                                   {student.isPaid ? 'Paid' : 'Unpaid'}
                                 </span>
                               </p>
@@ -1056,8 +1036,8 @@ export default function Dashboard() {
                             ) : studentRegistrations.length > 0 ? (
                               <div className="space-y-3">
                                 {studentRegistrations.map((registration) => {
-                                  const eventName = typeof registration.eventId === 'object' 
-                                    ? registration.eventId.name 
+                                  const eventName = typeof registration.eventId === 'object'
+                                    ? registration.eventId.name
                                     : 'Unknown Event';
                                   const isLeader = typeof registration.teamLeader === 'object'
                                     ? registration.teamLeader._id === student._id
@@ -1065,7 +1045,7 @@ export default function Dashboard() {
                                   const role = isLeader ? 'Leader' : 'Member';
                                   const participationType = registration.isIndividual ? 'Individual' : 'Team';
                                   const teamName = registration.isIndividual ? null : (registration.teamName || 'Team');
-                                  
+
                                   return (
                                     <div
                                       key={registration._id}
@@ -1075,11 +1055,10 @@ export default function Dashboard() {
                                         <div className="flex-1">
                                           <h4 className="font-semibold text-gray-900">{eventName}</h4>
                                           <div className="flex flex-wrap gap-2 mt-2">
-                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                              registration.isVerified === true 
-                                                ? 'bg-green-100 text-green-700' 
-                                                : 'bg-red-100 text-red-700'
-                                            }`}>
+                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${registration.isVerified === true
+                                              ? 'bg-green-100 text-green-700'
+                                              : 'bg-red-100 text-red-700'
+                                              }`}>
                                               {registration.isVerified === true ? 'Verified' : 'Unverified'}
                                             </span>
                                             <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
@@ -1212,9 +1191,8 @@ export default function Dashboard() {
                                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{referral.email}</td>
                                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">{referral.college}</td>
                                 <td className="px-4 py-3 whitespace-nowrap">
-                                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                    referral.isPaid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                                  }`}>
+                                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${referral.isPaid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                    }`}>
                                     {referral.isPaid ? 'Paid' : 'Unpaid'}
                                   </span>
                                 </td>
@@ -1248,16 +1226,16 @@ export default function Dashboard() {
             <div>
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-gray-800">Teams</h2>
-                  <select
-                    value={teamEventFilter}
-                    onChange={(e) => setTeamEventFilter(e.target.value)}
-                    className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  >
-                    <option value="all">All Events</option>
-                    {events.map((event) => (
-                      <option key={event._id} value={event._id}>{event.name}</option>
-                    ))}
-                  </select>
+                <select
+                  value={teamEventFilter}
+                  onChange={(e) => setTeamEventFilter(e.target.value)}
+                  className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="all">All Events</option>
+                  {events.map((event) => (
+                    <option key={event._id} value={event._id}>{event.name}</option>
+                  ))}
+                </select>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full">
@@ -1290,9 +1268,8 @@ export default function Dashboard() {
                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{leader}</td>
                             <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{team.teamMembers?.length || 0}</td>
                             <td className="px-4 py-4 whitespace-nowrap text-sm">
-                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                team.isVerified === true ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                              }`}>
+                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${team.isVerified === true ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                }`}>
                                 {team.isVerified === true ? 'Verified' : 'Unverified'}
                               </span>
                             </td>
@@ -1319,7 +1296,7 @@ export default function Dashboard() {
                                           t._id === team._id ? { ...t, isVerified: result.team.isVerified ?? false } : t
                                         )
                                       );
-                                    } catch (error: any) {
+                                    } catch (error: unknown) {
                                       console.error('Error updating team verification:', error);
                                       // Revert on error
                                       setTeams((prev) =>
@@ -1327,7 +1304,7 @@ export default function Dashboard() {
                                           t._id === team._id ? { ...t, isVerified: team.isVerified ?? false } : t
                                         )
                                       );
-                                      alert(error?.message || 'Failed to update team verification status');
+                                      alert(error instanceof Error ? error.message : 'Failed to update team verification status');
                                     }
                                   }}
                                   className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 cursor-pointer"
@@ -1439,7 +1416,7 @@ export default function Dashboard() {
                                         t._id === team._id ? { ...t, isVerified: result.team.isVerified ?? false } : t
                                       )
                                     );
-                                  } catch (error: any) {
+                                  } catch (error: unknown) {
                                     console.error('Error updating team verification:', error);
                                     // Revert on error
                                     setTeams((prev) =>
@@ -1447,7 +1424,7 @@ export default function Dashboard() {
                                         t._id === team._id ? { ...t, isVerified: team.isVerified ?? false } : t
                                       )
                                     );
-                                    alert(error?.message || 'Failed to update team verification status');
+                                    alert(error instanceof Error ? error.message : 'Failed to update team verification status');
                                   }
                                 }}
                                 className="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
@@ -1475,45 +1452,42 @@ export default function Dashboard() {
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200">
                                   {members.length > 0 ? (
-                                    members.map((member: any) => (
-                                      member && (
-                                        <tr key={member._id || member} className="hover:bg-gray-50">
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            {typeof member === 'object' ? member._id?.slice(-6) : member.slice(-6)}
-                                          </td>
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            {typeof member === 'object' ? member.ojassId : 'N/A'}
-                                          </td>
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            {typeof member === 'object' ? member.name : 'Unknown'}
-                                          </td>
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
-                                            {typeof member === 'object' ? member.email : 'N/A'}
-                                          </td>
-                                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
-                                            {typeof member === 'object' ? member.collegeName : 'N/A'}
-                                          </td>
-                                          <td className="px-4 py-3 whitespace-nowrap">
-                                            {(() => {
-                                              // Get payment status from member object or find in students array
-                                              let isPaid = false;
-                                              if (typeof member === 'object') {
-                                                isPaid = member.isPaid || false;
-                                              } else {
-                                                const student = students.find(s => s._id === member);
-                                                isPaid = student?.isPaid || false;
-                                              }
-                                              return (
-                                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                                  isPaid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                    members.slice(0, 5).map((member, idx) => (
+                                      <tr key={typeof member === 'object' ? member._id : `${member}-${idx}`} className="hover:bg-gray-50">
+                                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                                          {typeof member === 'object' ? member._id?.slice(-6) : ((member as unknown as string)?.slice(-6) || 'N/A')}
+                                        </td>
+                                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                                          {typeof member === 'object' ? member.ojassId : 'N/A'}
+                                        </td>
+                                        <td className="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
+                                          {typeof member === 'object' ? member.name : 'Unknown'}
+                                        </td>
+                                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                                          {typeof member === 'object' ? member.email : 'N/A'}
+                                        </td>
+                                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                                          {typeof member === 'object' ? member.collegeName : 'N/A'}
+                                        </td>
+                                        <td className="px-4 py-3 whitespace-nowrap">
+                                          {(() => {
+                                            // Get payment status from member object or find in students array
+                                            let isPaid = false;
+                                            if (typeof member === 'object') {
+                                              isPaid = member.isPaid || false;
+                                            } else {
+                                              const student = students.find(s => s._id === member);
+                                              isPaid = student?.isPaid || false;
+                                            }
+                                            return (
+                                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${isPaid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
                                                 }`}>
-                                                  {isPaid ? 'Paid' : 'Unpaid'}
-                                                </span>
-                                              );
-                                            })()}
-                                          </td>
-                                        </tr>
-                                      )
+                                                {isPaid ? 'Paid' : 'Unpaid'}
+                                              </span>
+                                            );
+                                          })()}
+                                        </td>
+                                      </tr>
                                     ))
                                   ) : (
                                     <tr>
@@ -1589,16 +1563,14 @@ export default function Dashboard() {
                               <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{participant?.ojassId || 'N/A'}</td>
                               <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-600">{participant?.email || 'N/A'}</td>
                               <td className="px-4 py-4 whitespace-nowrap text-sm">
-                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                  participant?.isPaid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                                }`}>
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${participant?.isPaid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                  }`}>
                                   {participant?.isPaid ? 'Paid' : 'Unpaid'}
                                 </span>
                               </td>
                               <td className="px-4 py-4 whitespace-nowrap text-sm">
-                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                  reg.isVerified === true ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                                }`}>
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${reg.isVerified === true ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                  }`}>
                                   {reg.isVerified === true ? 'Verified' : 'Unverified'}
                                 </span>
                               </td>
@@ -1625,7 +1597,7 @@ export default function Dashboard() {
                                             r._id === reg._id ? { ...r, isVerified: result.team.isVerified ?? false } : r
                                           )
                                         );
-                                      } catch (error: any) {
+                                      } catch (error: unknown) {
                                         console.error('Error updating registration verification:', error);
                                         // Revert on error
                                         setIndividualRegistrations((prev) =>
@@ -1633,7 +1605,7 @@ export default function Dashboard() {
                                             r._id === reg._id ? { ...r, isVerified: reg.isVerified ?? false } : r
                                           )
                                         );
-                                        alert(error?.message || 'Failed to update verification status');
+                                        alert(error instanceof Error ? error.message : 'Failed to update verification status');
                                       }
                                     }}
                                     className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 cursor-pointer"
@@ -1736,7 +1708,7 @@ export default function Dashboard() {
                                         r._id === reg._id ? { ...r, isVerified: result.team.isVerified ?? false } : r
                                       )
                                     );
-                                  } catch (error: any) {
+                                  } catch (error: unknown) {
                                     console.error('Error updating registration verification:', error);
                                     // Revert on error
                                     setIndividualRegistrations((prev) =>
@@ -1744,7 +1716,7 @@ export default function Dashboard() {
                                         r._id === reg._id ? { ...r, isVerified: reg.isVerified ?? false } : r
                                       )
                                     );
-                                    alert(error?.message || 'Failed to update verification status');
+                                    alert(error instanceof Error ? error.message : 'Failed to update verification status');
                                   }
                                 }}
                                 className="w-5 h-5 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
@@ -1779,9 +1751,8 @@ export default function Dashboard() {
                                 <div>
                                   <label className="text-sm font-medium text-gray-500">Payment Status</label>
                                   <p className="text-sm">
-                                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                      participant?.isPaid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                                    }`}>
+                                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${participant?.isPaid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                      }`}>
                                       {participant?.isPaid ? 'Paid' : 'Unpaid'}
                                     </span>
                                   </p>
