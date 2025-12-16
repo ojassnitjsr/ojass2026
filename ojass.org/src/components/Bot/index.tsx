@@ -11,7 +11,7 @@ export default function Bot() {
   const isDystopia = theme === "dystopia";
   return (
     <motion.div
-      className='fixed bottom-0 left-20 z-[100] cursor-pointer'
+      className='fixed bottom-0 sm:left-20 left-4 z-[100] cursor-pointer'
       animate={{
         y: [0, -15, 0],
       }}
