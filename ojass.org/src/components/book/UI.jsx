@@ -1,14 +1,16 @@
 "use client";
 
 import { atom, useAtom } from "jotai";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, Suspense } from "react";
+import { useEffect } from "react";
+import { FaInfoCircle } from "react-icons/fa";
 
 const pictures = [
-    "DSC00680",
-    "DSC00933",
     "DSC00966",
     "DSC00983",
+    "DSC00680",
+    "DSC00933",
     "DSC01011",
     "DSC01040",
     "DSC01064",
@@ -53,7 +55,7 @@ const toKebabCase = (str) => {
         .replace(/\s+/g, "-");
 };
 
-const UIContent = () => {
+export const UI = () => {
     const [page, setPage] = useAtom(pageAtom);
     const searchParams = useSearchParams();
 
@@ -96,37 +98,31 @@ const UIContent = () => {
         <>
             <main className="pointer-events-none select-none z-10 fixed inset-0 flex justify-end flex-col">
                 <div className="w-full overflow-auto pointer-events-auto flex justify-center">
-                    <div className="overflow-auto flex items-center gap-4 max-w-full p-10">
-                        {pages.map((pg, index) => (
-                            <button
-                                key={index}
-                                className={`border-transparent hover:border-white transition-all duration-300 px-4 py-1 rounded-full  text-md uppercase shrink-0 border ${index === page
-                                        ? "bg-white/90 text-black"
-                                        : "bg-black/30 text-white"
+                    <div className="overflow-auto grid grid-cols-2 sm:grid-cols-4 place-items-center gap-4 max-w-full p-10 relative">
+                        {pages.map((pg, index) => {
+                            if (index === 0) return null;
+                            return (
+                                <button
+                                    key={index}
+                                    className={`relative border-transparent hover:border-white transition-all duration-300 px-4 py-1 rounded-full text-xs sm:text-base uppercase shrink-0 border ${
+                                        index === page
+                                            ? "bg-white/90 text-black"
+                                            : "bg-black/30 text-white"
                                     }`}
-                                onClick={() => setPage(index)}>
-                                {pg.name}
-                            </button>
-                        ))}
-                        <button
-                            className={`border-transparent hover:border-white transition-all duration-300 px-4 py-1 rounded-full  text-md uppercase shrink-0 border ${page === pages.length
-                                    ? "bg-white/90 text-black"
-                                    : "bg-black/30 text-white"
-                                }`}
-                            onClick={() => setPage(pages.length)}>
-                            Back Cover
-                        </button>
+                                    onClick={() => setPage(index)}>
+                                    {pg.name}
+                                    <Link
+                                        href={`/book/textures/${pg.front}.jpg`}
+                                        target="_blank"
+                                        className="absolute right-0 top-0 m-1">
+                                        <FaInfoCircle className="size-3" />
+                                    </Link>
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
             </main>
         </>
-    );
-};
-
-export const UI = () => {
-    return (
-        <Suspense fallback={<div className="fixed inset-0 z-10" />}>
-            <UIContent />
-        </Suspense>
     );
 };

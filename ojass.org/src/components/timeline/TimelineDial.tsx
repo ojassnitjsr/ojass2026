@@ -50,6 +50,8 @@ const TimelineDial = ({
                 marginBottom: "-235px",
                 marginTop: "20px",
             }}>
+            <div className="absolute top-1/4 left-1/3 text-white">Rotate/Tap Dial</div>
+
             <svg
                 viewBox="0 0 538 538"
                 fill="none"
@@ -58,8 +60,9 @@ const TimelineDial = ({
                     width: "100%",
                     height: "100%",
                     transform: `rotate(${angle}deg)`,
-                    transition: `transform ${isDragging ? "0s" : "1s"
-                        } ease-out`,
+                    transition: `transform ${
+                        isDragging ? "0s" : "1s"
+                    } ease-out`,
                     pointerEvents: "none",
                     filter:
                         theme === "utopia"
@@ -375,7 +378,11 @@ const TimelineDial = ({
                                     y2={y2}
                                     stroke="url(#ringGradient)"
                                     strokeWidth={isPrimary ? 6 : 4}
-                                    filter={isPrimary ? "url(#strongGlow)" : "url(#glow)"}
+                                    filter={
+                                        isPrimary
+                                            ? "url(#strongGlow)"
+                                            : "url(#glow)"
+                                    }
                                     strokeLinecap="round"
                                 />
                                 {/* Core Line */}
@@ -398,14 +405,22 @@ const TimelineDial = ({
                                     cx={x2}
                                     cy={y2}
                                     r={isPrimary ? 8 : 6}
-                                    fill={theme === "utopia" ? "#00ffff" : "#ff0000"}
+                                    fill={
+                                        theme === "utopia"
+                                            ? "#00ffff"
+                                            : "#ff0000"
+                                    }
                                     filter="url(#strongGlow)"
                                 />
                                 <circle
                                     cx={x2}
                                     cy={y2}
                                     r={isPrimary ? 5 : 3}
-                                    fill={theme === "utopia" ? "#ffffff" : "#ffcccc"}
+                                    fill={
+                                        theme === "utopia"
+                                            ? "#ffffff"
+                                            : "#ffcccc"
+                                    }
                                 />
                             </g>
                         );
