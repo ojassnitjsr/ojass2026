@@ -1,16 +1,24 @@
+import { useLoginTheme } from "../login/theme";
 
-const Button = ({ onClick, content }: { onClick?: () => void, content?: string }) => {
+const Button = ({
+    onClick,
+    content,
+}: {
+    onClick?: () => void;
+    content?: string;
+}) => {
+    const theme = useLoginTheme();
     return (
         <button
-            onClick={ onClick}
-            className="px-4 py-2.5 text-xs font-mono uppercase transition-all backdrop-blur-sm border border-cyan-400/30 text-cyan-400/60  bg-cyan-400/20  hover:border-cyan-400/60 hover:bg-cyan-400/10 font-bold"
+            onClick={onClick}
+            className={`px-4 py-2.5 text-xs font-mono uppercase transition-all backdrop-blur-sm border ${theme.buttonPrimary} font-bold`}
             style={{
-                clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)',
-            }}
-        >
+                clipPath:
+                    "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
+            }}>
             {content}
-        </button >
-    )
-}
+        </button>
+    );
+};
 
-export default Button
+export default Button;
