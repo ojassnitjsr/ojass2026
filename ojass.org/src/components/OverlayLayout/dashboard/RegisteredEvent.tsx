@@ -2,91 +2,66 @@
 
 import React from "react";
 import { Calendar, Zap } from "lucide-react";
-import { useTheme } from "@/contexts/ThemeContext";
+import { useLoginTheme } from "@/components/login/theme";
+import { cn } from "@/lib/utils";
 
 export default function RegisteredEvent({
-  registeredEvents,
+    registeredEvents,
 }: {
-  registeredEvents: any[];
+    registeredEvents: any[];
 }) {
-  const { theme } = useTheme();
+    const theme = useLoginTheme();
 
-  // 🎨 Theme-based glow and colors
-  const glow = theme === "utopia" ? "#00ffff" : "#cc7722";
-  const borderColor =
-    theme === "utopia" ? "border-cyan-400/30" : "border-red-500";
-  const gradientFrom =
-    theme === "utopia"
-      ? "from-cyan-500/10 to-blue-500/5"
-      : "from-amber-700/15 to-amber-900/10";
-  const hoverGradient =
-    theme === "utopia"
-      ? "hover:from-cyan-500/20 hover:to-blue-500/10"
-      : "hover:from-amber-700/25 hover:to-red-900/15";
-  const textColor =
-    theme === "utopia" ? "text-cyan-300" : "text-amber-400";
-  const boxShadow = `0 0 15px ${glow}22, inset 0 0 12px ${glow}18`;
+    return (
+        <div className="space-y-3">
+            {registeredEvents.map((event) => (
+                <div
+                    key={event.id}
+                    className={cn(
+                        "p-4 border rounded-lg backdrop-blur-md transition-all relative overflow-hidden group",
+                        theme.borderColorDim,
+                        theme.bgGlass,
+                    )}>
+                    {/* 🏷️ Event Header */}
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                        <div>
+                            <div
+                                className={cn(
+                                    "text-sm font-bold text-slate-200 tracking-wide",
+                                    theme.textColor,
+                                )}>
+                                {event.name}
+                            </div>
+                            <div className="text-xs text-slate-500 mt-1 uppercase tracking-wider font-semibold">
+                                Team: {event.team}
+                            </div>
+                        </div>
+                        <span
+                            className={cn(
+                                "text-[10px] uppercase font-bold px-2 py-0.5 rounded border tracking-wider",
+                                event.status === "Confirmed" || event.isVerified
+                                    ? "bg-green-500/10 text-green-400 border-green-500/30"
+                                    : "bg-red-500/10 text-red-400 border-red-500/30",
+                            )}>
+                            {event.status === "Confirmed" || event.isVerified
+                                ? "Verified"
+                                : "Unverified"}
+                        </span>
+                    </div>
 
-  return (
-    <div className="space-y-3">
-      {registeredEvents.map((event) => (
-        <div
-          key={event.id}
-          className={`p-4 border ${borderColor} bg-gradient-to-r ${gradientFrom} ${hoverGradient} transition-all backdrop-blur-md rounded-md`}
-          style={{
-            clipPath:
-              "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
-            boxShadow,
-          }}
-        >
-          {/* 🏷️ Event Header */}
-          <div className="flex items-start justify-between gap-3 mb-2">
-            <div>
-              <div
-                className={`text-sm font-semibold text-white drop-shadow-[0_0_6px_${glow}]`}
-              >
-                {event.name}
-              </div>
-              <div className={`text-xs ${textColor} mt-1`}>
-                Team: {event.team}
-              </div>
-            </div>
-            <span
-              className={`text-xs font-mono px-2 py-1 rounded border border-white/10 ${
-                event.status === "Confirmed" || event.isVerified
-                  ? "bg-green-500/20 text-green-300"
-                  : "bg-red-500/20 text-red-300"
-              }`}
-              style={{
-                boxShadow:
-                  event.status === "Confirmed" || event.isVerified
-                    ? `0 0 10px rgba(0,255,0,0.3)`
-                    : `0 0 10px rgba(255,0,0,0.3)`,
-              }}
-            >
-              {event.status === "Confirmed" || event.isVerified ? "Verified" : "Unverified"}
-            </span>
-          </div>
-
-          {/* 📅 Event Details */}
-          <div className="space-y-1">
-            <div className="flex items-center gap-2 text-xs text-gray-300">
-              <Calendar
-                size={12}
-                style={{ filter: `drop-shadow(0 0 4px ${glow})` }}
-              />
-              <span>{event.date}</span>
-            </div>
-            <div className="flex items-center gap-2 text-xs text-gray-300">
-              <Zap
-                size={12}
-                style={{ filter: `drop-shadow(0 0 4px ${glow})` }}
-              />
-              <span>{event.time}</span>
-            </div>
-          </div>
+                    {/* 📅 Event Details */}
+                    <div className="space-y-1 mt-3 pt-3 border-t border-white/5">
+                        <div className="flex items-center gap-2 text-xs text-slate-400">
+                            <Calendar size={12} className="opacity-70" />
+                            <span className="font-mono">{event.date}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-slate-400">
+                            <Zap size={12} className="opacity-70" />
+                            <span className="font-mono">{event.time}</span>
+                        </div>
+                    </div>
+                </div>
+            ))}
         </div>
-      ))}
-    </div>
-  );
+    );
 }

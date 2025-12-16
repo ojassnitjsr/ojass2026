@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useTheme } from "@/contexts/ThemeContext";
-import GlassyNeonBoard from "@/components/OverlayLayout/dashboard/GlassyNeonBorad";
+import { useLoginTheme } from "@/components/login/theme";
+import Board from "@/components/OverlayLayout/dashboard/Board";
 import Profile from "@/components/OverlayLayout/dashboard/Profile";
 import Receipt from "@/components/OverlayLayout/dashboard/Reciept";
 import RegisteredEvent from "@/components/OverlayLayout/dashboard/RegisteredEvent";
@@ -11,340 +11,377 @@ import Certificate from "@/components/OverlayLayout/dashboard/Certificate";
 import Notification from "@/components/OverlayLayout/dashboard/Notification";
 import EmailVerificationModal from "@/components/OverlayLayout/dashboard/EmailVerificationModal";
 import Loader from "@/components/Loader";
+import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 export default function OjassDashboard() {
-  const router = useRouter();
-  const { theme } = useTheme();
-  const [activeTab, setActiveTab] = useState("receipt");
-  const [profileData, setProfileData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [showEmailVerificationModal, setShowEmailVerificationModal] = useState(false);
-  const [paymentData, setPaymentData] = useState<any>(null);
-  const [pricing, setPricing] = useState<any>(null);
-  const [userTeams, setUserTeams] = useState<any[]>([]);
-  const [registeredEvents, setRegisteredEvents] = useState<any[]>([]);
-  const [loadingTeams, setLoadingTeams] = useState(false);
-  const currentUserId = profileData?._id || "u1";
+    const router = useRouter();
+    const theme = useLoginTheme();
+    const [activeTab, setActiveTab] = useState("receipt");
+    const [profileData, setProfileData] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [showEmailVerificationModal, setShowEmailVerificationModal] =
+        useState(false);
+    const [paymentData, setPaymentData] = useState<any>(null);
+    const [pricing, setPricing] = useState<any>(null);
+    const [userTeams, setUserTeams] = useState<any[]>([]);
+    const [registeredEvents, setRegisteredEvents] = useState<any[]>([]);
+    const [loadingTeams, setLoadingTeams] = useState(false);
+    const currentUserId = profileData?._id || "u1";
 
-  // 🌗 Theme-based color mapping (same concept as StarfleetContact)
-  const glow = theme === "utopia" ? "#00ffff" : "#cc7722";
-  const borderColor =
-    theme === "utopia" ? "border-cyan-400" : "border-amber-500";
-  const accentText =
-    theme === "utopia" ? "text-cyan-300" : "text-amber-400";
-  const buttonActiveBg =
-    theme === "utopia" ? "bg-cyan-400/20" : "bg-amber-500/20";
-  const buttonInactiveBorder =
-    theme === "utopia" ? "border-cyan-400/30" : "border-amber-500/30";
-  const buttonInactiveHover =
-    theme === "utopia"
-      ? "hover:border-cyan-400/60 hover:bg-cyan-400/10"
-      : "hover:border-amber-500/60 hover:bg-amber-500/10";
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const user = localStorage.getItem("user");
+            if (!user) {
+                router.push("/login");
+                return;
+            }
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const user = localStorage.getItem('user');
-      if (!user) {
-        router.push('/login');
-        return;
-      }
+            try {
+                const userData = JSON.parse(user);
+                const userProfile = {
+                    name: userData.name,
+                    email: userData.email,
+                    college: userData.collegeName,
+                    phone: userData.phone,
+                    ojassId: userData.ojassId,
+                    gender: userData.gender,
+                    city: userData.city,
+                    state: userData.state,
+                    isPaid: userData.isPaid,
+                    isEmailVerified: userData.isEmailVerified,
+                    referralCount: userData.referralCount || 0,
+                    idCardImageUrl: userData.idCardImageUrl || null,
+                    idCardCloudinaryId: userData.idCardCloudinaryId || null,
+                    _id: userData._id,
+                };
+                setProfileData(userProfile);
 
-      try {
-        const userData = JSON.parse(user);
-        const userProfile = {
-          name: userData.name,
-          email: userData.email,
-          college: userData.collegeName,
-          phone: userData.phone,
-          ojassId: userData.ojassId,
-          gender: userData.gender,
-          city: userData.city,
-          state: userData.state,
-          isPaid: userData.isPaid,
-          isEmailVerified: userData.isEmailVerified,
-          referralCount: userData.referralCount || 0,
-          idCardImageUrl: userData.idCardImageUrl || null,
-          idCardCloudinaryId: userData.idCardCloudinaryId || null,
-          _id: userData._id
+                // Fetch payment status and pricing
+                const token = localStorage.getItem("token");
+                if (token) {
+                    // Fetch payment status
+                    const paymentRes = await fetch("/api/payment/status", {
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
+
+                    if (paymentRes.ok) {
+                        const payment = await paymentRes.json();
+                        setPaymentData(payment);
+                        // Update profile data with latest payment status
+                        userProfile.isPaid = payment.isPaid;
+                        userProfile.isEmailVerified = payment.isEmailVerified;
+                        setProfileData({ ...userProfile });
+                    }
+
+                    // Fetch pricing
+                    const pricingRes = await fetch("/api/pricing", {
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
+                    if (pricingRes.ok) {
+                        const pricingData = await pricingRes.json();
+                        setPricing(pricingData);
+                    }
+
+                    // Fetch user teams
+                    setLoadingTeams(true);
+                    try {
+                        const teamsRes = await fetch("/api/teams", {
+                            headers: { Authorization: `Bearer ${token}` },
+                        });
+                        if (teamsRes.ok) {
+                            const teams = await teamsRes.json();
+                            // Filter out individual teams (only show actual teams, not individual registrations)
+                            const actualTeams = teams.filter(
+                                (team: any) => !team.isIndividual,
+                            );
+                            // Transform teams to match Team component format
+                            const transformedTeams = actualTeams.map(
+                                (team: any) => ({
+                                    _id: team._id,
+                                    eventId: team.eventId?._id || team.eventId,
+                                    eventName:
+                                        team.eventId?.name || "Unknown Event",
+                                    isIndividual: team.isIndividual,
+                                    teamName: team.teamName || "Individual",
+                                    teamLeader:
+                                        typeof team.teamLeader === "object"
+                                            ? {
+                                                  _id: team.teamLeader._id,
+                                                  name:
+                                                      team.teamLeader.name ||
+                                                      "Unknown",
+                                                  ojassId:
+                                                      team.teamLeader.ojassId,
+                                              }
+                                            : team.teamLeader,
+                                    teamMembers: team.teamMembers
+                                        .filter((member: any) => {
+                                            // Filter out leader from members list
+                                            const memberId =
+                                                typeof member === "object"
+                                                    ? member._id
+                                                    : member;
+                                            const leaderId =
+                                                typeof team.teamLeader ===
+                                                "object"
+                                                    ? team.teamLeader._id
+                                                    : team.teamLeader;
+                                            return (
+                                                memberId.toString() !==
+                                                leaderId.toString()
+                                            );
+                                        })
+                                        .map((member: any) => ({
+                                            _id:
+                                                typeof member === "object"
+                                                    ? member._id
+                                                    : member,
+                                            name:
+                                                typeof member === "object"
+                                                    ? member.name
+                                                    : "Unknown",
+                                            ojassId:
+                                                typeof member === "object"
+                                                    ? member.ojassId
+                                                    : undefined,
+                                        })),
+                                    joinToken: team.joinToken || "",
+                                    isVerified: team.isVerified || false,
+                                }),
+                            );
+                            setUserTeams(transformedTeams);
+                        }
+                    } catch (err) {
+                        console.error("Error fetching teams:", err);
+                    } finally {
+                        setLoadingTeams(false);
+                    }
+
+                    // Fetch registered events
+                    try {
+                        const registrationsRes = await fetch(
+                            "/api/events/my-registrations",
+                            {
+                                headers: { Authorization: `Bearer ${token}` },
+                            },
+                        );
+
+                        if (registrationsRes.ok) {
+                            const registrations = await registrationsRes.json();
+                            // Transform registrations to match expected format
+                            const transformedRegistrations = registrations.map(
+                                (reg: any) => ({
+                                    id: reg._id,
+                                    name: reg.eventId?.name || "Unknown Event",
+                                    date: new Date(
+                                        reg.createdAt,
+                                    ).toLocaleDateString("en-US", {
+                                        month: "short",
+                                        day: "numeric",
+                                        year: "numeric",
+                                    }),
+                                    time: new Date(
+                                        reg.createdAt,
+                                    ).toLocaleTimeString("en-US", {
+                                        hour: "numeric",
+                                        minute: "2-digit",
+                                        hour12: true,
+                                    }),
+                                    status: reg.isVerified
+                                        ? "Confirmed"
+                                        : "Pending",
+                                    team: reg.isIndividual
+                                        ? "Solo"
+                                        : reg.teamName || "Team",
+                                    registration: reg,
+                                    isVerified: reg.isVerified || false,
+                                }),
+                            );
+                            setRegisteredEvents(transformedRegistrations);
+                        }
+                    } catch (err) {
+                        console.error("Error fetching registrations:", err);
+                    }
+                }
+            } catch (err) {
+                console.error("Error parsing user data:", err);
+                router.push("/login");
+            } finally {
+                setLoading(false);
+            }
         };
-        setProfileData(userProfile);
 
-        // Fetch payment status and pricing
-        const token = localStorage.getItem('token');
-        if (token) {
-          // Fetch payment status
-          const paymentRes = await fetch('/api/payment/status', {
-            headers: { 'Authorization': `Bearer ${token}` }
-          });
+        fetchUserData();
+    }, [router]);
 
-          if (paymentRes.ok) {
-            const payment = await paymentRes.json();
-            setPaymentData(payment);
-            // Update profile data with latest payment status
-            userProfile.isPaid = payment.isPaid;
-            userProfile.isEmailVerified = payment.isEmailVerified;
-            setProfileData({ ...userProfile });
-          }
+    // Certificate type definition
+    interface Certificate {
+        id: string;
+        event: string;
+        type: string;
+        date: string;
+        url: string;
+    }
 
-          // Fetch pricing
-          const pricingRes = await fetch('/api/pricing', {
-            headers: { 'Authorization': `Bearer ${token}` }
-          });
-          if (pricingRes.ok) {
-            const pricingData = await pricingRes.json();
-            setPricing(pricingData);
-          }
+    const certificates: Certificate[] = [];
 
-          // Fetch user teams
-          setLoadingTeams(true);
-          try {
-            const teamsRes = await fetch('/api/teams', {
-              headers: { 'Authorization': `Bearer ${token}` }
-            });
-            if (teamsRes.ok) {
-              const teams = await teamsRes.json();
-              // Filter out individual teams (only show actual teams, not individual registrations)
-              const actualTeams = teams.filter((team: any) => !team.isIndividual);
-              // Transform teams to match Team component format
-              const transformedTeams = actualTeams.map((team: any) => ({
-                _id: team._id,
-                eventId: team.eventId?._id || team.eventId,
-                eventName: team.eventId?.name || 'Unknown Event',
-                isIndividual: team.isIndividual,
-                teamName: team.teamName || 'Individual',
-                teamLeader: typeof team.teamLeader === 'object'
-                  ? {
-                    _id: team.teamLeader._id,
-                    name: team.teamLeader.name || 'Unknown',
-                    ojassId: team.teamLeader.ojassId
-                  }
-                  : team.teamLeader,
-                teamMembers: team.teamMembers
-                  .filter((member: any) => {
-                    // Filter out leader from members list
-                    const memberId = typeof member === 'object' ? member._id : member;
-                    const leaderId = typeof team.teamLeader === 'object'
-                      ? team.teamLeader._id
-                      : team.teamLeader;
-                    return memberId.toString() !== leaderId.toString();
-                  })
-                  .map((member: any) => ({
-                    _id: typeof member === 'object' ? member._id : member,
-                    name: typeof member === 'object' ? member.name : 'Unknown',
-                    ojassId: typeof member === 'object' ? member.ojassId : undefined
-                  })),
-                joinToken: team.joinToken || '',
-                isVerified: team.isVerified || false
-              }));
-              setUserTeams(transformedTeams);
-            }
-          } catch (err) {
-            console.error('Error fetching teams:', err);
-          } finally {
-            setLoadingTeams(false);
-          }
+    if (loading) {
+        return <Loader />;
+    }
 
-          // Fetch registered events
-          try {
-            const registrationsRes = await fetch('/api/events/my-registrations', {
-              headers: { 'Authorization': `Bearer ${token}` }
-            });
+    if (!profileData) {
+        return null;
+    }
 
-            if (registrationsRes.ok) {
-              const registrations = await registrationsRes.json();
-              // Transform registrations to match expected format
-              const transformedRegistrations = registrations.map((reg: any) => ({
-                id: reg._id,
-                name: reg.eventId?.name || 'Unknown Event',
-                date: new Date(reg.createdAt).toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                  year: 'numeric'
-                }),
-                time: new Date(reg.createdAt).toLocaleTimeString('en-US', {
-                  hour: 'numeric',
-                  minute: '2-digit',
-                  hour12: true
-                }),
-                status: reg.isVerified ? 'Confirmed' : 'Pending',
-                team: reg.isIndividual ? 'Solo' : (reg.teamName || 'Team'),
-                registration: reg,
-                isVerified: reg.isVerified || false
-              }));
-              setRegisteredEvents(transformedRegistrations);
-            }
-          } catch (err) {
-            console.error('Error fetching registrations:', err);
-          }
-        }
-      } catch (err) {
-        console.error('Error parsing user data:', err);
-        router.push('/login');
-      } finally {
-        setLoading(false);
-      }
-    };
+    return (
+        <div
+            className={cn(
+                "relative w-full min-h-screen overflow-hidden bg-black",
+                theme.selection,
+            )}>
+            {/* Background - Matches Login Page */}
+            <div className="fixed inset-0 w-full h-full pointer-events-none">
+                <Image
+                    src="/login/space-bg.png"
+                    alt="Background"
+                    width={1000}
+                    height={1000}
+                    className="absolute w-full h-full object-cover"
+                    priority
+                />
+                {/* Optional: Add a subtle overlay to make text more readable if needed, or keep raw like login */}
+                <div className="absolute inset-0 bg-black/20" />
+            </div>
 
-    fetchUserData();
-  }, [router]);
+            {/* 🪩 Dashboard Layout */}
+            <div className="relative h-full flex items-center justify-center px-4 md:px-8 py-8 md:py-12">
+                <div className="w-full max-w-[90rem] xl:max-w-[110rem] 2xl:max-w-[130rem]">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        {/* PROFILE CARD - Takes up 4 columns on large screens */}
+                        <div className="lg:col-span-4 xl:col-span-3">
+                            <Board
+                                title="PROFILE"
+                                isEmailVerified={
+                                    profileData?.isEmailVerified || false
+                                }
+                                isPaid={paymentData?.isPaid || false}
+                                pricing={pricing}
+                                onPaymentClick={() => setActiveTab("receipt")}
+                                onEmailVerificationClick={() =>
+                                    setShowEmailVerificationModal(true)
+                                }
+                                onRegisterNow={() => setActiveTab("events")}
+                                onDownloadReceipt={() => {}}>
+                                <div className="h-[calc(100vh-200px)] lg:h-[62vh] overflow-y-auto scrollbar-none">
+                                    <Profile profileData={profileData} />
+                                </div>
+                            </Board>
+                        </div>
 
-  // Certificate type definition
-  interface Certificate {
-    id: string;
-    event: string;
-    type: string;
-    date: string;
-    url: string;
-  }
+                        {/* DASHBOARD CARD - Takes up 8 columns on large screens */}
+                        <div className="lg:col-span-8 xl:col-span-9">
+                            <Board title="DASHBOARD">
+                                {/* Tabs */}
+                                <div className="flex flex-wrap gap-2 mb-6 border-b border-white/10 pb-4">
+                                    {[
+                                        "RECEIPT",
+                                        "EVENTS",
+                                        "TEAMS",
+                                        "CERTIFICATES",
+                                        "NOTIFICATIONS",
+                                    ].map((tab) => {
+                                        const isActive =
+                                            activeTab === tab.toLowerCase();
+                                        return (
+                                            <button
+                                                key={tab}
+                                                onClick={() =>
+                                                    setActiveTab(
+                                                        tab.toLowerCase(),
+                                                    )
+                                                }
+                                                className={cn(
+                                                    "px-4 py-2 text-xs md:text-sm font-mono tracking-wider transition-all duration-300 rounded-sm relative overflow-hidden group",
+                                                    isActive
+                                                        ? "bg-white/10 text-white font-bold border-b-2"
+                                                        : "text-slate-400 hover:text-white hover:bg-white/5",
+                                                    isActive
+                                                        ? theme.accentBorder
+                                                        : "border-transparent",
+                                                )}>
+                                                <span className="relative z-10">
+                                                    {tab}
+                                                </span>
+                                                {isActive && (
+                                                    <div
+                                                        className={cn(
+                                                            "absolute inset-0 opacity-20",
+                                                            theme.accentBg,
+                                                        )}
+                                                    />
+                                                )}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
 
-  const certificates: Certificate[] = [
+                                {/* Tab Content */}
+                                <div className="h-[60vh] lg:h-[65vh] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent pr-2">
+                                    {activeTab === "receipt" && (
+                                        <Receipt userData={profileData} pricing={pricing}/>
+                                    )}
+                                    {activeTab === "events" && (
+                                        <RegisteredEvent
+                                            registeredEvents={registeredEvents}
+                                        />
+                                    )}
+                                    {activeTab === "teams" && (
+                                        <Team
+                                            teamData={userTeams}
+                                            currentUserId={currentUserId}
+                                        />
+                                    )}
+                                    {activeTab === "certificates" && (
+                                        <Certificate
+                                            certificates={certificates}
+                                        />
+                                    )}
+                                    {activeTab === "notifications" && (
+                                        <Notification />
+                                    )}
+                                </div>
+                            </Board>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-  ];
-
-  const stars = useMemo(
-    () =>
-      [...Array(20)].map((_, i) => ({
-        id: i,
-        top: Math.random() * 100,
-        left: Math.random() * 100,
-        delay: Math.random() * 3,
-        opacity: Math.random() * 0.7 + 0.3,
-      })),
-    []
-  );
-
-  if (loading) {
-    return <Loader />;
-  }
-
-  if (!profileData) {
-    return null;
-  }
-
-  return (
-    <div className="bg-black relative overflow-hidden">
-      {/* ✨ Star Background */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {stars.map((star) => (
-          <div
-            key={star.id}
-            className="absolute w-1 h-1 rounded-full animate-pulse"
-            style={{
-              backgroundColor: glow,
-              top: `${star.top}%`,
-              left: `${star.left}%`,
-              animationDelay: `${star.delay}s`,
-              opacity: star.opacity,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* 🪩 Dashboard Layout */}
-      <div className="relative h-full flex items-center justify-center px-2 sm:px-6 md:px-8 lg:px-12 py-12">
-        <div className="w-full max-w-[90rem] xl:max-w-[110rem] 2xl:max-w-[130rem] 4xl:max-w-[150rem]">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-            {/* PROFILE CARD */}
-            <GlassyNeonBoard
-              title="PROFILE"
-              isEmailVerified={profileData?.isEmailVerified || false}
-              isPaid={paymentData?.isPaid || false}
-              pricing={pricing}
-              onPaymentClick={() => setActiveTab('receipt')}
-              onEmailVerificationClick={() => setShowEmailVerificationModal(true)}
-              onRegisterNow={() => {
-                // Navigate to events page for registration
-                setActiveTab('events');
-              }}
-              onDownloadReceipt={() => {
-                // Set flag to trigger receipt download
-                // sessionStorage.setItem('downloadReceipt', 'true');
-                // setActiveTab('receipt');
-              }}
-            >
-              <div
-                className="
-                  overflow-y-auto
-                  h-[60vh] sm:h-[70vh] md:h-[70vh] lg:h-[70vh] 
-                  xl:h-[78vh] 2xl:h-[80vh] 4xl:h-[82vh]
-                  scrollbar-thin scrollbar-thumb-cyan-500/40 scrollbar-track-transparent
-                "
-              >
-                <Profile profileData={profileData} />
-              </div>
-            </GlassyNeonBoard>
-
-            {/* DASHBOARD CARD */}
-            <GlassyNeonBoard title="DASHBOARD">
-              {/* Tabs */}
-              <div className="flex gap-3 py-6 flex-wrap">
-                {["RECEIPT", "EVENTS", "TEAMS", "CERTIFICATES", "NOTIFICATIONS"].map((tab) => {
-                  const isActive = activeTab === tab.toLowerCase();
-                  return (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab.toLowerCase())}
-                      className={`px-4 py-2 text-xs font-mono transition-all backdrop-blur-sm border ${buttonInactiveBorder} ${isActive
-                        ? `${buttonActiveBg} ${accentText} border-2`
-                        : `${accentText} opacity-70 ${buttonInactiveHover}`
-                        }`}
-                      style={{
-                        clipPath:
-                          "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
-                      }}
-                    >
-                      {tab}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Tab Content */}
-              <div
-                className="
-                  overflow-y-auto
-                  h-[55vh] sm:h-[60vh] md:h-[65vh] lg:h-[75vh]
-                  xl:h-[78vh] 2xl:h-[75vh] 4xl:h-[77vh]
-                  scrollbar-thin scrollbar-thumb-cyan-500/40 scrollbar-track-transparent py-4
-                "
-              >
-                {activeTab === "receipt" && <Receipt userData={profileData} />}
-                {activeTab === "events" && (
-                  <RegisteredEvent registeredEvents={registeredEvents} />
-                )}
-                {activeTab === "teams" && (
-                  <Team teamData={userTeams} currentUserId={currentUserId} />
-                )}
-                {activeTab === "certificates" && (
-                  <Certificate certificates={certificates} />
-                )}
-                {activeTab === "notifications" && (
-                  <Notification />
-                )}
-              </div>
-            </GlassyNeonBoard>
-          </div>
+            {/* Email Verification Modal */}
+            {showEmailVerificationModal && profileData && (
+                <EmailVerificationModal
+                    isOpen={showEmailVerificationModal}
+                    onClose={() => setShowEmailVerificationModal(false)}
+                    email={profileData.email}
+                    onVerificationSuccess={() => {
+                        // Refresh user data
+                        const user = JSON.parse(
+                            localStorage.getItem("user") || "{}",
+                        );
+                        const updatedUser = { ...user, isEmailVerified: true };
+                        localStorage.setItem(
+                            "user",
+                            JSON.stringify(updatedUser),
+                        );
+                        setProfileData({
+                            ...profileData,
+                            isEmailVerified: true,
+                        });
+                        // Reload page to refresh all data
+                        window.location.reload();
+                    }}
+                />
+            )}
         </div>
-      </div>
-
-      {/* Email Verification Modal */}
-      {showEmailVerificationModal && profileData && (
-        <EmailVerificationModal
-          isOpen={showEmailVerificationModal}
-          onClose={() => setShowEmailVerificationModal(false)}
-          email={profileData.email}
-          onVerificationSuccess={() => {
-            // Refresh user data
-            const user = JSON.parse(localStorage.getItem('user') || '{}');
-            const updatedUser = { ...user, isEmailVerified: true };
-            localStorage.setItem('user', JSON.stringify(updatedUser));
-            setProfileData({ ...profileData, isEmailVerified: true });
-            // Reload page to refresh all data
-            window.location.reload();
-          }}
-        />
-      )}
-    </div>
-  );
+    );
 }
