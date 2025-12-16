@@ -305,12 +305,12 @@ export default function Home() {
         </div>
 
         <div
-          className="fixed -bottom-[5vh] left-0"
+          className="fixed bottom-[0vh] left-0"
           // id="bottom"
           style={{
-            width: '120vw',
+            width: '100vw',
             height: '64vh',
-            marginLeft: '-10vw',
+            marginLeft: '0vw',
             backgroundImage: isDystopia ? 'url(/homelayer/bottom_dys.png)' : 'url(/homelayer/bottom.png)',
             backgroundSize: 'cover',
             backgroundPosition: 'bottom center',
