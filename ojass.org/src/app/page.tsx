@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef, useState } from 'react';
 export default function Home() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { theme } = useTheme();
@@ -15,29 +16,67 @@ export default function Home() {
     gsap.registerPlugin(ScrollTrigger);
   }
 
-  // Smooth mouse tracking without throttling
+  // Detect if device is mobile/touch-based
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      // Normalize to -1 to 1 range, centered at 0 based on window size to support all sections
-      const x = e.clientX / window.innerWidth;
-      const y = e.clientY / window.innerHeight;
-
-      const normalizedX = (x - 0.5) * 2;
-      const normalizedY = (y - 0.5) * 2;
-
-      setMousePosition({ x: normalizedX, y: normalizedY });
+    const checkMobile = () => {
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isSmallScreen = window.matchMedia('(max-width: 768px)').matches;
+      setIsMobile(isTouchDevice || isSmallScreen);
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
+
+  // Throttled mouse tracking - ONLY on desktop
+  useEffect(() => {
+    // Skip mouse tracking on mobile devices
+    if (isMobile) return;
+
+    let rafId: number;
+    let lastTime = 0;
+    const throttleMs = 16; // ~60fps
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const now = performance.now();
+
+      if (now - lastTime < throttleMs) return;
+      lastTime = now;
+
+      // Cancel any pending animation frame
+      if (rafId) cancelAnimationFrame(rafId);
+
+      // Use requestAnimationFrame for smooth updates
+      rafId = requestAnimationFrame(() => {
+        // Normalize to -1 to 1 range, centered at 0 based on window size to support all sections
+        const x = e.clientX / window.innerWidth;
+        const y = e.clientY / window.innerHeight;
+
+        const normalizedX = (x - 0.5) * 2;
+        const normalizedY = (y - 0.5) * 2;
+
+        setMousePosition({ x: normalizedX, y: normalizedY });
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      if (rafId) cancelAnimationFrame(rafId);
     };
-  }, []);
+  }, [isMobile]);
 
 
   // GSAP animations for parallax effect - moving the divs themselves
   useGSAP(() => {
+    // Skip mouse-based parallax on mobile devices
+    if (isMobile) return;
+
     // Animate layers based on mouse position
     const animateLayers = () => {
       const { x, y } = mousePosition;
@@ -49,6 +88,13 @@ export default function Home() {
       const bottomSpeed = 0.7;
       const titleSpeed = 0.9;
 
+      // Shared animation config for better performance
+      const animConfig = {
+        duration: 0.3,
+        ease: 'power2.out',
+        force3D: true, // GPU acceleration
+      };
+
       // Move the actual divs instead of background position
       gsap.to('#bg', {
         x: x * bgSpeed * 40,
@@ -56,7 +102,7 @@ export default function Home() {
         rotationX: y * bgSpeed * 0.5,
         rotationY: x * bgSpeed * 0.5,
         transformOrigin: 'center center',
-        duration: 0.5,
+        ...animConfig,
       });
 
       gsap.to('#layer2', {
@@ -65,7 +111,7 @@ export default function Home() {
         rotationX: y * layer2Speed * 1,
         rotationY: x * layer2Speed * 1,
         transformOrigin: 'center center',
-        duration: 0.5,
+        ...animConfig,
       });
 
       gsap.to('#layer3', {
@@ -74,13 +120,13 @@ export default function Home() {
         rotationX: y * layer3Speed * 1.5,
         rotationY: x * layer3Speed * 1.5,
         transformOrigin: 'center center',
-        duration: 0.5,
+        ...animConfig,
       });
 
       gsap.to('#bottom', {
         x: x * bottomSpeed * 100,
         y: y * bottomSpeed * 60,
-        duration: 0.5,
+        ...animConfig,
       });
 
       gsap.to('#title', {
@@ -88,7 +134,7 @@ export default function Home() {
         y: y * titleSpeed * 50,
         rotationY: x * titleSpeed * 1.2,
         transformOrigin: 'center center',
-        duration: 0.5,
+        ...animConfig,
       });
 
       // --- SECTION 2 PARALLAX ---
@@ -100,15 +146,15 @@ export default function Home() {
       gsap.to('#cave-inner', {
         x: x * caveInnerSpeed * 40,
         y: y * caveInnerSpeed * 40,
-        duration: 0.5,
+        ...animConfig,
       });
 
       // Rocket: Only apply mouse parallax to X axis (horizontal)
       // Y axis is controlled by scroll animation
       gsap.to('#rocket', {
         x: x * rocketSpeed * 80,
-        duration: 0.5,
         overwrite: 'auto', // Don't overwrite Y from scroll animation
+        ...animConfig,
       });
 
       // Title2: Only apply mouse parallax to X axis (horizontal)
@@ -117,14 +163,14 @@ export default function Home() {
         x: x * title2Speed * 70,
         rotationY: x * title2Speed * 1.0,
         transformOrigin: 'center center',
-        duration: 0.5,
         overwrite: 'auto', // Don't overwrite Y from scroll animation
+        ...animConfig,
       });
       // Cave Outer is static as per previous request
     };
 
     animateLayers();
-  }, [mousePosition]);
+  }, [mousePosition, isMobile]);
 
   useGSAP(() => {
     if (!containerRef.current) return;
@@ -135,7 +181,8 @@ export default function Home() {
       trigger: containerRef.current,
       start: 'top top',
       end: 'bottom+=100% top',
-      scrub: true,
+      scrub: 1, // Smooth scrubbing with 1 second delay
+      invalidateOnRefresh: true,
       onUpdate: () => {
         const scrollY = window.scrollY;
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -148,24 +195,28 @@ export default function Home() {
         gsap.set('#title', {
           y: scrollY,
           scale: 1 + progress * 0.05,
+          force3D: true,
         });
 
         // Bottom (Foreground) - Moves naturally with scroll (Speed ~1.0)
         // This "cancels" relative motion between the scroll and this element's position on page.
         gsap.set('#bottom', {
           y: 0,
+          force3D: true,
         });
 
         // Layer3 (Behind bottom) - Moves slower (Speed ~0.6)
         gsap.set('#layer3', {
           y: scrollY * 0.3,
           scale: 1 + progress * 0.02,
+          force3D: true,
         });
 
         // Layer2 (Behind layer3) - Moves slower (Speed ~0.3)
         gsap.set('#layer2', {
           y: scrollY * 0.6,
           scale: 1 + progress * 0.04,
+          force3D: true,
         });
 
         // Background (Furthest) - Moves slowest (Speed ~0.1)
@@ -173,7 +224,8 @@ export default function Home() {
           y: scrollY * 0.9,
           scale: 1 + progress * 0.06,
           rotationX: progress * 2,
-          transformOrigin: 'center center'
+          transformOrigin: 'center center',
+          force3D: true,
         });
 
         // Title2 (Second section) - Synced with first title's movement
@@ -187,10 +239,12 @@ export default function Home() {
           // Total movement: 40vh - (-20vh) = 60vh
           gsap.set('#title2', {
             y: title2Progress * 60 * window.innerHeight / 100, // From 0 to 60vh (CSS -20vh + 60vh = 40vh)
+            force3D: true,
           });
         } else {
           gsap.set('#title2', {
             y: 0, // Keep at CSS position -20vh
+            force3D: true,
           });
         }
       }
@@ -204,7 +258,8 @@ export default function Home() {
         trigger: '#second-section',
         start: 'top 50%', // Start when the top of the section enters the middle of the viewport
         end: 'bottom bottom',   // End when the bottom of the section hits the bottom of viewport
-        scrub: true,
+        scrub: 1, // Smooth scrubbing
+        invalidateOnRefresh: true,
       }
     });
 
@@ -256,7 +311,8 @@ export default function Home() {
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
             transformStyle: 'preserve-3d',
-            willChange: 'transform'
+            willChange: 'transform',
+            backfaceVisibility: 'hidden',
           }}
         ></div>
 
@@ -274,11 +330,10 @@ export default function Home() {
             // filter: isDystopia ? 'brightness(1.2) hue-rotate(180deg)' : 'blur(0px) brightness(1.2) hue-rotate(0deg)',
             transformStyle: 'preserve-3d',
             willChange: 'transform',
+            backfaceVisibility: 'hidden',
             // backgroundColor: 'red',
           }}
         ></div>
-
-
 
         <div
           className="fixed bottom-[5vh] -left-[5vw] flex flex-row justify-between"
@@ -293,6 +348,7 @@ export default function Home() {
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
+            backfaceVisibility: 'hidden',
           }}
         >
         </div>
@@ -300,7 +356,7 @@ export default function Home() {
         <div
           id="title"
           className={`fixed top-[30%] font-bold text-[200px] text-center w-full bg-contain bg-center bg-no-repeat h-[35vh] ${isDystopia ? 'bg-[url(/text_main_dys_nobg.png)]' : 'bg-[url(/text_main_dys_nobg.png)]'}`}
-          style={{ willChange: 'transform', pointerEvents: 'none', filter: isDystopia ? 'hue-rotate(180deg)' : 'hue-rotate(0deg)', }}
+          style={{ willChange: 'transform', pointerEvents: 'none', filter: isDystopia ? 'hue-rotate(180deg)' : 'hue-rotate(0deg)', backfaceVisibility: 'hidden' }}
         >
         </div>
 
@@ -316,6 +372,7 @@ export default function Home() {
             backgroundPosition: 'bottom center',
             backgroundRepeat: 'no-repeat',
             willChange: 'transform',
+            backfaceVisibility: 'hidden',
             // filter: isDystopia ? 'hue-rotate(180deg)' : 'hue-rotate(0deg)',
           }}
         ></div>
@@ -332,13 +389,14 @@ export default function Home() {
             backgroundSize: 'cover',
             backgroundPosition: 'center center',
             backgroundRepeat: 'no-repeat',
-            willChange: 'transform'
+            willChange: 'transform',
+            backfaceVisibility: 'hidden',
           }}
         ></div>
         <div
           id="title2"
           className={`absolute -top-[30vh] font-bold text-[200px] text-center w-full bg-contain bg-center bg-no-repeat h-[35vh] ${isDystopia ? 'bg-[url(/text_main_dys_nobg.png)]' : 'bg-[url(/text_main_dys_nobg.png)]'}`}
-          style={{ willChange: 'transform', pointerEvents: 'none', filter: isDystopia ? 'hue-rotate(180deg)' : 'hue-rotate(0deg)', }}
+          style={{ willChange: 'transform', pointerEvents: 'none', filter: isDystopia ? 'hue-rotate(180deg)' : 'hue-rotate(0deg)', backfaceVisibility: 'hidden' }}
         >
         </div>
         <div
@@ -352,8 +410,9 @@ export default function Home() {
             backgroundSize: 'contain',
             backgroundPosition: 'center center',
             backgroundRepeat: 'no-repeat',
-            willChange: 'transform'
-          }} 
+            willChange: 'transform',
+            backfaceVisibility: 'hidden',
+          }}
         ></div>
         <div
           className="absolute top-0 left-0"

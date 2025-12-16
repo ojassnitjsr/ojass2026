@@ -72,9 +72,9 @@ export default function Header() {
       </div>
 
       {/* Extreme Left - Sponsors */}
-      <div className="absolute top-6 left-6 h-full flex items-start overflow-hidden">
+      <div className="absolute top-6 left-6 h-full hidden md:flex items-start overflow-hidden">
         <Link
-          href="https://sponsors.ojass.org" target="_blank"
+          href="https://sponsor.ojass.org" target="_blank"
           className={`clip-left layout-panel layout-text !border-0 pointer-events-auto px-6 py-3 font-bold text-sm md:text-lg hover:scale-105 active:scale-95 transition-all duration-300 ${isDystopia ? "is-dystopia" : ""}`}
         >
           SPONSOR US
@@ -82,7 +82,7 @@ export default function Header() {
       </div>
 
       {/* Extreme Right - Ambassadors */}
-      <div className="absolute top-6 right-6 h-full flex items-start overflow-hidden">
+      <div className="absolute top-6 right-6 h-full hidden md:flex items-start overflow-hidden">
         <Link
           href="https://ca.ojass.org" target="_blank"
           className={`clip-right layout-panel layout-text !border-0 pointer-events-auto px-6 py-3 font-bold text-sm md:text-lg hover:scale-105 active:scale-95 transition-all duration-300 ${isDystopia ? "is-dystopia" : ""}`}
