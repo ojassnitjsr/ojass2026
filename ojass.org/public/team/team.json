@@ -1,0 +1,146 @@
+[
+    {
+        "id": 1,
+        "name": "Anurag Das",
+        "imageUrl": "/team/img.png",
+        "designation": "Convenor",
+        "phone": "+918340671871",
+        "email": "techsec.sc@nitjsr.ac.in",
+        "category": "Core"
+    },
+    {
+        "id": 2,
+        "name": "Kushal Srivastava",
+        "imageUrl": "/team/img.png",
+        "designation": "Joint Technical Secretary",
+        "phone": "+918423046011",
+        "email": "jtechsec.sc@nitjsr.ac.in",
+        "category": "Core"
+    },
+    {
+        "id": 3,
+        "name": "Navya Mishra",
+        "imageUrl": "/team/img.png",
+        "designation": "Joint Technical Secretary",
+        "phone": "+918528693206",
+        "email": "jtechsec.sc@nitjsr.ac.in",
+        "category": "Core"
+    },
+    {
+        "id": 4,
+        "name": "Sritam Mohanty",
+        "imageUrl": "/team/img.png",
+        "designation": "General Secretary",
+        "phone": "+918984099823",
+        "email": "2022UGME052@nitjsr.ac.in",
+        "category": "Core"
+    },
+    {
+        "id": 5,
+        "name": "Hari Kumar",
+        "imageUrl": "/team/img.png",
+        "designation": "General Secretary",
+        "phone": "+917643864011",
+        "email": "2022UGEC018@nitjsr.ac.in",
+        "category": "Core"
+    },
+    {
+        "id": 6,
+        "name": "Mithilesh Kumar",
+        "imageUrl": "/team/img.png",
+        "designation": "Joint Secretary",
+        "phone": "+917631568586",
+        "email": "2022UGME008@nitjsr.ac.in",
+        "category": "Core"
+    },
+    {
+        "id": 7,
+        "name": "Harshit Singh",
+        "imageUrl": "/team/img.png",
+        "designation": "Events Head",
+        "phone": "+919792696393",
+        "email": "2022UGEC017@nitjsr.ac.in",
+        "category": "Core"
+    },
+    {
+        "id": 8,
+        "name": "Basundhara Singhdeo",
+        "imageUrl": "/team/img.png",
+        "designation": "Events Head",
+        "phone": "+917004632130",
+        "email": "2022UGEC070@nitjsr.ac.in",
+        "category": "Core"
+    },
+    {
+        "id": 9,
+        "name": "Mohak Raj",
+        "imageUrl": "/team/img.png",
+        "designation": "Web Team",
+        "githubUrl": "https://github.com/mohak-git",
+        "linkedinUrl": "https://linkedin.com/in/mohak-raj-65a921309",
+        "category": "Web"
+    },
+    {
+        "id": 10,
+        "name": "Shruti Kumari",
+        "imageUrl": "/team/img.png",
+        "designation": "Web Team",
+        "githubUrl": "https://github.com/Shruti10934",
+        "linkedinUrl": "https://linkedin.com/in/shruti-kumari-321251280",
+        "category": "Web"
+    },
+    {
+        "id": 11,
+        "name": "Tanishq S Pandey",
+        "imageUrl": "/team/img.png",
+        "designation": "Web Team",
+        "githubUrl": "https://github.com/HanuP69",
+        "linkedinUrl": "https://www.linkedin.com/in/tanishk-s-pandey-17a007339",
+        "category": "Web"
+    },
+    {
+        "id": 12,
+        "name": "Utkarsh Singh",
+        "imageUrl": "/team/img.png",
+        "designation": "Web Team",
+        "githubUrl": "https://github.com/usrjsr",
+        "linkedinUrl": "https://www.linkedin.com/in/usrjsr",
+        "category": "Web"
+    },
+    {
+        "id": 13,
+        "name": "Kriti",
+        "imageUrl": "/team/img.png",
+        "designation": "Web Team",
+        "githubUrl": "https://github.com/Krypton019",
+        "linkedinUrl": "https://www.linkedin.com/in/kriti-3518a531b",
+        "category": "Web"
+    },
+    {
+        "id": 14,
+        "name": "Aditi Raj",
+        "imageUrl": "/team/img.png",
+        "designation": "Web Team",
+        "githubUrl": "https://github.com/aditi2024-2028",
+        "linkedinUrl": "https://www.linkedin.com/in/aditi-raj-1b148434a",
+        "category": "Web"
+    },
+    {
+        "id": 15,
+        "name": "Ruchika Sinha",
+        "imageUrl": "/team/img.png",
+        "designation": "Web Team",
+        "githubUrl": "https://github.com/Ruchika-Sinha0629",
+        "linkedinUrl": "https://www.linkedin.com/in/ruchika-sinha-4aab47343",
+        "category": "Web"
+    },
+    {
+        "id": 16,
+        "name": "Adarsh Kumari",
+        "imageUrl": "/team/img.png",
+        "designation": "Web Team",
+        "githubUrl": "https://github.com/paladarsh280",
+        "linkedinUrl": "https://www.linkedin.com/in/adarsh280",
+        "category": "Web"
+    }
+]
