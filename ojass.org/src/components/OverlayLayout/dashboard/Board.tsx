@@ -125,11 +125,11 @@ export default function Board({
                                 clipPath:
                                     "polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)",
                             }}>
-                            <div className="relative flex items-center justify-center gap-3">
-                                <Mail size={20} className={theme.textColor} />
+                            <div className="relative flex items-center justify-center group gap-3">
+                                <Mail size={20} className={`${theme.textColor} group-hover:text-black`} />
                                 <span
                                     className={cn(
-                                        "font-bold text-lg tracking-wide uppercase",
+                                        "font-bold text-lg tracking-wide uppercase group-hover:text-black",
                                         theme.textColor,
                                     )}>
                                     Verify Email
