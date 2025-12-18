@@ -67,7 +67,7 @@ const Navbar = () => {
               </a>
             ))}
             <motion.a
-              href="/SCSE_brochure.pdf"
+              href="/Ojass26_Brochure.pdf"
               download
               className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2.5 rounded-full font-semibold hover:shadow-lg transition-all duration-200"
               whileHover={{ scale: 1.05 }}
@@ -113,7 +113,7 @@ const Navbar = () => {
                 </a>
               ))}
               <a
-                href="/SCSE_brochure.pdf"
+                href="/Ojass26_Brochure.pdf"
                 download
                 className="block w-full text-center bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2.5 rounded-full font-semibold mt-4"
                 onClick={() => setIsMobileMenuOpen(false)}

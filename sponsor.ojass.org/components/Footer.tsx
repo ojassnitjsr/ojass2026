@@ -98,7 +98,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link 
-                  href="/SCSE_brochure.pdf" 
+                  href="/Ojass26_Brochure.pdf" 
                   download
                   className="text-gray-400 hover:text-blue-400 transition-colors"
                 >

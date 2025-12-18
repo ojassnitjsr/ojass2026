@@ -152,7 +152,7 @@ const TitleSponsor = () => {
               Claim Title Sponsorship
             </motion.a>
             <motion.a
-              href="/SCSE_brochure.pdf"
+              href="/Ojass26_Brochure.pdf"
               download
               className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm text-white border-2 border-white/30 px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/20 transition-all duration-300"
               whileHover={{ scale: 1.05 }}
