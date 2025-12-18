@@ -1,8 +1,8 @@
 "use client";
 
-import Galaxy from "@/components/gallery/Galaxy";
+import Galaxy from "@/components/Gallery/Galaxy";
 import "@/components/Gallery/gallery.css";
-import { InfiniteGrid } from "@/components/gallery/InfiniteGallery";
+import { InfiniteGrid } from "@/components/Gallery/InfiniteGallery";
 import { useTheme } from "@/contexts/ThemeContext";
 import { galleryImages, galleryLayout } from "@/lib/constants";
 import Link from "next/link";
@@ -74,11 +74,10 @@ const Gallery = () => {
         <div className="w-full h-dvh relative">
             <Link
                 href="/"
-                className={`clip-left absolute top-6 left-6 z-50 flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 ${
-                    isDystopia
+                className={`clip-left absolute top-6 left-6 z-50 flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 ${isDystopia
                         ? "bg-[#ee8f59]/20 hover:bg-[#ee8f59]/40 text-white"
                         : "bg-cyan-500/20 hover:bg-cyan-500/40 text-white"
-                }`}>
+                    }`}>
                 <IoExitOutline size={20} />
                 <span className="font-semibold tracking-wider">EXIT</span>
             </Link>
