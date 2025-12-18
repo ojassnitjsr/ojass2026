@@ -260,7 +260,7 @@ export default function Home() {
 
         <div
           id="title"
-          className={`fixed top-[30%] font-bold text-[200px] text-center w-full bg-contain bg-center bg-no-repeat h-[35vh] ${isDystopia ? 'bg-[url(/text_main_dys_nobg.png)]' : 'bg-[url(/text_main_dys_nobg.png)]'}`}
+          className={`fixed top-[30%] font-bold text-[200px] text-center w-full bg-contain bg-center bg-no-repeat h-[35vh] ${isDystopia ? 'bg-[url(/text-main-dys.png)]' : 'bg-[url(/text-main-eut.png)]'}`}
           style={{ willChange: 'transform', pointerEvents: 'none', filter: isDystopia ? 'hue-rotate(180deg)' : 'hue-rotate(0deg)', zIndex: 10 }}
         ></div>
 
@@ -298,7 +298,7 @@ export default function Home() {
 
         <div
           id="title2"
-          className={`absolute -top-[30vh] font-bold text-[200px] text-center w-full bg-contain bg-center bg-no-repeat h-[35vh] ${isDystopia ? 'bg-[url(/text_main_dys_nobg.png)]' : 'bg-[url(/text_main_dys_nobg.png)]'}`}
+          className={`absolute -top-[30vh] font-bold text-[200px] text-center w-full bg-contain bg-center bg-no-repeat h-[35vh] ${isDystopia ? 'bg-[url(/text-main-dys.png)]' : 'bg-[url(/text-main-eut.png)]'}`}
           style={{ willChange: 'transform', pointerEvents: 'none', filter: isDystopia ? 'hue-rotate(180deg)' : 'hue-rotate(0deg)', zIndex: 2 }}
         ></div>
 

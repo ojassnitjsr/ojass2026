@@ -6,6 +6,7 @@ import Link from "next/link";
 import { IoExitOutline } from "react-icons/io5";
 import TimelineCard from "./TimelineCard";
 import TimelineDial from "./TimelineDial";
+import SpaceTunnel from "@/components/login/SpaceTunnel";
 
 const TimelinePage = () => {
     const [selectedDay, setSelectedDay] = useState<DayKey>(2);
@@ -18,11 +19,13 @@ const TimelinePage = () => {
     const isDystopia = theme === "dystopia";
 
     useEffect(() => {
-        let styleElement = document.getElementById('timeline-clip-styles') as HTMLStyleElement;
+        let styleElement = document.getElementById(
+            "timeline-clip-styles",
+        ) as HTMLStyleElement;
 
         if (!styleElement) {
-            styleElement = document.createElement('style');
-            styleElement.id = 'timeline-clip-styles';
+            styleElement = document.createElement("style");
+            styleElement.id = "timeline-clip-styles";
             document.head.appendChild(styleElement);
         }
 
@@ -47,7 +50,6 @@ const TimelinePage = () => {
     const startAngleRef = useRef<number>(0);
     const currentAngleRef = useRef<number>(angle);
     const textContainerRef = useRef<HTMLDivElement>(null);
-    const videoRef = useRef<HTMLVideoElement>(null);
 
     const throttleDelay = 1000;
     const [direction, setDirection] = useState<"left" | "right">("left");
@@ -174,11 +176,11 @@ const TimelinePage = () => {
         <div className="min-h-screen relative overflow-hidden">
             <Link
                 href="/"
-                className={`clip-left absolute top-6 left-6 z-50 flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 ${isDystopia
-                    ? 'bg-[#ee8f59]/20 hover:bg-[#ee8f59]/40 text-white'
-                    : 'bg-cyan-500/20 hover:bg-cyan-500/40 text-white'
-                    }`}
-            >
+                className={`clip-left absolute top-6 left-6 z-50 flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 ${
+                    isDystopia
+                        ? "bg-[#ee8f59]/20 hover:bg-[#ee8f59]/40 text-white"
+                        : "bg-cyan-500/20 hover:bg-cyan-500/40 text-white"
+                }`}>
                 <IoExitOutline size={20} />
                 <span className="font-semibold tracking-wider">EXIT</span>
             </Link>
@@ -203,25 +205,13 @@ const TimelinePage = () => {
                         onAnimationComplete={() => {
                             const timer = setTimeout(
                                 () => setShowTransition(false),
-                                100,
+                                500,
                             );
                             return () => clearTimeout(timer);
                         }}>
-                        <video
-                            ref={videoRef}
-                            src="/timeline/AdobeStock_976822303_Video_HD_Preview.mov"
-                            autoPlay
-                            muted
-                            playsInline
-                            className="w-full h-full object-cover"
-                            onEnded={() => setShowTransition(false)}
-                            onError={() => {
-                                console.warn(
-                                    "Transition video failed to load — falling back.",
-                                );
-                                setShowTransition(false);
-                            }}
-                        />
+                        <div className="w-full h-full">
+                            <SpaceTunnel />
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
