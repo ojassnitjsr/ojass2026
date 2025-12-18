@@ -96,7 +96,7 @@ export default function TeamPage() {
 
                 {/* Scrollable Area */}
                 <div
-                    className="custom-scrollbar"
+                    className="custom-scrollbar sm:px-10 py-4"
                     style={{
                         position: "relative",
                         width: "100%",
@@ -104,7 +104,6 @@ export default function TeamPage() {
                         overflowY: "auto",
                         overflowX: "hidden",
                         zIndex: 10,
-                        padding: "1rem 2.5rem",
                     }}>
                     {/* CORE TEAM SECTION */}
                     <div className="mb-16">

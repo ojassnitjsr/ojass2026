@@ -1,18 +1,18 @@
 "use client";
-import React, { useState, useMemo, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import Loader from "@/components/Loader";
 import { useLoginTheme } from "@/components/login/theme";
 import Board from "@/components/OverlayLayout/dashboard/Board";
+import Certificate from "@/components/OverlayLayout/dashboard/Certificate";
+import EmailVerificationModal from "@/components/OverlayLayout/dashboard/EmailVerificationModal";
+import Notification from "@/components/OverlayLayout/dashboard/Notification";
 import Profile from "@/components/OverlayLayout/dashboard/Profile";
 import Receipt from "@/components/OverlayLayout/dashboard/Reciept";
 import RegisteredEvent from "@/components/OverlayLayout/dashboard/RegisteredEvent";
 import Team from "@/components/OverlayLayout/dashboard/Team";
-import Certificate from "@/components/OverlayLayout/dashboard/Certificate";
-import Notification from "@/components/OverlayLayout/dashboard/Notification";
-import EmailVerificationModal from "@/components/OverlayLayout/dashboard/EmailVerificationModal";
-import Loader from "@/components/Loader";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function OjassDashboard() {
     const router = useRouter();
@@ -273,7 +273,7 @@ export default function OjassDashboard() {
                                 }
                                 onRegisterNow={() => setActiveTab("events")}
                                 onDownloadReceipt={() => {}}>
-                                <div className="h-[calc(100vh-200px)] lg:h-[62vh] overflow-y-auto scrollbar-none">
+                                <div className="h-[calc(90vh-240px)] lg:h-[62vh] overflow-y-auto scrollbar-none">
                                     <Profile profileData={profileData} />
                                 </div>
                             </Board>

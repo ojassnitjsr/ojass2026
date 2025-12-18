@@ -1,7 +1,12 @@
 import { IconType } from "react-icons";
 import { BiSolidCalendarEvent } from "react-icons/bi";
-import { FaFacebook, FaHome, FaLinkedin, FaYoutube } from "react-icons/fa";
-import { FaSquareInstagram } from "react-icons/fa6";
+import {
+    FaFacebook,
+    FaHome,
+    FaInstagram,
+    FaLinkedin,
+    FaYoutube,
+} from "react-icons/fa";
 import { IoPeopleSharp } from "react-icons/io5";
 import { RiGalleryFill, RiMapPinTimeLine } from "react-icons/ri";
 
@@ -20,7 +25,7 @@ export const NavItems: Icons = [
 ];
 
 export const SocialMediaItems: Icons = [
-    { title: "Instagram", element: FaSquareInstagram },
+    { title: "Instagram", element: FaInstagram },
     { title: "YouTube", element: FaYoutube },
     { title: "LinkedIn", element: FaLinkedin },
     { title: "Facebook", element: FaFacebook },

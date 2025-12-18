@@ -90,10 +90,8 @@ const CoinToss = ({ onToggle }: { onToggle: () => void }) => {
     }, [isDystopia, onToggle]);
 
     return (
-        <div className="fixed bottom-6 right-20 flex justify-center items-center z-[9999]">
-            <div ref={wrapperRef}>
-                {isDystopia ? <DystopianSVG /> : <UtopianSVG />}
-            </div>
+        <div ref={wrapperRef}>
+            {isDystopia ? <DystopianSVG /> : <UtopianSVG />}
         </div>
     );
 };

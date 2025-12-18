@@ -1,8 +1,8 @@
 "use client";
 
-import Galaxy from "@/components/Gallery/Galaxy";
+import Galaxy from "@/components/gallery/Galaxy";
 import "@/components/Gallery/gallery.css";
-import { InfiniteGrid } from "@/components/Gallery/InfiniteGallery";
+import { InfiniteGrid } from "@/components/gallery/InfiniteGallery";
 import { useTheme } from "@/contexts/ThemeContext";
 import { galleryImages, galleryLayout } from "@/lib/constants";
 import Link from "next/link";
@@ -15,11 +15,13 @@ const Gallery = () => {
     const isDystopia = theme === "dystopia";
 
     useEffect(() => {
-        let styleElement = document.getElementById('gallery-clip-styles') as HTMLStyleElement;
+        let styleElement = document.getElementById(
+            "gallery-clip-styles",
+        ) as HTMLStyleElement;
 
         if (!styleElement) {
-            styleElement = document.createElement('style');
-            styleElement.id = 'gallery-clip-styles';
+            styleElement = document.createElement("style");
+            styleElement.id = "gallery-clip-styles";
             document.head.appendChild(styleElement);
         }
 
@@ -72,13 +74,13 @@ const Gallery = () => {
         <div className="w-full h-dvh relative">
             <Link
                 href="/"
-                className={`clip-left absolute top-3 left-3 md:top-6 md:left-6 z-50 flex items-center gap-1 md:gap-2 px-3 py-2 md:px-6 md:py-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 ${isDystopia
-                    ? 'bg-[#ee8f59]/20 hover:bg-[#ee8f59]/40 text-white'
-                    : 'bg-cyan-500/20 hover:bg-cyan-500/40 text-white'
-                    }`}
-            >
-                <IoExitOutline size={16} className="md:w-5 md:h-5" />
-                <span className="font-semibold tracking-wider text-xs md:text-base">EXIT</span>
+                className={`clip-left absolute top-6 left-6 z-50 flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 ${
+                    isDystopia
+                        ? "bg-[#ee8f59]/20 hover:bg-[#ee8f59]/40 text-white"
+                        : "bg-cyan-500/20 hover:bg-cyan-500/40 text-white"
+                }`}>
+                <IoExitOutline size={20} />
+                <span className="font-semibold tracking-wider">EXIT</span>
             </Link>
             <Galaxy
                 mouseRepulsion={true}

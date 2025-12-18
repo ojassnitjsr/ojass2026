@@ -604,7 +604,7 @@ function MetaCard({
                     {icon}
                 </div>
                 <div>
-                    <h4 className="text-[10px] uppercase text-gray-500 tracking-wider font-mono mb-1">
+                    <h4 className={`text-[10px] uppercase ${themeClasses.textColor} tracking-wider font-mono mb-1`}>
                         {label}
                     </h4>
                     <p className="text-white font-bold font-mono text-sm">
@@ -730,7 +730,7 @@ function EventDetailsSection({
                         {eventData.rules!.map((r, i) => (
                             <li
                                 key={i}
-                                className="group relative flex gap-4 text-gray-300 leading-relaxed pl-4">
+                                className="group relative flex items-center gap-4 text-gray-300 leading-relaxed pl-4">
                                 {/* Decorative line */}
                                 <div
                                     className={clsx(
@@ -775,10 +775,10 @@ function EventDetailsSection({
                             {eventData.details!.map((d, i) => (
                                 <div
                                     key={i}
-                                    className="text-gray-300 leading-relaxed flex gap-3 text-sm">
+                                    className="text-gray-300 leading-relaxed flex items-center gap-3 text-sm">
                                     <FaChevronRight
                                         className={clsx(
-                                            "w-3 h-3 mt-1 shrink-0",
+                                            "w-3 h-3 shrink-0",
                                             themeClasses.textColor,
                                         )}
                                     />
