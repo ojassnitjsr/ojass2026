@@ -70,10 +70,11 @@ const TeamCard: FC<TeamCardProps> = ({
                 </div>
 
                 {/* Social Links */}
-                <div className="absolute bottom-10 left-[35px] flex flex-row gap-[15px] z-10">
+                <div className="absolute bottom-10 left-[35px] flex flex-col gap-[15px] z-10">
                     <SocialLink
                         href={`tel:${phone}`}
                         ariaLabel="Phone"
+                        displayText={phone}
                         theme={theme}>
                         <FaPhone />
                     </SocialLink>
@@ -81,6 +82,7 @@ const TeamCard: FC<TeamCardProps> = ({
                     <SocialLink
                         href={`mailto:${email}`}
                         ariaLabel="Email"
+                        displayText={email}
                         theme={theme}>
                         <MdMail />
                     </SocialLink>
@@ -94,19 +96,30 @@ const SocialLink = ({
     href,
     children,
     ariaLabel,
+    displayText,
     theme,
 }: {
     href: string;
     children: React.ReactNode;
     ariaLabel: string;
+    displayText: string;
     theme: any;
 }) => (
-    <a
-        href={href}
-        aria-label={ariaLabel}
-        className={`w-[45px] h-[45px] bg-white/10 backdrop-blur-[10px] border-2 ${theme.borderColorDim} rounded-full flex justify-center items-center text-white transition-all duration-300 hover:${theme.accentBg} hover:border-white/60 hover:scale-110`}>
-        {children}
-    </a>
+    <div className="relative group/social">
+        <a
+            href={href}
+            aria-label={ariaLabel}
+            className={`w-[45px] h-[45px] bg-white/10 backdrop-blur-[10px] border-2 ${theme.borderColorDim} rounded-full flex justify-center items-center text-white transition-all duration-300 hover:${theme.accentBg} hover:border-white/60 hover:scale-110`}>
+            {children}
+        </a>
+
+        {/* Tooltip with contact info */}
+        <div className={`absolute left-[55px] top-1/2 -translate-y-1/2 opacity-0 group-hover/social:opacity-100 group-hover/social:left-[60px] transition-all duration-300 pointer-events-none z-20`}>
+            <div className={`px-4 py-2 bg-white/10 backdrop-blur-md border-2 ${theme.borderColorDim} rounded-lg whitespace-nowrap ${theme.textColor} text-sm font-medium shadow-lg`}>
+                {displayText}
+            </div>
+        </div>
+    </div>
 );
 
 export default TeamCard;

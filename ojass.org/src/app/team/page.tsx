@@ -110,7 +110,7 @@ export default function TeamPage() {
                     <div className="mb-16">
                         <h2
                             className={`text-center text-4xl font-bold mb-8 uppercase tracking-widest ${themeStyles.textColor} ${themeStyles.textGlow}`}>
-                            Core
+                            Super Core
                         </h2>
                         <div
                             style={{

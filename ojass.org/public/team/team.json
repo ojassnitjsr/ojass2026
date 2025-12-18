@@ -55,8 +55,8 @@
     },
     {
         "id": 7,
-        "name": "Ayush Kumar Singh",
-        "imageUrl": "/team/img.png",
+        "name": "Ayush Kumar",
+        "imageUrl": "/team/supercore/ayush.png",
         "designation": "Web Head",
         "phone": "+918299797516",
         "email": "2023ugcs086@nitjsr.ac.in",
@@ -73,7 +73,7 @@
     },
     {
         "id": 8,
-        "name": "Basundhara Singhdeo",
+        "name": "Basundhara Si...",
         "imageUrl": "/team/img.png",
         "designation": "Events Head",
         "phone": "+917004632130",
