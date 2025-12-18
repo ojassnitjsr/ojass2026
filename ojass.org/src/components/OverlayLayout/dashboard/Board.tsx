@@ -53,8 +53,10 @@ export default function Board({
             });
             const data = await res.json();
             if (res.ok) {
-                localStorage.setItem("token", "null");
-                localStorage.setItem("user", "null");
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                // Dispatch custom event to notify other components
+                window.dispatchEvent(new Event("localStorageChange"));
                 router.push("/login");
             } else {
                 setError(data.error || "LogOut failed");

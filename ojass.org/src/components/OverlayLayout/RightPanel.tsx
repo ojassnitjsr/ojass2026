@@ -13,10 +13,28 @@ export default function RightPanel() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
-        const user = localStorage.getItem("user");
-        if (user) {
-            setIsLoggedIn(true);
-        }
+        // Check initial login state
+        const checkLoginState = () => {
+            const user = localStorage.getItem("user");
+            setIsLoggedIn(!!user);
+        };
+
+        checkLoginState();
+
+        // Listen for storage changes (works across tabs)
+        const handleStorageChange = (e: StorageEvent) => {
+            if (e.key === "user" || e.key === "token") {
+                checkLoginState();
+            }
+        };
+
+        // Listen for custom storage events (works in same tab)
+        const handleCustomStorageChange = () => {
+            checkLoginState();
+        };
+
+        window.addEventListener("storage", handleStorageChange);
+        window.addEventListener("localStorageChange", handleCustomStorageChange);
 
         if (!panelRef.current) return;
 
@@ -25,6 +43,11 @@ export default function RightPanel() {
             { x: 100, opacity: 0 },
             { x: 0, opacity: 1, duration: 0.8, ease: "power2.out", delay: 0.2 },
         );
+
+        return () => {
+            window.removeEventListener("storage", handleStorageChange);
+            window.removeEventListener("localStorageChange", handleCustomStorageChange);
+        };
     }, []);
 
 

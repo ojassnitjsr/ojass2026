@@ -9,7 +9,8 @@ const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(',') || [
   'http://localhost:3002',
   'https://admin.ojass.org',
   'https://ojass.org',
-  'http://10.240.208.161:3000',
+  'https://ca.ojass.org',
+  'https://test.ojass.org'
 ];
 
 /**
