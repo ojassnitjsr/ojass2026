@@ -47,7 +47,7 @@ export async function PUT(request: NextRequest) {
         const { idCardImageUrl, idCardCloudinaryId } = body;
 
         // Validate input
-        if (!idCardImageUrl || !idCardCloudinaryId) {
+        if (idCardImageUrl === undefined || idCardCloudinaryId === undefined) {
             return NextResponse.json(
                 { error: 'ID card image URL and Cloudinary ID are required' },
                 { status: 400 }

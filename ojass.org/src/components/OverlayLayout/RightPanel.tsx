@@ -1,16 +1,23 @@
 import { useTheme } from "@/contexts/ThemeContext";
 import { SocialMediaItems } from "@/lib/constants";
 import gsap from "gsap";
-import { useEffect, useRef } from "react";
-import { RiLoginBoxFill } from "react-icons/ri";
+import { useEffect, useRef, useState } from "react";
+import { RiLoginBoxFill, RiUserFill } from "react-icons/ri";
+import { CgProfile } from "react-icons/cg";
 import Link from "next/link";
 
 export default function RightPanel() {
     const { theme } = useTheme();
     const isDystopia = theme === "dystopia";
     const panelRef = useRef<HTMLDivElement>(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
+        const user = localStorage.getItem("user");
+        if (user) {
+            setIsLoggedIn(true);
+        }
+
         if (!panelRef.current) return;
 
         gsap.fromTo(
@@ -43,15 +50,27 @@ export default function RightPanel() {
         >
             <div className="flex flex-col items-center justify-between h-full py-2">
 
-                <Link
-                    href="/login"
-                    className={`layout-text cursor-pointer hover:scale-110 transition-transform ${isDystopia ? "is-dystopia" : ""
-                        } text-center`}
-                    title="Login "
-                >
-                    <RiLoginBoxFill className="size-6 mx-auto" />
-                    <div className="text-[10px]">LOGIN</div>
-                </Link>
+                {isLoggedIn ? (
+                    <Link
+                        href="/dashboard"
+                        className={`layout-text cursor-pointer hover:scale-110 transition-transform ${isDystopia ? "is-dystopia" : ""
+                            } text-center`}
+                        title="Dashboard"
+                    >
+                        <CgProfile className="size-6 mx-auto" />
+                        <div className="text-[10px]">BOARD</div>
+                    </Link>
+                ) : (
+                    <Link
+                        href="/login"
+                        className={`layout-text cursor-pointer hover:scale-110 transition-transform ${isDystopia ? "is-dystopia" : ""
+                            } text-center`}
+                        title="Login "
+                    >
+                        <RiLoginBoxFill className="size-6 mx-auto" />
+                        <div className="text-[10px]">LOGIN</div>
+                    </Link>
+                )}
 
 
                 {SocialMediaItems.map((item, idx) => (

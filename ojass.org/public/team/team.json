@@ -83,7 +83,7 @@
     {
         "id": 9,
         "name": "Mohak Raj",
-        "imageUrl": "/team/img.png",
+        "imageUrl": "/team/web/mohak.jpg",
         "designation": "Web Team",
         "githubUrl": "https://github.com/mohak-git",
         "linkedinUrl": "https://linkedin.com/in/mohak-raj-65a921309",
@@ -92,7 +92,7 @@
     {
         "id": 10,
         "name": "Shruti Kumari",
-        "imageUrl": "/team/img.png",
+        "imageUrl": "/team/web/shruti.jpg",
         "designation": "Web Team",
         "githubUrl": "https://github.com/Shruti10934",
         "linkedinUrl": "https://linkedin.com/in/shruti-kumari-321251280",
@@ -168,6 +168,42 @@
         "designation": "Web Team",
         "githubUrl": "https://github.com/roshnikumari-21",
         "linkedinUrl": "https://www.linkedin.com/in/roshni-kumari-2aa61928a/",
+        "category": "Web"
+    },
+    {
+        "id": 19,
+        "name": "Pranaw Kumar",
+        "imageUrl": "/team/web/pranav.png",
+        "designation": "Web Team",
+        "githubUrl": "https://github.com/prana-W",
+        "linkedinUrl": "https://www.linkedin.com/in/pranaw-kumar-710331215",
+        "category": "Web"
+    },
+    {
+        "id": 19,
+        "name": "Anoop kumar",
+        "imageUrl": "/team/web/anoop.png",
+        "designation": "Web Team",
+        "githubUrl": "https://github.com/Anoopkr1906",
+        "linkedinUrl": "https://www.linkedin.com/in/anoop-kumar-burnwal-aa0b10318/",
+        "category": "Web"
+    },
+    {
+        "id": 19,
+        "name": "Neha kumari",
+        "imageUrl": "/team/web/neha.png",
+        "designation": "Web Team",
+        "githubUrl": "https://github.com/Neha-Kumari2311",
+        "linkedinUrl": "https://www.linkedin.com/in/neha-kumari-201b38341",
+        "category": "Web"
+    },
+    {
+        "id": 19,
+        "name": "Aditya Raj",
+        "imageUrl": "/team/web/aditya.png",
+        "designation": "Web Team",
+        "githubUrl": "https://github.com/aditraj24",
+        "linkedinUrl": "http://www.linkedin.com/in/aditraj24",
         "category": "Web"
     }
 ]

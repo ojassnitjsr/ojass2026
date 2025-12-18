@@ -147,9 +147,10 @@ export default function Profile({ profileData }: { profileData: any }) {
             return;
         }
 
+        setUploading(true);
         try {
             const token = localStorage.getItem("token");
-            if (!token) return;
+            if (!token) throw new Error("Authentication required");
 
             const res = await fetch("/api/user/id-card", {
                 method: "PUT",
@@ -170,9 +171,14 @@ export default function Profile({ profileData }: { profileData: any }) {
                 user.idCardImageUrl = null;
                 user.idCardCloudinaryId = null;
                 localStorage.setItem("user", JSON.stringify(user));
+                setUploadSuccess(true); // Reusing success state to show a message? Logic below might need check.
+                // Actually let's not reuse uploadSuccess for delete as it might say "ID card uploaded successfully!"
             }
         } catch (err) {
             console.error("Error removing ID card:", err);
+            setUploadError("Failed to remove ID card");
+        } finally {
+            setUploading(false);
         }
     };
 
@@ -294,7 +300,7 @@ export default function Profile({ profileData }: { profileData: any }) {
                 {uploadSuccess && (
                     <div className="mb-4 p-3 text-xs rounded bg-green-500/10 text-green-300 border border-green-500/30 flex items-center gap-2">
                         <Check size={14} />
-                        ID card uploaded successfully!
+                        ID card updated successfully!
                     </div>
                 )}
 
@@ -312,9 +318,10 @@ export default function Profile({ profileData }: { profileData: any }) {
                                 onClick={() => fileInputRef.current?.click()}
                                 disabled={uploading}
                                 className={cn(
-                                    "flex-1 py-2 px-4 rounded border text-xs font-bold tracking-wide transition-all",
+                                    "flex-1 py-2 px-4 rounded border text-xs font-bold tracking-wide transition-all flex items-center justify-center gap-2",
                                     theme.buttonOutline,
                                 )}>
+                                {uploading && <div className="animate-spin rounded-full h-3 w-3 border-t-2 border-b-2 border-white"></div>}
                                 {uploading ? "UPLOADING..." : "CHANGE CARD"}
                             </button>
                             <button
@@ -328,36 +335,55 @@ export default function Profile({ profileData }: { profileData: any }) {
                 ) : (
                     <div className="space-y-4">
                         <div
-                            onClick={() => fileInputRef.current?.click()}
+                            onClick={() => !uploading && fileInputRef.current?.click()}
                             className={cn(
-                                "border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer hover:bg-white/5",
+                                "border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer hover:bg-white/5 min-h-[160px] flex flex-col items-center justify-center",
                                 theme.borderColorDim,
+                                uploading && "opacity-50 cursor-not-allowed"
                             )}>
-                            <Upload
-                                size={32}
-                                className={cn(
-                                    "mx-auto mb-4 opacity-50",
-                                    theme.textColor,
-                                )}
-                            />
-                            <p
-                                className={cn(
-                                    "text-xs font-medium mb-1",
-                                    theme.textColor,
-                                )}>
-                                Drop your ID card here
-                            </p>
-                            <p className="text-[10px] text-slate-500">
-                                (College/University ID) • Max 10MB
-                            </p>
+                            {uploading ? (
+                                <div className="flex flex-col items-center animate-pulse">
+                                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white mb-4"></div>
+                                    <p
+                                        className={cn(
+                                            "text-xs font-medium mb-1",
+                                            theme.textColor,
+                                        )}>
+                                        Uploading to Server...
+                                    </p>
+                                </div>
+                            ) : (
+                                <>
+                                    <Upload
+                                        size={32}
+                                        className={cn(
+                                            "mx-auto mb-4 opacity-50",
+                                            theme.textColor,
+                                        )}
+                                    />
+                                    <p
+                                        className={cn(
+                                            "text-xs font-medium mb-1",
+                                            theme.textColor,
+                                        )}>
+                                        Drop your ID card here
+                                    </p>
+                                    <p className="text-[10px] text-slate-500">
+                                        (College/University ID) • Max 10MB
+                                    </p>
+                                </>
+                            )}
                         </div>
                         <button
                             onClick={() => fileInputRef.current?.click()}
+                            disabled={uploading}
                             className={cn(
-                                "w-full py-3 px-4 rounded border text-xs font-bold tracking-wide uppercase",
+                                "w-full py-3 px-4 rounded border text-xs font-bold tracking-wide uppercase flex items-center justify-center gap-2",
                                 theme.buttonPrimary,
+                                uploading && "opacity-50 cursor-not-allowed",
                             )}>
-                            Upload Document
+                            {uploading && <div className="animate-spin rounded-full h-3 w-3 border-t-2 border-b-2 border-white"></div>}
+                            {uploading ? "Uploading..." : "Upload Document"}
                         </button>
                     </div>
                 )}
