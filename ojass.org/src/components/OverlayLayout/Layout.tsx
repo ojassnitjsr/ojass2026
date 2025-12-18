@@ -1,5 +1,6 @@
 "use client";
 
+import Bot from "@/components/Bot";
 import Footer from "@/components/OverlayLayout/Footer";
 import GlitchTransition from "@/components/OverlayLayout/GlitchTransition";
 import Header from "@/components/OverlayLayout/Header";
@@ -8,12 +9,8 @@ import LeftPanel from "@/components/OverlayLayout/LeftPanel";
 import RightPanel from "@/components/OverlayLayout/RightPanel";
 import ThemeToggleButton from "@/components/OverlayLayout/ThemeToggle/ThemeToggleButton";
 import { useTheme } from "@/contexts/ThemeContext";
-import { NavItems } from "@/lib/constants";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-// import Bot from "./Bot";
-// import Bot from "./Bot";
-import Bot from "@/components/Bot";
 
 export default function OverlayLayout() {
     const { toggleTheme } = useTheme();
@@ -28,22 +25,20 @@ export default function OverlayLayout() {
         }, 2000);
     };
 
-    const matched = NavItems.find(
-        (item) =>
-            item.title.toLowerCase() === path ||
-            path === "/" ||
-            path === "/login" ||
-            path === "/team"
-    );
+    const matched = path === "/" || path === "/login";
 
     return (
         <>
+            {matched ? (
+                <>
+                    <Header />
+                    <RightPanel />
+                    <LeftPanel />
+                    <Footer />
+                </>
+            ) : null}
 
-            {matched && <><Header /> <RightPanel />
-                <LeftPanel /> <Footer /></>}
-
-
-            {path !== '/bot' && <Bot />}
+            {path !== "/bot" && <Bot />}
             <ThemeToggleButton onToggle={handleThemeChange} />
 
             <GlitchTransition

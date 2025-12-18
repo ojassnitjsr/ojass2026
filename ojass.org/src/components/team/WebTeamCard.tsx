@@ -23,7 +23,7 @@ const TeamCardSquare: React.FC<TeamCardSquareProps> = ({
     const theme = useLoginTheme();
 
     return (
-        <div className="relative w-[400px] h-[400px] scale-75 m-[3vmin_0.8vmax] cursor-pointer group">
+        <div className="relative w-[400px] h-[400px] scale-70 sm:scale-75 m-[3vmin_0.8vmax] cursor-pointer group">
             {/* Hover Decoration 1 (Top Left) */}
             <div
                 className={`absolute z-[-2] w-[130px] h-[70px] left-0 top-0 rounded-[10px] ${theme.accentBg} opacity-0 transition-all duration-300 transform translate-x-[100px] translate-y-[100px] group-hover:translate-x-[130px] group-hover:translate-y-[20px] group-hover:opacity-100`}

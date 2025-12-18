@@ -20,7 +20,7 @@ export default function GlitchTransition({
 
     return (
         <div
-            className="fixed w-screen h-screen bg-black z-1000 top-0 left-0 opacity-0 pointer-events-none"
+            className="fixed w-screen h-screen bg-black z-10000 top-0 left-0 opacity-0 pointer-events-none"
             style={{
                 opacity: isVisible ? 1 : 0,
                 transition: "opacity 1s ease-in-out",
