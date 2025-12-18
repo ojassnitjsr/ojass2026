@@ -21,7 +21,7 @@ import {
     FaUsers,
 } from "react-icons/fa";
 import { GiPodiumSecond, GiPodiumThird, GiPodiumWinner } from "react-icons/gi";
-import { IoExitOutline } from "react-icons/io5";
+import { RiTeamFill } from "react-icons/ri";
 
 // Types
 interface User {
@@ -83,6 +83,7 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
         registration: null,
     });
     const [userTeam, setUserTeam] = useState<Team | null>(null);
+    const [userStatusLoading, setUserStatusLoading] = useState(true);
 
     useEffect(() => {
         let styleElement = document.getElementById(
@@ -137,25 +138,34 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
 
         // Authenticated requests
         if (token) {
+            const promises = [];
+
             // Registration status
-            fetch(`/api/events/${eventId}/registered`, {
-                headers: { Authorization: `Bearer ${token}` },
-            })
-                .then((res) => res.json())
-                .then((data) => setRegistration(data))
-                .catch(console.error);
+            promises.push(
+                fetch(`/api/events/${eventId}/registered`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                })
+                    .then((res) => res.json())
+                    .then((data) => setRegistration(data))
+                    .catch(console.error),
+            );
 
             // User team
-            fetch(`/api/teams?eventId=${eventId}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            })
-                .then((res) => res.json())
-                .then((teams: Team[]) => {
-                    if (Array.isArray(teams) && teams.length > 0) {
-                        setUserTeam(teams[0]);
-                    }
+            promises.push(
+                fetch(`/api/teams?eventId=${eventId}`, {
+                    headers: { Authorization: `Bearer ${token}` },
                 })
-                .catch(console.error);
+                    .then((res) => res.json())
+                    .then((teams: Team[]) => {
+                        if (Array.isArray(teams) && teams.length > 0)
+                            setUserTeam(teams[0]);
+                    })
+                    .catch(console.error),
+            );
+
+            Promise.allSettled(promises).then(() =>
+                setUserStatusLoading(false),
+            );
 
             // User data
             try {
@@ -170,7 +180,7 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
             } catch (err) {
                 console.error("User data parse error:", err);
             }
-        }
+        } else setUserStatusLoading(false);
     }, [eventId, router]);
 
     if (loading) {
@@ -182,7 +192,7 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
                             className={`absolute inset-0 border-t-2 border-b-2 ${themeClasses.borderColor} rounded-full animate-spin`}
                         />
                         <div
-                            className={`absolute inset-2 border-r-2 border-l-2 ${themeClasses.borderColor} rounded-full animate-reverse-spin`}
+                            className={`absolute inset-2 border-r-2 border-l-2 ${themeClasses.borderColor} rounded-full animate-spin direction-reverse`}
                         />
                         <div className="absolute inset-0 flex items-center justify-center">
                             <FaMicrochip
@@ -434,6 +444,7 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
                                         teamSizeMax={eventData.teamSizeMax}
                                         userTeam={userTeam}
                                         registration={registration.registration}
+                                        isLoading={userStatusLoading}
                                     />
 
                                     {eventData.rulebookurl && (
@@ -782,6 +793,412 @@ function EventDetailsSection({
     );
 }
 
+interface TechButtonProps {
+    onClick?: () => void;
+    disabled?: boolean;
+    children: React.ReactNode;
+    className?: string;
+    accentColor?: string;
+    accentHover?: string;
+}
+
+function TechButton({
+    onClick,
+    disabled,
+    children,
+    className,
+    accentColor = "bg-amber-500",
+    accentHover = "hover:bg-amber-400",
+}: TechButtonProps) {
+    return (
+        <button
+            onClick={onClick}
+            disabled={disabled}
+            className={clsx(
+                "w-full py-4 px-6 font-bold text-black transition-all transform active:scale-[0.98]",
+                "flex items-center justify-center gap-2 text-sm sm:text-base tracking-widest uppercase",
+                "clip-path-btn relative overflow-hidden group",
+                accentColor,
+                accentHover,
+                disabled && "opacity-50 cursor-not-allowed grayscale",
+                className,
+            )}>
+            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+            <span className="relative z-1 flex items-center justify-center gap-2">
+                {children}
+            </span>
+        </button>
+    );
+}
+
+function TeamSelectionView({
+    onCreate,
+    onJoin,
+    accentColor,
+    accentHover,
+}: {
+    onCreate: () => void;
+    onJoin: () => void;
+    accentColor: string;
+    accentHover: string;
+}) {
+    return (
+        <div className="flex flex-col gap-3 animate-fade-in">
+            <TechButton
+                onClick={onCreate}
+                accentColor={accentColor}
+                accentHover={accentHover}>
+                Form Unit & Deploy
+            </TechButton>
+            <TechButton
+                onClick={onJoin}
+                className="bg-white hover:bg-gray-200"
+                accentColor="bg-white"
+                accentHover="hover:bg-gray-200">
+                Join Existing Unit
+            </TechButton>
+        </div>
+    );
+}
+
+function CreateTeamView({
+    eventId,
+    onBack,
+    onSuccess,
+    themeClasses,
+    router,
+}: {
+    eventId: string;
+    onBack: () => void;
+    onSuccess: (team: Team) => void;
+    themeClasses: any;
+    router: ReturnType<typeof useRouter>;
+}) {
+    const [teamName, setTeamName] = useState("");
+    const [isCreating, setIsCreating] = useState(false);
+
+    const handleCreate = async () => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            router.push("/login");
+            return;
+        }
+        if (!teamName.trim()) {
+            alert("Enter a team name");
+            return;
+        }
+        setIsCreating(true);
+        try {
+            const res = await fetch("/api/teams", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    eventId,
+                    teamName: teamName.trim(),
+                }),
+            });
+            if (res.status === 401) {
+                localStorage.setItem("token", "");
+                localStorage.setItem("user", "");
+                router.push("/login");
+                return;
+            }
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error);
+            alert("Team created! Assemble your unit.");
+            onSuccess(data);
+        } catch (err: any) {
+            alert(err.message || "Team creation failed");
+        } finally {
+            setIsCreating(false);
+        }
+    };
+
+    return (
+        <div className="space-y-4 animate-slide-in">
+            <div className="bg-black/60 border border-gray-700 p-5 relative">
+                <div
+                    className={clsx(
+                        "absolute top-0 left-0 w-full h-[1px]",
+                        themeClasses.accentColor,
+                    )}
+                />
+                <h4 className="text-white font-bold mb-4 flex items-center justify-between font-mono text-xs uppercase tracking-widest">
+                    New Unit Formation
+                </h4>
+                <div className="space-y-3">
+                    <input
+                        type="text"
+                        value={teamName}
+                        onChange={(e) => setTeamName(e.target.value)}
+                        placeholder="ENTER UNIT DESIGNATION"
+                        className={clsx(
+                            "w-full bg-transparent border-b-2 border-gray-700 px-2 py-3 text-white placeholder-gray-600",
+                            "focus:outline-none focus:border-current font-mono text-sm transition-colors",
+                            themeClasses.textColor,
+                        )}
+                    />
+                </div>
+            </div>
+            <div className="flex gap-3">
+                <button
+                    onClick={handleCreate}
+                    disabled={isCreating || !teamName.trim()}
+                    className={clsx(
+                        "flex-1 font-bold text-black py-3 uppercase tracking-wider text-sm clip-path-slanted hover:brightness-110 transition-all",
+                        themeClasses.accentColor,
+                        (!teamName.trim() || isCreating) && "opacity-50",
+                    )}>
+                    {isCreating ? "CREATING..." : "INITIATE"}
+                </button>
+                <button
+                    onClick={onBack}
+                    className="px-6 py-3 bg-transparent border border-gray-600 hover:border-gray-400 text-gray-400 hover:text-white font-mono text-xs uppercase tracking-wider transition-colors">
+                    ABORT
+                </button>
+            </div>
+        </div>
+    );
+}
+
+function JoinTeamView({
+    onBack,
+    onSuccess,
+    themeClasses,
+}: {
+    onBack: () => void;
+    onSuccess: (team: Team) => void;
+    themeClasses: any;
+}) {
+    const [joinInput, setJoinInput] = useState("");
+    const [isJoining, setIsJoining] = useState(false);
+    const [error, setError] = useState("");
+
+    const handleJoin = async () => {
+        if (!joinInput.trim()) return;
+
+        setIsJoining(true);
+        setError("");
+
+        try {
+            // Extract token if it's a full URL
+            let token = joinInput.trim();
+            if (token.includes("/teams/join/")) {
+                const parts = token.split("/teams/join/");
+                if (parts[1]) token = parts[1];
+            }
+
+            const authToken = localStorage.getItem("token");
+            if (!authToken) {
+                alert("Please login first");
+                return;
+            }
+
+            const response = await fetch(`/api/teams/join/${token}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${authToken}`,
+                },
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to join team");
+            }
+
+            // Success!
+            alert("Joined team successfully!");
+            onSuccess(data.team);
+        } catch (err: any) {
+            setError(err.message || "Failed to join team");
+        } finally {
+            setIsJoining(false);
+        }
+    };
+
+    return (
+        <div className="space-y-4 animate-slide-in">
+            <div className="bg-black/60 border border-gray-700 p-5 relative">
+                <div
+                    className={clsx(
+                        "absolute top-0 left-0 w-full h-[1px]",
+                        themeClasses.accentColor,
+                    )}
+                />
+                <h4 className="text-white font-bold mb-4 flex items-center justify-between font-mono text-xs uppercase tracking-widest">
+                    Join Existing Unit
+                </h4>
+                <div className="space-y-3">
+                    <input
+                        type="text"
+                        value={joinInput}
+                        onChange={(e) => setJoinInput(e.target.value)}
+                        placeholder="ENTER TOKEN OR URL"
+                        className={clsx(
+                            "w-full bg-transparent border-b-2 border-gray-700 px-2 py-3 text-white placeholder-gray-600",
+                            "focus:outline-none focus:border-current font-mono text-sm transition-colors",
+                            themeClasses.textColor,
+                        )}
+                    />
+                    {error && (
+                        <p className="text-red-400 text-xs font-mono">
+                            {error}
+                        </p>
+                    )}
+                </div>
+            </div>
+            <div className="flex gap-3">
+                <button
+                    onClick={handleJoin}
+                    disabled={!joinInput.trim() || isJoining}
+                    className={clsx(
+                        "flex-1 font-bold text-black py-3 uppercase tracking-wider text-sm clip-path-slanted hover:brightness-110 transition-all",
+                        themeClasses.accentColor,
+                        (!joinInput.trim() || isJoining) && "opacity-50",
+                    )}>
+                    {isJoining ? "ENGAGING..." : "ENGAGE"}
+                </button>
+                <button
+                    onClick={onBack}
+                    className="px-6 py-3 bg-transparent border border-gray-600 hover:border-gray-400 text-gray-400 hover:text-white font-mono text-xs uppercase tracking-wider transition-colors">
+                    ABORT
+                </button>
+            </div>
+        </div>
+    );
+}
+
+function TeamLobbyView({
+    team,
+    minMembers,
+    maxMembers,
+    onRegister,
+    router,
+    accentColor,
+    accentHover,
+}: {
+    team: Team;
+    minMembers: number;
+    maxMembers: number;
+    onRegister: () => Promise<void>;
+    router: ReturnType<typeof useRouter>;
+    accentColor: string;
+    accentHover: string;
+}) {
+    const [isRegistering, setIsRegistering] = useState(false);
+
+    const memberCount = Array.isArray(team.teamMembers)
+        ? team.teamMembers.length
+        : 1;
+    const canRegister = memberCount >= minMembers;
+    const inviteLink = `${window.location.origin}/teams/join/${team.joinToken}`;
+
+    const copyToClipboard = async () => {
+        try {
+            await navigator.clipboard.writeText(inviteLink);
+            alert("Invitation link copied to clipboard!");
+        } catch (err) {
+            const textarea = document.createElement("textarea");
+            textarea.value = inviteLink;
+            textarea.style.position = "fixed";
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+            alert("Invitation link copied!");
+        }
+    };
+
+    const handleRegister = async () => {
+        setIsRegistering(true);
+        try {
+            await onRegister();
+        } catch (e) {
+            // Error handling usually in parent or internal
+        } finally {
+            setIsRegistering(false);
+        }
+    };
+
+    return (
+        <div className="space-y-4 animate-fade-in">
+            <div className="bg-gray-900/80 border border-gray-700 p-5 backdrop-blur-sm relative">
+                <div className="absolute top-0 left-0 w-2 h-2 border-l border-t border-white/50" />
+                <div className="absolute top-0 right-0 w-2 h-2 border-r border-t border-white/50" />
+
+                <div className="flex justify-between items-center mb-3">
+                    <span className="text-gray-300 font-bold text-xs font-mono uppercase">
+                        UNIT: {team.teamName}
+                    </span>
+                    <span
+                        className={clsx(
+                            "text-[10px] px-2 py-1 border rounded-sm font-mono",
+                            canRegister
+                                ? "bg-green-900/30 border-green-500/50 text-green-400"
+                                : "bg-red-900/30 border-red-500/50 text-red-400",
+                        )}>
+                        {memberCount}/{maxMembers} UNITS
+                    </span>
+                </div>
+
+                <div className="flex gap-1 mb-4">
+                    <input
+                        readOnly
+                        value={inviteLink}
+                        className="flex-1 bg-black border border-gray-700 px-3 py-2 text-gray-300 text-[10px] font-mono tracking-wider focus:outline-none focus:border-white/50"
+                    />
+                    <button
+                        onClick={copyToClipboard}
+                        className="px-3 py-2 bg-gray-800 border border-gray-700 hover:bg-gray-700 text-white text-[10px] font-bold font-mono uppercase hover:text-cyan-400 transition-colors">
+                        Copy
+                    </button>
+                </div>
+
+                {/* Lobby Actions */}
+                <div className="grid grid-cols-2 gap-2">
+                    <button
+                        onClick={copyToClipboard}
+                        className="py-2 px-3 bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500 text-gray-300 text-xs font-mono flex items-center justify-center gap-2 transition-all">
+                        <FaShareAlt className="text-[10px]" />
+                        Share Uplink
+                    </button>
+                    <button
+                        onClick={() => router.push("/dashboard")}
+                        className="py-2 px-3 bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500 text-gray-300 text-xs font-mono flex items-center justify-center gap-2 transition-all">
+                        <RiTeamFill className="text-[10px]" />
+                        Manage Unit
+                    </button>
+                </div>
+            </div>
+
+            {/* Status / Deploy Button */}
+            {!canRegister ? (
+                <div className="bg-red-500/10 border border-red-500/20 p-3 text-center">
+                    <p className="text-red-400 font-mono text-xs uppercase tracking-widest font-bold">
+                        Additional Members Required ({minMembers - memberCount}{" "}
+                        More)
+                    </p>
+                </div>
+            ) : (
+                <TechButton
+                    onClick={handleRegister}
+                    disabled={isRegistering}
+                    accentColor={accentColor}
+                    accentHover={accentHover}>
+                    {isRegistering
+                        ? "Processing Protocol..."
+                        : "Confirm Deployment [Register]"}
+                </TechButton>
+            )}
+        </div>
+    );
+}
+
 function RegisterButton({
     user,
     eventId,
@@ -796,6 +1213,7 @@ function RegisterButton({
     teamSizeMax = 4,
     userTeam,
     registration,
+    isLoading,
 }: {
     user: User | null;
     eventId: string;
@@ -810,88 +1228,80 @@ function RegisterButton({
     teamSizeMax?: number;
     userTeam: Team | null;
     registration: any;
+    isLoading: boolean;
 }) {
-    const [isRegistering, setIsRegistering] = useState(false);
-    const [showCreateTeam, setShowCreateTeam] = useState(false);
-    const [teamName, setTeamName] = useState("");
-    const [isCreatingTeam, setIsCreatingTeam] = useState(false);
+    // Local state for non-registered flow
+    const [view, setView] = useState<"selection" | "create" | "join">(
+        "selection",
+    );
+    // If we just created a team locally, store it here
     const [createdTeam, setCreatedTeam] = useState<Team | null>(null);
-    const [inviteLink, setInviteLink] = useState("");
 
+    // Derived active team
     const currentTeam = createdTeam || userTeam || registration;
 
-    const copyToClipboard = async (text: string) => {
-        try {
-            await navigator.clipboard.writeText(text);
-            alert("Invitation link copied to clipboard!");
-        } catch (err) {
-            console.warn("Clipboard copy failed:", err);
-            const textarea = document.createElement("textarea");
-            textarea.value = text;
-            textarea.style.position = "fixed";
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand("copy");
-            document.body.removeChild(textarea);
-            alert("Invitation link copied to clipboard!");
-        }
-    };
+    // --- Loading State ---
+    if (isLoading) {
+        return (
+            <TechButton
+                disabled
+                className="animate-pulse"
+                accentColor={accentColor}>
+                <FaMicrochip className="animate-spin mr-2" />
+                Synchronizing Database...
+            </TechButton>
+        );
+    }
 
-    const buttonBaseClasses = `
-        w-full py-4 px-6 font-bold text-black transition-all transform active:scale-[0.98] 
-        flex items-center justify-center gap-2 text-sm sm:text-base tracking-widest uppercase
-        clip-path-btn relative overflow-hidden group
-    `;
-
-    // Tech button wrapper
-    const TechButton = ({ onClick, disabled, children, className }: any) => (
-        <button
-            onClick={onClick}
-            disabled={disabled}
-            className={clsx(
-                buttonBaseClasses,
-                accentColor,
-                accentHover,
-                disabled && "opacity-50 cursor-not-allowed grayscale",
-                className,
-            )}>
-            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-            <span className="relative z-1 flex items-center justify-center gap-2">
-                {children}
-            </span>
-        </button>
-    );
-
-    // ========= Render States =========
+    // --- Auth Check ---
     if (!user) {
         return (
-            <TechButton onClick={() => router.push("/login")}>
+            <TechButton
+                onClick={() => router.push("/login")}
+                accentColor={accentColor}
+                accentHover={accentHover}>
                 Initialize Session [Login]
             </TechButton>
         );
     }
 
+    // --- Payment Check ---
     if (!user.paid) {
         return (
             <TechButton
                 onClick={() => {
                     alert("Please complete payment to register for events");
                     router.push("/dashboard");
-                }}>
+                }}
+                accentColor={accentColor}
+                accentHover={accentHover}>
                 Credits Required [Pay]
             </TechButton>
         );
     }
 
+    // --- Registered State ---
     if (isRegistered) {
+        // If team event and we have token, show share/manage + status
         if (isTeamEvent && currentTeam?.joinToken) {
+            const memberCount = Array.isArray(currentTeam.teamMembers)
+                ? currentTeam.teamMembers.length
+                : 1;
+            const needsMore = memberCount < teamSizeMin;
             const fullInviteLink = `${window.location.origin}/teams/join/${currentTeam.joinToken}`;
+
+            const copyLink = () => {
+                navigator.clipboard.writeText(fullInviteLink).then(
+                    () => alert("Link copied!"),
+                    () => alert("Failed to copy"),
+                );
+            };
+
             return (
                 <div className="space-y-4">
                     <div className="bg-green-500/10 border border-green-500/30 p-4 clip-path-polygon relative">
                         <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-green-500" />
                         <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-green-500" />
-
                         <div className="flex justify-center items-center gap-3">
                             <div className="w-6 h-6 rounded-sm bg-green-500 flex items-center justify-center text-black font-bold">
                                 <FaCheck size={12} />
@@ -901,21 +1311,39 @@ function RegisterButton({
                             </div>
                         </div>
                     </div>
+
+                    {needsMore && (
+                        <div className="bg-red-500/10 border border-red-500/20 p-3 text-center animate-pulse">
+                            <p className="text-red-400 font-mono text-xs uppercase tracking-widest font-bold">
+                                Warning: Low Unit Strength (
+                                {teamSizeMin - memberCount} required).
+                                Recruitment Mandatory.
+                            </p>
+                        </div>
+                    )}
+
                     <TechButton
-                        onClick={() =>
-                            copyToClipboard(inviteLink || fullInviteLink)
-                        }>
-                        <FaShareAlt />
-                        Share Uplink
+                        onClick={copyLink}
+                        accentColor={accentColor}
+                        accentHover={accentHover}>
+                        <FaShareAlt /> Share Uplink
+                    </TechButton>
+                    <TechButton
+                        className="bg-gray-200 hover:bg-white"
+                        accentColor="bg-gray-200"
+                        accentHover="hover:bg-white"
+                        onClick={() => router.push("/dashboard")}>
+                        <RiTeamFill /> Manage Unit
                     </TechButton>
                 </div>
             );
         }
 
+        // Standard Registered State
         return (
-            <div className="bg-green-500/10 border border-green-500/30 p-4 clip-path-polygon flex items-center gap-3 w-full">
+            <div className="bg-green-500/10 border border-green-500/30 p-4 clip-path-polygon flex items-center justify-center gap-3 w-full">
                 <div className="w-6 h-6 rounded-sm bg-green-500 flex items-center justify-center text-black font-bold">
-                    ✓
+                    <FaCheck size={12} />
                 </div>
                 <div className="text-green-400 font-bold font-mono text-sm tracking-wider">
                     STATUS: REGISTERED
@@ -924,200 +1352,82 @@ function RegisterButton({
         );
     }
 
-    // ========= Team Event Logic =========
+    // --- Team Event Logic (Not Registered) ---
     if (isTeamEvent) {
+        // 1. If in a team (created or loaded), show Lobby
         if (currentTeam) {
-            const memberCount = Array.isArray(currentTeam.teamMembers)
-                ? currentTeam.teamMembers.length
-                : 1;
-
-            const fullInviteLink = `${window.location.origin}/teams/join/${currentTeam.joinToken}`;
             return (
-                <div className="space-y-4">
-                    <div className="bg-gray-900/80 border border-gray-700 p-5 backdrop-blur-sm relative">
-                        {/* Tech Corners */}
-                        <div className="absolute top-0 left-0 w-2 h-2 border-l border-t border-white/50" />
-                        <div className="absolute top-0 right-0 w-2 h-2 border-r border-t border-white/50" />
+                <TeamLobbyView
+                    team={currentTeam}
+                    minMembers={teamSizeMin}
+                    maxMembers={teamSizeMax}
+                    router={router}
+                    accentColor={accentColor}
+                    accentHover={accentHover}
+                    onRegister={async () => {
+                        const token = localStorage.getItem("token");
+                        if (!token) return router.push("/login");
 
-                        <div className="flex justify-between items-center mb-3">
-                            <span className="text-gray-300 font-bold text-xs font-mono uppercase">
-                                UNIT: {currentTeam.teamName}
-                            </span>
-                            <span className="text-[10px] px-2 py-1 bg-gray-800 border border-gray-700 rounded-sm text-gray-300 font-mono">
-                                {memberCount}/{teamSizeMax} UNITS
-                            </span>
-                        </div>
-
-                        <div className="flex gap-1">
-                            <input
-                                readOnly
-                                value={inviteLink || fullInviteLink}
-                                className="flex-1 bg-black border border-gray-700 px-3 py-2 text-gray-300 text-[10px] font-mono tracking-wider focus:outline-none focus:border-white/50"
-                            />
-                            <button
-                                onClick={() =>
-                                    copyToClipboard(
-                                        inviteLink || fullInviteLink,
-                                    )
-                                }
-                                className="px-3 py-2 bg-gray-800 border border-gray-700 hover:bg-gray-700 text-white text-[10px] font-bold font-mono uppercase hover:text-cyan-400 transition-colors">
-                                Copy
-                            </button>
-                        </div>
-                    </div>
-
-                    <TechButton
-                        onClick={async () => {
-                            const token = localStorage.getItem("token");
-                            if (!token) {
-                                router.push("/login");
-                                return;
-                            }
-                            setIsRegistering(true);
-                            try {
-                                const res = await fetch(
-                                    "/api/events/register",
-                                    {
-                                        method: "POST",
-                                        headers: {
-                                            "Content-Type": "application/json",
-                                            Authorization: `Bearer ${token}`,
-                                        },
-                                        body: JSON.stringify({
-                                            eventId,
-                                            teamId: currentTeam._id,
-                                        }),
-                                    },
-                                );
-                                const data = await res.json();
-                                if (!res.ok)
-                                    throw new Error(
-                                        data.error || "Registration failed",
-                                    );
-                                onRegisterSuccess();
-                                alert("Team registered successfully!");
-                            } catch (err: any) {
-                                alert(err.message || "Failed to register team");
-                            } finally {
-                                setIsRegistering(false);
-                            }
-                        }}
-                        disabled={isRegistering || memberCount < teamSizeMin}>
-                        {isRegistering
-                            ? "Processing..."
-                            : memberCount < teamSizeMin
-                            ? `Assemble ${teamSizeMin} Units`
-                            : "Confirm Deployment"}
-                    </TechButton>
-                </div>
+                        const res = await fetch("/api/events/register", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${token}`,
+                            },
+                            body: JSON.stringify({
+                                eventId,
+                                teamId: currentTeam._id,
+                            }),
+                        });
+                        const data = await res.json();
+                        if (!res.ok)
+                            throw new Error(
+                                data.error || "Registration failed",
+                            );
+                        onRegisterSuccess();
+                        alert("Team registered successfully!");
+                    }}
+                />
             );
         }
 
-        if (showCreateTeam) {
+        // 2. Not in team - Flow Views
+        if (view === "create") {
             return (
-                <div className="space-y-4 animate-slide-in">
-                    <div className="bg-black/60 border border-gray-700 p-5 relative">
-                        <div
-                            className={clsx(
-                                "absolute top-0 left-0 w-full h-[1px]",
-                                themeClasses.accentColor,
-                            )}
-                        />
+                <CreateTeamView
+                    eventId={eventId}
+                    onBack={() => setView("selection")}
+                    onSuccess={(team) => setCreatedTeam(team)}
+                    themeClasses={themeClasses}
+                    router={router}
+                />
+            );
+        }
 
-                        <h4 className="text-white font-bold mb-4 flex items-center justify-between font-mono text-xs uppercase tracking-widest">
-                            New Unit Formation
-                            <span className="text-gray-500">
-                                Size: {teamSizeMin}–{teamSizeMax}
-                            </span>
-                        </h4>
-                        <div className="space-y-3">
-                            <input
-                                type="text"
-                                value={teamName}
-                                onChange={(e) => setTeamName(e.target.value)}
-                                placeholder="ENTER UNIT DESIGNATION"
-                                className={clsx(
-                                    "w-full bg-transparent border-b-2 border-gray-700 px-2 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-current font-mono text-sm transition-colors",
-                                    themeClasses.textColor,
-                                )}
-                            />
-                        </div>
-                    </div>
-                    <div className="flex gap-3">
-                        <button
-                            onClick={async () => {
-                                const token = localStorage.getItem("token");
-                                if (!token) {
-                                    router.push("/login");
-                                    return;
-                                }
-                                if (!teamName.trim()) {
-                                    alert("Enter a team name");
-                                    return;
-                                }
-                                setIsCreatingTeam(true);
-                                try {
-                                    const res = await fetch("/api/teams", {
-                                        method: "POST",
-                                        headers: {
-                                            "Content-Type": "application/json",
-                                            Authorization: `Bearer ${token}`,
-                                        },
-                                        body: JSON.stringify({
-                                            eventId,
-                                            teamName: teamName.trim(),
-                                        }),
-                                    });
-                                    if (res.status === 401) {
-                                        localStorage.setItem("token", "");
-                                        localStorage.setItem("user", "");
-                                        router.push("/login");
-                                        return;
-                                    }
-                                    const data = await res.json();
-                                    if (!res.ok) throw new Error(data.error);
-                                    setCreatedTeam(data);
-                                    const link = `${window.location.origin}/teams/join/${data.joinToken}`;
-                                    setInviteLink(link);
-                                    setShowCreateTeam(false);
-                                    alert(
-                                        "Team created! Share the invite link.",
-                                    );
-                                } catch (err: any) {
-                                    alert(
-                                        err.message || "Team creation failed",
-                                    );
-                                } finally {
-                                    setIsCreatingTeam(false);
-                                }
-                            }}
-                            disabled={isCreatingTeam || !teamName.trim()}
-                            className={clsx(
-                                "flex-1 font-bold text-black py-3 uppercase tracking-wider text-sm clip-path-slanted hover:brightness-110 transition-all",
-                                accentColor,
-                                (!teamName.trim() || isCreatingTeam) &&
-                                    "opacity-50",
-                            )}>
-                            {isCreatingTeam ? "CREATING..." : "INITIATE"}
-                        </button>
-                        <button
-                            onClick={() => setShowCreateTeam(false)}
-                            className="px-6 py-3 bg-transparent border border-gray-600 hover:border-gray-400 text-gray-400 hover:text-white font-mono text-xs uppercase tracking-wider transition-colors">
-                            ABORT
-                        </button>
-                    </div>
-                </div>
+        if (view === "join") {
+            return (
+                <JoinTeamView
+                    onBack={() => setView("selection")}
+                    onSuccess={(team) => {
+                        setCreatedTeam(team);
+                        setView("selection"); // Will render Lobby next render because currentTeam will be set
+                    }}
+                    themeClasses={themeClasses}
+                />
             );
         }
 
         return (
-            <TechButton onClick={() => setShowCreateTeam(true)}>
-                Form Unit & Deploy
-            </TechButton>
+            <TeamSelectionView
+                onCreate={() => setView("create")}
+                onJoin={() => setView("join")}
+                accentColor={accentColor}
+                accentHover={accentHover}
+            />
         );
     }
 
-    // ========= Individual Event =========
+    // --- Individual Event Logic ---
     return (
         <TechButton
             onClick={async () => {
@@ -1126,7 +1436,6 @@ function RegisterButton({
                     router.push("/login");
                     return;
                 }
-                setIsRegistering(true);
                 try {
                     const res = await fetch("/api/events/register", {
                         method: "POST",
@@ -1142,12 +1451,11 @@ function RegisterButton({
                     alert("Registered successfully!");
                 } catch (err: any) {
                     alert(err.message || "Registration failed");
-                } finally {
-                    setIsRegistering(false);
                 }
             }}
-            disabled={isRegistering}>
-            {isRegistering ? "Processing..." : "Engage Protocol [Register]"}
+            accentColor={accentColor}
+            accentHover={accentHover}>
+            Engage Protocol [Register]
         </TechButton>
     );
 }

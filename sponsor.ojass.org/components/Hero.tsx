@@ -79,7 +79,7 @@ const Hero = () => {
               transition={{ delay: 0.6, duration: 0.5 }}
             >
               <Link
-                href="/SCSE_brochure.pdf"
+                href="/Ojass26_Brochure.pdf"
                 download
                 className="group inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl transition-all duration-300"
               >
