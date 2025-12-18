@@ -136,7 +136,7 @@ const getEmailVerificationTemplate = (otp) => {
             <div class='msg'>Never share this code. In a world of surveillance, verification is your power.</div>
         </div>
         <div class='footer'>
-            Need support? Contact <a href='mailto:support@ojassfest.com'>support@ojassfest.com</a>
+            Need support? Contact <a href='mailto:support@ojass.org'>support@ojass.org</a>
         </div>
     </div>
 </body>

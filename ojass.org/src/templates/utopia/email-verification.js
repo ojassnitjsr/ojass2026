@@ -135,7 +135,7 @@ const getEmailVerificationTemplate = (otp) => {
             <div class='msg'>If you didn't request this verification, please ignore this email.</div>
         </div>
         <div class='footer'>
-            Need support? Contact <a href='mailto:support@ojassfest.com'>support@ojassfest.com</a>
+            Need support? Contact <a href='mailto:support@ojass.org'>support@ojass.org</a>
         </div>
     </div>
 </body>

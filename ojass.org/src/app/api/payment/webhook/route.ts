@@ -54,7 +54,10 @@ export async function POST(request: NextRequest) {
         const payload = JSON.parse(body);
         const event = payload.event;
 
-        console.log('Webhook event received:', event);
+        console.log('\n🔵 WEBHOOK EVENT:', event);
+        console.log('📅 Timestamp:', new Date().toISOString());
+        console.log('📦 Payload Data:', JSON.stringify(payload.payload || {}, null, 2));
+        console.log('----------------------------------------\n');
 
         // Handle payment.authorized event
         if (event === 'payment.authorized' || event === 'payment.captured') {
@@ -62,7 +65,7 @@ export async function POST(request: NextRequest) {
             const orderId = payment.order_id;
             const paymentId = payment.id;
 
-            console.log('Payment authorized/captured:', { orderId, paymentId });
+            console.log(`✅ Processing Payment: Order=${orderId}, Payment=${paymentId}`);
 
             // Connect to database
             await connectToDatabase();
