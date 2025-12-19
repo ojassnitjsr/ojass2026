@@ -32,7 +32,7 @@ export default function Page() {
   const router = useRouter();
   const isDystopia = theme === "dystopia";
   const containerRef = useRef<HTMLDivElement>(null)
-  const [allEvents, setAllEvents] = useState<CardData[][]>([]);
+  const [allEvents, setAllEvents] = useState<CardData[]>([]);
   const [rawEvents, setRawEvents] = useState<CardData[]>([]);
   const [categories, setCategories] = useState<string[]>(['All']);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -163,7 +163,7 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    // Filter and group events whenever selectedCategory or rawEvents change
+    // Filter events whenever selectedCategory or rawEvents change
     const filtered = selectedCategory === 'All'
       ? rawEvents
       : rawEvents.filter(e => {
@@ -171,14 +171,8 @@ export default function Page() {
         return orgs.includes(selectedCategory);
       });
 
-    const eventsPerPage = 3;
-    const groupedEvents: CardData[][] = [];
-    for (let i = 0; i < filtered.length; i += eventsPerPage) {
-      groupedEvents.push(filtered.slice(i, i + eventsPerPage));
-    }
-
-    setAllEvents(groupedEvents);
-    setSelectedEventIndex(0); // Reset to first page on filter change
+    setAllEvents(filtered);
+    setSelectedEventIndex(0); // Reset to first slide on filter change
   }, [selectedCategory, rawEvents]);
 
   useEffect(() => {
@@ -245,12 +239,7 @@ export default function Page() {
     };
   }, [isMobile]);
 
-  const dropdownOptions = allEvents.map((_, index) => ({
-    value: index,
-    label: `Event ${index + 1}`
-  }));
-
-  const currentEventCards = allEvents[selectedEventIndex] || [];
+  // All events are now shown in a single carousel, no pagination needed
 
   const handleDropdownChange = (newValue: string | number) => {
     setSelectedEventIndex(Number(newValue));
@@ -363,7 +352,7 @@ export default function Page() {
 
           <div className="swiper-3d-container w-full h-full">
             <Swiper
-              key={`swiper-${selectedEventIndex}-${currentEventCards.length}`}
+              key={`swiper-${selectedCategory}-${allEvents.length}`}
               spaceBetween={80}
               slidesPerView={3}
               centeredSlides={true}
@@ -397,7 +386,7 @@ export default function Page() {
               navigation={{ nextEl: '.events-next', prevEl: '.events-prev' }}
             >
 
-              {currentEventCards.map((card) => (
+              {allEvents.map((card) => (
                 <SwiperSlide key={card.id}>
                   <div className="w-full h-full flex items-center justify-center">
                     <div

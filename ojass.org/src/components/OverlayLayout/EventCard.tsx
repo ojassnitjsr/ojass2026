@@ -73,15 +73,30 @@ export default function EventCard({ id, name, description, img }: EventCardProps
 
     return (
         <div className="relative w-68 h-[32rem] mt-[50px] overflow-hidden rounded-lg">
- <div className="relative w-40  h-54 sm:h-60 md:h-65 lg:h-58 ml-10 mt-32">
-            <Image
-                src={img}  // 'img' prop ka istemaal
-                alt={name} // 'name' prop ka istemaal
-                layout="fill"
-                objectFit="cover"
-                className="object-cover absolute inset-0 z-0"
-            />
-        </div>
+            {/* Event Name - Top Section */}
+            <div
+                ref={textContainerRef}
+                className="absolute top-14 left-[17.5px] right-0 z-20 px-6 text-center w-[210px] h-[55px] flex items-center justify-center overflow-hidden"
+                style={{
+                    textShadow: theme === "utopia"
+                        ? "0 0 20px rgba(0, 255, 255, 0.8)"
+                        : "0 0 20px rgba(204, 119, 34, 0.8)"
+                }}
+            >
+                <h3 className="text-md font-bold uppercase tracking-wider leading-tight">
+    {name}
+</h3>
+            </div>
+
+            <div className="relative w-40  h-54 sm:h-60 md:h-65 lg:h-58 ml-10 mt-32">
+                <Image
+                    src={img}  // 'img' prop ka istemaal
+                    alt={name} // 'name' prop ka istemaal
+                    layout="fill"
+                    objectFit="cover"
+                    className="object-cover absolute inset-0 z-0"
+                />
+            </div>
 
             {/* Layer 2: Aapka SVG (z-10) */}
             <svg
