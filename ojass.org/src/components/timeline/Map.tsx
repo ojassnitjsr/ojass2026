@@ -67,7 +67,7 @@ const EventDetailsContent = ({
                                     {status}
                                 </span>
                             )}
-                            /// {event.id.toString().padStart(3, "0")}
+                            ### {event.id.toString().padStart(3, "0")}
                         </div>
 
                         {/* Title */}
