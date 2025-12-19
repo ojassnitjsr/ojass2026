@@ -9,29 +9,61 @@ const metaDataDescription =
     "Join us for OJASS 2026, the premier annual techno-management festival featuring cutting-edge technology, innovation, and exciting competitions.";
 
 export const metadata: Metadata = {
-    title: "OJASS 2026 | NIT Jamshedpur",
+    title: {
+        default: "OJASS 2026 | NIT Jamshedpur",
+        template: "%s | OJASS 2026",
+    },
     description: metaDataDescription,
+    applicationName: "OJASS 2026",
+    authors: [{ name: "OJASS Team", url: "https://ojass.org" }],
+    generator: "Next.js",
     keywords: [
         "OJASS",
-        "technical festival",
-        "technology",
-        "innovation",
-        "competitions",
-        "2026",
+        "OJASS 2026",
+        "NIT Jamshedpur",
+        "Techno-management festival",
+        "Technical festival",
+        "Cultural festival",
+        "Robotics",
+        "Coding",
+        "Workshops",
+        "Events",
+        "Competitions",
+        "Engineering",
+        "Technology",
+        "Innovation",
     ],
-    authors: [{ name: "OJASS Team" }],
+    referrer: "origin-when-cross-origin",
+    creator: "OJASS Web Team",
+    publisher: "OJASS Team",
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            "max-video-preview": -1,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+        },
+    },
     openGraph: {
-        title: "OJASS 2026 - NIT Jamshedpur",
-        description: metaDataDescription,
         type: "website",
         locale: "en_US",
+        url: "https://ojass.org",
+        title: "OJASS 2026 | NIT Jamshedpur",
+        description: metaDataDescription,
+        siteName: "OJASS 2026",
     },
     twitter: {
         card: "summary_large_image",
         title: "OJASS 2026 | NIT Jamshedpur",
         description: metaDataDescription,
+        creator: "@ojass_nitjsr",
     },
-    robots: { index: true, follow: true },
+    alternates: {
+        canonical: "https://ojass.org",
+    },
 };
 
 export default function RootLayout({
