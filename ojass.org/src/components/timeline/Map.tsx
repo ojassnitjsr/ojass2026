@@ -52,11 +52,10 @@ const EventDetailsContent = ({
                         <div className="flex justify-between items-start mb-6">
                             {status === "LIVE NOW" ? (
                                 <span
-                                    className={`flex items-center gap-2 text-[10px] font-bold px-3 py-1 rounded animate-pulse border ${
-                                        isDystopian
-                                            ? "bg-red-500/20 border-red-500 text-red-500"
-                                            : "bg-emerald-500/20 border-emerald-500 text-emerald-400"
-                                    }`}>
+                                    className={`flex items-center gap-2 text-[10px] font-bold px-3 py-1 rounded animate-pulse border ${isDystopian
+                                        ? "bg-red-500/20 border-red-500 text-red-500"
+                                        : "bg-emerald-500/20 border-emerald-500 text-emerald-400"
+                                        }`}>
                                     <Radio
                                         size={12}
                                         className="animate-spin-slow"
@@ -68,7 +67,7 @@ const EventDetailsContent = ({
                                     {status}
                                 </span>
                             )}
-                            \/\/\/ {event.id.toString().padStart(3, "0")}
+                            /// {event.id.toString().padStart(3, "0")}
                         </div>
 
                         {/* Title */}
@@ -182,9 +181,8 @@ const MapNode = ({
 
                 {/* Core Dot */}
                 <div
-                    className={`w-3 h-3 rounded-full shadow-[0_0_15px_currentColor] transition-all duration-300 z-10 ${nodeColor} ${
-                        isSelected ? "scale-125" : "group-hover:scale-110"
-                    }`}
+                    className={`w-3 h-3 rounded-full shadow-[0_0_15px_currentColor] transition-all duration-300 z-10 ${nodeColor} ${isSelected ? "scale-125" : "group-hover:scale-110"
+                        }`}
                 />
 
                 {/* Hover Label (Only visible on hover or selection) */}
@@ -192,11 +190,10 @@ const MapNode = ({
                     className={`
                     absolute top-8 whitespace-nowrap bg-black/90 backdrop-blur px-2 py-1 border border-white/10 
                     text-[9px] uppercase tracking-widest transition-all duration-300 pointer-events-none
-                    ${
-                        isSelected
+                    ${isSelected
                             ? "opacity-100 translate-y-0"
                             : "opacity-0 translate-y-[-5px] group-hover:opacity-100 group-hover:translate-y-0"
-                    }
+                        }
                 `}>
                     <span
                         className={
@@ -255,11 +252,10 @@ const EventMap = ({ selectedDay }: { selectedDay: DayKey }) => {
 
     return (
         <div
-            className={`h-screen w-full bg-[#030303] overflow-hidden font-mono flex flex-col relative ${
-                !isDystopian
-                    ? "text-cyan-400 selection:bg-cyan-500/30"
-                    : "text-yellow-400 selection:bg-yellow-500/30"
-            }`}>
+            className={`h-screen w-full bg-[#030303] overflow-hidden font-mono flex flex-col relative ${!isDystopian
+                ? "text-cyan-400 selection:bg-cyan-500/30"
+                : "text-yellow-400 selection:bg-yellow-500/30"
+                }`}>
             {/* --- Background Elements --- */}
             <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#000000_90%)] pointer-events-none" />
@@ -272,18 +268,16 @@ const EventMap = ({ selectedDay }: { selectedDay: DayKey }) => {
                     </div>
 
                     <div
-                        className={`text-2xl font-bold text-white tabular-nums drop-shadow-[0_0_10px_currentColor] ${
-                            !isDystopian ? "text-cyan-400" : "text-yellow-400"
-                        }`}>
+                        className={`text-2xl font-bold text-white tabular-nums drop-shadow-[0_0_10px_currentColor] ${!isDystopian ? "text-cyan-400" : "text-yellow-400"
+                            }`}>
                         {now.toLocaleDateString([], {
                             day: "numeric",
                             month: "long",
                         })}
                     </div>
                     <div
-                        className={`text-3xl font-bold text-white tabular-nums drop-shadow-[0_0_10px_currentColor] ${
-                            !isDystopian ? "text-cyan-400" : "text-yellow-400"
-                        }`}>
+                        className={`text-3xl font-bold text-white tabular-nums drop-shadow-[0_0_10px_currentColor] ${!isDystopian ? "text-cyan-400" : "text-yellow-400"
+                            }`}>
                         {now.toLocaleTimeString([], { hour12: false })}
                     </div>
                 </div>
@@ -291,15 +285,14 @@ const EventMap = ({ selectedDay }: { selectedDay: DayKey }) => {
 
             {/* --- Main Content Layout --- */}
             <div
-                className={`flex-1 flex relative w-full h-full transition-all duration-1000 ${
-                    isBooting ? "opacity-0 scale-95" : "opacity-100 scale-100"
-                }`}>
+                className={`flex-1 flex relative w-full h-full transition-all duration-1000 ${isBooting ? "opacity-0 scale-95" : "opacity-100 scale-100"
+                    }`}>
                 {/* MAP AREA */}
                 <div
                     className={`relative h-full transition-all duration-500 ease-in-out
                     ${selectedEventId ? "w-full md:w-[75%]" : "w-full"}
                     `}>
-                    <div className="w-full h-full flex items-center justify-center p-4">
+                    <div className="w-full h-full flex items-start justify-center pt-8 md:-mt-20 pb-4 px-4">
                         {/* Map Container */}
                         <div className="relative w-full max-w-5xl aspect-video select-none">
                             {/* SVG Layer */}
@@ -355,11 +348,10 @@ const EventMap = ({ selectedDay }: { selectedDay: DayKey }) => {
                     fixed md:static inset-0 z-40 
                     md:border-l md:border-white/5 md:bg-black/20
                     transition-all duration-500 transform
-                    ${
-                        selectedEventId
+                    ${selectedEventId
                             ? "translate-x-0 opacity-100 w-full md:w-[25%]"
                             : "translate-x-full opacity-0 md:w-0 md:opacity-0 md:overflow-hidden"
-                    }
+                        }
                 `}>
                     {/* Dark Overlay */}
                     <div

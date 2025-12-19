@@ -50,7 +50,7 @@ const TimelineDial = ({
                 marginBottom: "-235px",
                 marginTop: "20px",
             }}>
-            <div className="absolute top-1/4 left-1/3 text-white">Rotate/Tap Dial</div>
+            <div className="absolute top-1/4 left-1/3 text-white opacity-50">Rotate/Tap Dial</div>
 
             <svg
                 viewBox="0 0 538 538"
