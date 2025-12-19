@@ -147,7 +147,7 @@ export default function TeamPage() {
                         </h2>
                         <div
                             style={{
-                                    display: "grid",
+                                display: "grid",
                                 gridTemplateColumns:
                                     "repeat(auto-fill, minmax(350px, 1fr))",
                                 gap: "2rem",
@@ -189,20 +189,20 @@ export default function TeamPage() {
                 }
                 .custom-scrollbar::-webkit-scrollbar-track {
                     background: ${isDystopia
-                        ? "rgba(40, 20, 10, 0.3)"
-                        : "rgba(0, 20, 40, 0.3)"};
+                    ? "rgba(40, 20, 10, 0.3)"
+                    : "rgba(0, 20, 40, 0.3)"};
                     border-radius: 4px;
                 }
                 .custom-scrollbar::-webkit-scrollbar-thumb {
                     background: ${isDystopia
-                        ? "rgba(255, 100, 0, 0.5)"
-                        : "rgba(0, 255, 255, 0.5)"};
+                    ? "rgba(255, 100, 0, 0.5)"
+                    : "rgba(0, 255, 255, 0.5)"};
                     border-radius: 4px;
                 }
                 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
                     background: ${isDystopia
-                        ? "rgba(255, 100, 0, 0.7)"
-                        : "rgba(0, 255, 255, 0.7)"};
+                    ? "rgba(255, 100, 0, 0.7)"
+                    : "rgba(0, 255, 255, 0.7)"};
                 }
             `}</style>
         </div>

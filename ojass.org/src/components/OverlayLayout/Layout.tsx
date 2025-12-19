@@ -25,7 +25,7 @@ export default function OverlayLayout() {
         }, 2000);
     };
 
-    const matched = path === "/" || path === "/login";
+    const matched = path === "/" || path === "/login" || path === "/team";
 
     return (
         <>
