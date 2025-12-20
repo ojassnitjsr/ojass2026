@@ -604,7 +604,8 @@ function MetaCard({
                     {icon}
                 </div>
                 <div>
-                    <h4 className={`text-[10px] uppercase ${themeClasses.textColor} tracking-wider font-mono mb-1`}>
+                    <h4
+                        className={`text-[10px] uppercase ${themeClasses.textColor} tracking-wider font-mono mb-1`}>
                         {label}
                     </h4>
                     <p className="text-white font-bold font-mono text-sm">
@@ -647,7 +648,7 @@ function PrizesWidget({
                                 <GiPodiumWinner />
                             </span>
                             <span className="font-mono text-xs text-gray-400 uppercase tracking-widest">
-                                Target_01
+                                Winner
                             </span>
                         </div>
                         <span
@@ -668,7 +669,7 @@ function PrizesWidget({
                                 <GiPodiumSecond />
                             </span>
                             <span className="font-mono text-xs text-gray-500 uppercase tracking-widest">
-                                Target_02
+                                Runner Up
                             </span>
                         </div>
                         <span
@@ -676,25 +677,6 @@ function PrizesWidget({
                                 "font-bold font-mono text-gray-200",
                             )}>
                             {prizes.first_runner_up}
-                        </span>
-                    </div>
-                )}
-                {prizes.second_runner_up && (
-                    <div className="relative flex items-center justify-between p-3 bg-black/40 border border-white/5">
-                        <div className="flex items-center gap-4">
-                            <span className="text-3xl opacity-80">
-                                <GiPodiumThird />
-                            </span>
-
-                            <span className="font-mono text-xs text-gray-500 uppercase tracking-widest">
-                                Target_03
-                            </span>
-                        </div>
-                        <span
-                            className={clsx(
-                                "font-bold font-mono text-gray-200",
-                            )}>
-                            {prizes.second_runner_up}
                         </span>
                     </div>
                 )}
