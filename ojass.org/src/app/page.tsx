@@ -33,29 +33,39 @@ export default function Home() {
 
         gsap.registerPlugin(ScrollTrigger);
 
-        const lenis = new Lenis({
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            touchMultiplier: 2,
-            infinite: false,
-        });
+        const isMobile = window.innerWidth <= 768;
+        let lenis: Lenis | null = null;
 
-        lenis.on("scroll", ScrollTrigger.update);
+        // Only enable Lenis on Desktop for performance
+        if (!isMobile) {
+            lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                touchMultiplier: 2,
+                infinite: false,
+            });
 
-        gsap.ticker.add((time) => {
-            lenis.raf(time * 1000);
-        });
+            lenis.on("scroll", ScrollTrigger.update);
 
-        gsap.ticker.lagSmoothing(0);
+            gsap.ticker.add((time) => {
+                lenis?.raf(time * 1000);
+            });
+
+            gsap.ticker.lagSmoothing(0);
+        }
 
         return () => {
-            gsap.ticker.remove(lenis.raf);
-            lenis.destroy();
+            if (lenis) {
+                gsap.ticker.remove(lenis.raf);
+                lenis.destroy();
+            }
         };
     }, []);
 
     useLayoutEffect(() => {
-        const calculateDimensions = () => {
+        let prevWidth = window.innerWidth;
+
+        const performCalculation = () => {
             const imgW = 2804;
             const imgH = 2330;
             const splitY = 855; // The pixel Y coordinate where the cut happens
@@ -88,142 +98,29 @@ export default function Home() {
             });
         };
 
-        calculateDimensions();
-        window.addEventListener("resize", calculateDimensions);
-        return () => window.removeEventListener("resize", calculateDimensions);
+        const onResize = () => {
+            const currentWidth = window.innerWidth;
+            // Ignore mobile vertical resizes (URL bar)
+            if (currentWidth <= 768 && currentWidth === prevWidth) return;
+
+            prevWidth = currentWidth;
+            performCalculation();
+        };
+
+        performCalculation();
+        window.addEventListener("resize", onResize);
+        return () => window.removeEventListener("resize", onResize);
     }, []);
 
     // --- MOUSE & SCROLL ANIMATIONS ---
     useGSAP(() => {
-        // We use xTo/yTo for "QuickTo" performance (instant retargeting without building new tweens)
-        const mouseMove = (e: MouseEvent) => {
-            const x = (e.clientX / window.innerWidth - 0.5) * 2;
-            const y = (e.clientY / window.innerHeight - 0.5) * 2;
-
-            // Animate directly
-            gsap.to(bgRef.current, {
-                x: x * 10,
-                y: y * 10,
-                rotationX: y * 0.5,
-                rotationY: x * 0.5,
-                duration: 1,
-                ease: "power2.out",
-            });
-
-            gsap.to(layer2Ref.current, {
-                x: x * 30,
-                y: y * 20,
-                rotationX: y * 1,
-                rotationY: x * 1,
-                duration: 1,
-                ease: "power2.out",
-            });
-            gsap.to(layer3Ref.current, {
-                x: x * 40,
-                y: y * 25,
-                rotationX: y * 1.5,
-                rotationY: x * 1.5,
-                duration: 1,
-                ease: "power2.out",
-            });
-            gsap.to(titleRef.current, {
-                x: x * 80,
-                y: y * 50,
-                rotationY: x * 1.2,
-                duration: 1,
-                ease: "power2.out",
-            });
-            gsap.to(caveInnerRef.current, {
-                x: x * 40,
-                y: y * 40,
-                duration: 1,
-                ease: "power2.out",
-            });
-            gsap.to(rocketRef.current, {
-                x: x * 80,
-                duration: 1,
-                overwrite: "auto",
-                ease: "power2.out",
-            });
-            gsap.to(title2Ref.current, {
-                x: x * 70,
-                rotationY: x * 1.0,
-                duration: 1,
-                overwrite: "auto",
-                ease: "power2.out",
-            });
-        };
-
-        window.addEventListener("mousemove", mouseMove);
-
-        // B. SCROLL LOGIC
-        if (!containerRef.current) return;
-        const firstSectionHeight = window.innerHeight;
-
-        ScrollTrigger.create({
-            trigger: containerRef.current,
-            start: "top top",
-            end: "bottom+=100% top",
-            scrub: 1,
-            onUpdate: (self) => {
-                const scrollY = window.scrollY; // Note: For parallax accurate mapping, prefer self.progress
-                const progress = self.progress;
-
-                gsap.to(titleRef.current, {
-                    y: scrollY,
-                    scale: 1 + progress * 0.05,
-                    overwrite: "auto",
-                    duration: 0.1, // small duration prevents fighting with hover
-                });
-
-                gsap.to(layer3Ref.current, {
-                    y: scrollY * 0.3,
-                    scale: 1 + progress * 0.02,
-                    overwrite: "auto",
-                    duration: 0.1,
-                });
-
-                gsap.to(layer2Ref.current, {
-                    y: scrollY * 0.6,
-                    scale: 1 + progress * 0.04,
-                    overwrite: "auto",
-                    duration: 0.1,
-                });
-
-                gsap.to(bgRef.current, {
-                    y: scrollY * 0.9,
-                    scale: 1 + progress * 0.06,
-                    rotationX: progress * 2,
-                    overwrite: "auto",
-                    duration: 0.1,
-                });
-
-                // Title 2 Logic
-                const secondSectionStart = firstSectionHeight;
-                if (scrollY >= secondSectionStart * 0.5) {
-                    const title2Progress = Math.min(
-                        1,
-                        (scrollY - secondSectionStart * 0.5) /
-                            (secondSectionStart * 0.5),
-                    );
-                    gsap.to(title2Ref.current, {
-                        y: (title2Progress * 60 * window.innerHeight) / 100,
-                        overwrite: "auto",
-                        duration: 0.1,
-                    });
-                } else {
-                    gsap.set(title2Ref.current, { y: 0 });
-                }
-            },
-        });
-
-        // Timeline for Rocket launch
+        // Shared Rocket Timeline (Runs everywhere)
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: "#second-section",
                 start: "top 50%",
                 end: "bottom bottom",
-                scrub: 1, 
+                scrub: 1,
             },
         });
 
@@ -235,7 +132,172 @@ export default function Home() {
             0,
         );
 
-        return () => window.removeEventListener("mousemove", mouseMove);
+        const mm = gsap.matchMedia();
+
+        // 1. DESKTOP Logic ( > 768px )
+        mm.add("(min-width: 769px)", () => {
+            // Mouse Move
+            const mouseMove = (e: MouseEvent) => {
+                const x = (e.clientX / window.innerWidth - 0.5) * 2;
+                const y = (e.clientY / window.innerHeight - 0.5) * 2;
+
+                gsap.to(bgRef.current, {
+                    x: x * 10,
+                    y: y * 10,
+                    rotationX: y * 0.5,
+                    rotationY: x * 0.5,
+                    duration: 1,
+                    ease: "power2.out",
+                });
+                gsap.to(layer2Ref.current, {
+                    x: x * 30,
+                    y: y * 20,
+                    rotationX: y * 1,
+                    rotationY: x * 1,
+                    duration: 1,
+                    ease: "power2.out",
+                });
+                gsap.to(layer3Ref.current, {
+                    x: x * 40,
+                    y: y * 25,
+                    rotationX: y * 1.5,
+                    rotationY: x * 1.5,
+                    duration: 1,
+                    ease: "power2.out",
+                });
+                gsap.to(titleRef.current, {
+                    x: x * 80,
+                    y: y * 50,
+                    rotationY: x * 1.2,
+                    duration: 1,
+                    ease: "power2.out",
+                });
+                gsap.to(caveInnerRef.current, {
+                    x: x * 40,
+                    y: y * 40,
+                    duration: 1,
+                    ease: "power2.out",
+                });
+                gsap.to(rocketRef.current, {
+                    x: x * 80,
+                    duration: 1,
+                    overwrite: "auto",
+                    ease: "power2.out",
+                });
+                gsap.to(title2Ref.current, {
+                    x: x * 70,
+                    rotationY: x * 1.0,
+                    duration: 1,
+                    overwrite: "auto",
+                    ease: "power2.out",
+                });
+            };
+            window.addEventListener("mousemove", mouseMove);
+
+            // Desktop Scroll Trigger
+            if (containerRef.current) {
+                ScrollTrigger.create({
+                    trigger: containerRef.current,
+                    start: "top top",
+                    end: "bottom+=100% top",
+                    scrub: 1,
+                    onUpdate: (self) => {
+                        const scrollY = window.scrollY;
+                        const progress = self.progress;
+
+                        gsap.to(titleRef.current, {
+                            y: scrollY,
+                            scale: 1 + progress * 0.05,
+                            overwrite: "auto",
+                            duration: 0.1,
+                        });
+                        gsap.to(layer3Ref.current, {
+                            y: scrollY * 0.3,
+                            scale: 1 + progress * 0.02,
+                            overwrite: "auto",
+                            duration: 0.1,
+                        });
+                        gsap.to(layer2Ref.current, {
+                            y: scrollY * 0.6,
+                            scale: 1 + progress * 0.04,
+                            overwrite: "auto",
+                            duration: 0.1,
+                        });
+                        gsap.to(bgRef.current, {
+                            y: scrollY * 0.9,
+                            scale: 1 + progress * 0.06,
+                            rotationX: progress * 2,
+                            overwrite: "auto",
+                            duration: 0.1,
+                        });
+
+                        // Title 2 Logic
+                        const limit = window.innerHeight * 0.5;
+                        if (scrollY >= limit) {
+                            const p = Math.min(1, (scrollY - limit) / limit);
+                            gsap.to(title2Ref.current, {
+                                y: (p * 60 * window.innerHeight) / 100,
+                                overwrite: "auto",
+                                duration: 0.1,
+                            });
+                        } else {
+                            gsap.set(title2Ref.current, { y: 0 });
+                        }
+                    },
+                });
+            }
+
+            return () => window.removeEventListener("mousemove", mouseMove);
+        });
+
+        // 2. MOBILE Logic ( <= 768px )
+        mm.add("(max-width: 768px)", () => {
+            if (containerRef.current) {
+                // Declarative Timeline for Mobile - Native Scrubbing
+                // Max scroll is 200vh (100% + 100vh).
+                // We approximate the movement based on the same logic: layer speed * total height
+
+                const totalScrollHeight = window.innerHeight * 2; // Rough estimate of the section scroll triggers
+
+                const mobileTl = gsap.timeline({
+                    defaults: { force3D: true }, // Hardware Acceleration
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top top",
+                        end: "bottom+=100% top",
+                        scrub: 0, // Direct Scrub for instant response (no lag)
+                    },
+                });
+
+                // title moves at speed 1 (scrollY) -> moves 100% of scroll distance
+                mobileTl.to(titleRef.current, { y: totalScrollHeight * 1, ease: "none" }, 0);
+
+                // layer3 moves at 0.3
+                mobileTl.to(layer3Ref.current, { y: totalScrollHeight * 0.3, ease: "none" }, 0);
+
+                // layer2 moves at 0.6
+                mobileTl.to(layer2Ref.current, { y: totalScrollHeight * 0.6, ease: "none" }, 0);
+
+                // bg moves at 0.9
+                mobileTl.to(bgRef.current, { y: totalScrollHeight * 0.9, ease: "none" }, 0);
+
+                // Title 2 Logic
+                // It starts appearing at 50% scroll.
+                // We create a separate timeline pinned to the same trigger but with different start
+                const title2Tl = gsap.timeline({
+                    defaults: { force3D: true },
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top+=50% top", // Starts when 50% scrolled
+                        end: "bottom top",    // Ends when section is fully scrolled (100vh)
+                        scrub: 0,
+                    }
+                });
+
+                // Moves to 60vh
+                title2Tl.to(title2Ref.current, { y: window.innerHeight * 0.60, ease: "none" }, 0);
+            }
+        });
     }, []);
 
     const bottomImage = isDystopia
@@ -309,11 +371,10 @@ export default function Home() {
                 <div
                     ref={titleRef}
                     id="title"
-                    className={`fixed top-[30%] font-bold text-[200px] text-center w-full bg-contain bg-center bg-no-repeat h-[35vh] ${
-                        isDystopia
-                            ? "bg-[url(/text-main-dys.png)]"
-                            : "bg-[url(/text-main-eut.png)]"
-                    }`}
+                    className={`fixed top-[30%] font-bold text-[200px] text-center w-full bg-contain bg-center bg-no-repeat h-[35vh] ${isDystopia
+                        ? "bg-[url(/text-main-dys.png)]"
+                        : "bg-[url(/text-main-eut.png)]"
+                        }`}
                     style={{
                         willChange: "transform",
                         pointerEvents: "none",
@@ -363,11 +424,10 @@ export default function Home() {
                 <div
                     ref={title2Ref}
                     id="title2"
-                    className={`absolute -top-[30vh] font-bold text-[200px] text-center w-full bg-contain bg-center bg-no-repeat h-[35vh] ${
-                        isDystopia
-                            ? "bg-[url(/text-main-dys.png)]"
-                            : "bg-[url(/text-main-eut.png)]"
-                    }`}
+                    className={`absolute -top-[30vh] font-bold text-[200px] text-center w-full bg-contain bg-center bg-no-repeat h-[35vh] ${isDystopia
+                        ? "bg-[url(/text-main-dys.png)]"
+                        : "bg-[url(/text-main-eut.png)]"
+                        }`}
                     style={{
                         willChange: "transform",
                         pointerEvents: "none",
