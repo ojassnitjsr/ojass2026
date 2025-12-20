@@ -294,15 +294,31 @@ export default function FuturisticHUD() {
 
                   {/* Chatbox */}
                   <div
-                    className={`absolute bottom-16 w-[95%] max-w-3xl border-2 ${colors.borderMedium} bg-black/70 backdrop-blur-md p-6 rounded-xl ${colors.text200} font-mono`}
+                    className={`absolute bottom-16 sm:bottom-20 w-[95%] sm:w-[90%] max-w-3xl h-[75vh] sm:h-[70vh] md:h-[68vh] lg:h-[65vh] border-2 ${colors.borderMedium} bg-black/70 backdrop-blur-md rounded-xl ${colors.text200} font-mono flex flex-col`}
                     style={{
                       clipPath:
                         'polygon(0% 10px, 10px 0%, calc(100% - 10px) 0%, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px))',
                     }}
                   >
+                    {/* Bot Description Header - Inside Chatbox */}
+                    <div className={`px-4 sm:px-6 pt-4 sm:pt-6 pb-3 border-b ${colors.borderLight} flex-shrink-0`}>
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <div className={`w-2 h-2 rounded-full ${theme === 'dystopia' ? 'bg-red-500' : 'bg-cyan-500'} animate-pulse flex-shrink-0`}></div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className={`${colors.text400} text-xs sm:text-sm font-bold tracking-wider mb-1`}>
+                            OJASS AI ASSISTANT
+                          </h3>
+                          <p className="text-gray-400 text-[10px] sm:text-xs leading-relaxed">
+                            Your intelligent guide to OJASS 2026. Ask me about events, schedules, registration, venue details, or anything related to the fest.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Chat Messages Container */}
                     <div
                       ref={chatContainerRef}
-                      className="h-95 sm:h-40 lg:h-90 overflow-y-auto mb-4 space-y-3 text-sm sm:text-base scrollbar-thin scrollbar-thumb-cyan-700/50 scrollbar-track-transparent"
+                      className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 space-y-3 text-xs sm:text-sm scrollbar-thin scrollbar-thumb-cyan-700/50 scrollbar-track-transparent"
                     >
                       {messages.map((msg, i) => (
                         <div
@@ -313,7 +329,7 @@ export default function FuturisticHUD() {
                             }`}
                         >
                           {msg.role === 'assistant' ? (
-                            <div className="prose prose-invert prose-sm max-w-none text-current [&>ul]:list-disc [&>ul]:pl-5 [&>ol]:list-decimal [&>ol]:pl-5 [&>h3]:text-lg [&>h3]:font-bold [&>h3]:mt-2 [&>h3]:mb-1 [&>p]:leading-relaxed">
+                            <div className="prose prose-invert prose-sm max-w-none text-current [&>ul]:list-disc [&>ul]:pl-5 [&>ol]:list-decimal [&>ol]:pl-5 [&>h3]:text-base [&>h3]:font-bold [&>h3]:mt-2 [&>h3]:mb-1 [&>p]:leading-relaxed">
                               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {msg.content}
                               </ReactMarkdown>
@@ -335,26 +351,29 @@ export default function FuturisticHUD() {
                       )}
                     </div>
 
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={input}
-                        onChange={(e) => {
-                          setInput(e.target.value);
-                          setChatState(e.target.value ? 'typing' : 'idle');
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') handleSend();
-                        }}
-                        placeholder="Type your message...."
-                        className={`flex-1 bg-black/60 ${colors.borderMedium} ${colors.text200} rounded-lg px-3 py-3 focus:outline-none focus:ring-1 ${theme === 'dystopia' ? 'focus:ring-red-400' : 'focus:ring-cyan-400'} ${theme === 'dystopia' ? 'placeholder-red-700' : 'placeholder-cyan-700'} text-sm`}
-                      />
-                      <button
-                        onClick={handleSend}
-                        className={`border ${colors.border}/50 px-5 py-3 text-sm rounded-lg ${theme === 'dystopia' ? 'hover:bg-red-500/20' : 'hover:bg-cyan-500/20'} transition-all`}
-                      >
-                        SEND
-                      </button>
+                    {/* Input Area */}
+                    <div className="px-4 sm:px-6 pb-4 sm:pb-6 pt-3 flex-shrink-0">
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={input}
+                          onChange={(e) => {
+                            setInput(e.target.value);
+                            setChatState(e.target.value ? 'typing' : 'idle');
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleSend();
+                          }}
+                          placeholder="Type your message...."
+                          className={`flex-1 bg-black/60 border ${colors.borderMedium} ${colors.text200} rounded-lg px-3 py-2 sm:py-3 focus:outline-none focus:ring-1 ${theme === 'dystopia' ? 'focus:ring-red-400' : 'focus:ring-cyan-400'} ${theme === 'dystopia' ? 'placeholder-red-700' : 'placeholder-cyan-700'} text-xs sm:text-sm`}
+                        />
+                        <button
+                          onClick={handleSend}
+                          className={`border ${colors.border}/50 px-4 sm:px-5 py-2 sm:py-3 text-xs sm:text-sm rounded-lg ${theme === 'dystopia' ? 'hover:bg-red-500/20' : 'hover:bg-cyan-500/20'} transition-all font-bold tracking-wider`}
+                        >
+                          SEND
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
