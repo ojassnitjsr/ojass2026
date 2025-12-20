@@ -83,7 +83,7 @@ export default function EventCard({ id, name, description, img }: EventCardProps
                         : "0 0 20px rgba(204, 119, 34, 0.8)"
                 }}
             >
-                <h3 className="text-md font-bold uppercase tracking-wider leading-tight">
+                <h3 className="text-md sm:text-lg font-bold uppercase tracking-wider leading-tight text-white">
     {name}
 </h3>
             </div>
