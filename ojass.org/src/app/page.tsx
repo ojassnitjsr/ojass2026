@@ -15,19 +15,15 @@ export default function Home() {
         const loadImages = async () => {
             const imagePaths = [
                 "/homelayer/bottom.png",
-                "/homelayer/bottom_dys.png",
+                // "/homelayer/bottom_dys.png",
                 "/homelayer/sky.png",
-                "/homelayer/sky_dys.png",
+                // "/homelayer/sky_dys.png",
                 "/homelayer/behindmountain.png",
-                "/homelayer/behindmountain_dys.png",
+                // "/homelayer/behindmountain_dys.png",
                 "/homelayer/mainmountain.png",
-                "/homelayer/mainmountain_dys.png",
+                // "/homelayer/mainmountain_dys.png",
                 "/text-main-eut.png",
-                "/text-main-dys.png",
-                "/homelayer/caveinner.png",
-                "/homelayer/caveinner_dys.png",
-                "/homelayer/rocket.png",
-                "/homelayer/rocket_dys.png",
+                // "/text-main-dys.png"
             ];
 
             const promises = imagePaths.map((path) => {
