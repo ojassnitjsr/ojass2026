@@ -5,42 +5,21 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Loader from "@/components/Loader";
 
 export default function Home() {
     const [isLoading, setIsLoading] = useState(true);
+    const loadedCountRef = useRef(0);
+    const totalImages = 9;
 
-    useEffect(() => {
-        const loadImages = async () => {
-            const imagePaths = [
-                "/homelayer/bottom.png",
-                // "/homelayer/bottom_dys.png",
-                "/homelayer/sky.png",
-                // "/homelayer/sky_dys.png",
-                "/homelayer/behindmountain.png",
-                // "/homelayer/behindmountain_dys.png",
-                "/homelayer/mainmountain.png",
-                // "/homelayer/mainmountain_dys.png",
-                "/text-main-eut.png",
-                // "/text-main-dys.png"
-            ];
-
-            const promises = imagePaths.map((path) => {
-                return new Promise((resolve) => {
-                    const img = new Image();
-                    img.src = path;
-                    img.onload = resolve;
-                    img.onerror = resolve;
-                });
-            });
-
-            await Promise.all(promises);
+    const handleImageLoad = () => {
+        loadedCountRef.current += 1;
+        if (loadedCountRef.current >= totalImages) {
             setIsLoading(false);
-        };
-
-        loadImages();
-    }, []);
+        }
+    };
 
     const [imgDims, setImgDims] = useState({
         width: 0,
@@ -334,9 +313,6 @@ export default function Home() {
         });
     }, []);
 
-    const bottomImage = isDystopia
-        ? "url(/homelayer/bottom_dys.png)"
-        : "url(/homelayer/bottom.png)";
 
     return (
         <>
@@ -358,15 +334,19 @@ export default function Home() {
                         height: "65vh",
                         marginLeft: "-2vw",
                         marginTop: "-2vh",
-                        backgroundImage: isDystopia
-                            ? "url(/homelayer/sky_dys.png)"
-                            : "url(/homelayer/sky.png)",
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        backgroundRepeat: "no-repeat",
                         transformStyle: "preserve-3d",
                         willChange: "transform",
-                    }}></div>
+                    }}
+                >
+                    <Image
+                        src={isDystopia ? "/homelayer/sky_dys.png" : "/homelayer/sky.png"}
+                        alt="Sky Background"
+                        fill
+                        className="object-cover"
+                        priority
+                        onLoad={handleImageLoad}
+                    />
+                </div>
 
                 <div
                     ref={layer2Ref}
@@ -376,40 +356,45 @@ export default function Home() {
                         width: "110vw",
                         height: "80vh",
                         marginLeft: "-5vw",
-                        backgroundImage: isDystopia
-                            ? "url(/homelayer/behindmountain_dys.png)"
-                            : "url(/homelayer/behindmountain.png)",
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        backgroundRepeat: "no-repeat",
                         transformStyle: "preserve-3d",
                         willChange: "transform",
-                    }}></div>
+                    }}
+                >
+                    <Image
+                        src={isDystopia ? "/homelayer/behindmountain_dys.png" : "/homelayer/behindmountain.png"}
+                        alt="Behind Mountain"
+                        fill
+                        className="object-cover"
+                        priority
+                        onLoad={handleImageLoad}
+                    />
+                </div>
 
                 <div
                     ref={layer3Ref}
-                    className="fixed bottom-[5vh] -left-[5vw] w-full bg-contain bg-center bg-no-repeat"
+                    className="fixed bottom-[5vh] -left-[5vw] w-full"
                     id="layer3"
                     style={{
                         width: "110vw",
                         height: "72vh",
-                        backgroundImage: isDystopia
-                            ? "url(/homelayer/mainmountain_dys.png)"
-                            : "url(/homelayer/mainmountain.png)",
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        backgroundRepeat: "no-repeat",
                         transformStyle: "preserve-3d",
                         willChange: "transform",
-                    }}></div>
+                    }}
+                >
+                    <Image
+                        src={isDystopia ? "/homelayer/mainmountain_dys.png" : "/homelayer/mainmountain.png"}
+                        alt="Main Mountain"
+                        fill
+                        className="object-cover"
+                        priority
+                        onLoad={handleImageLoad}
+                    />
+                </div>
 
                 <div
                     ref={titleRef}
                     id="title"
-                    className={`fixed top-[30%] font-bold text-[200px] text-center w-full bg-contain bg-center bg-no-repeat h-[35vh] ${isDystopia
-                        ? "bg-[url(/text-main-dys.png)]"
-                        : "bg-[url(/text-main-eut.png)]"
-                        }`}
+                    className="fixed top-[30%] w-full h-[35vh]"
                     style={{
                         willChange: "transform",
                         pointerEvents: "none",
@@ -417,10 +402,20 @@ export default function Home() {
                             ? "hue-rotate(180deg)"
                             : "hue-rotate(0deg)",
                         zIndex: 10,
-                    }}></div>
+                    }}
+                >
+                    <Image
+                        src={isDystopia ? "/text-main-dys.png" : "/text-main-eut.png"}
+                        alt="Title"
+                        fill
+                        className="object-contain"
+                        priority
+                        onLoad={handleImageLoad}
+                    />
+                </div>
 
                 <div
-                    className="absolute bottom-0 left-0"
+                    className="absolute bottom-0 left-0 overflow-hidden flex justify-center items-start"
                     id="bottom-sec1"
                     style={{
                         width: "100vw",
@@ -428,13 +423,20 @@ export default function Home() {
                             imgDims.splitTop > 0
                                 ? `${imgDims.splitTop + 2}px`
                                 : "0px",
-                        backgroundImage: bottomImage,
-                        backgroundPosition: "top center",
-                        backgroundSize: `${imgDims.width}px ${imgDims.height}px`,
-                        backgroundRepeat: "no-repeat",
                         zIndex: 20,
                         pointerEvents: "none",
-                    }}></div>
+                    }}
+                >
+                    <Image
+                        src={isDystopia ? "/homelayer/bottom_dys.png" : "/homelayer/bottom.png"}
+                        alt="Bottom Segment 1"
+                        width={imgDims.width || 1}
+                        height={imgDims.height || 1}
+                        className="max-w-none"
+                        priority
+                        onLoad={handleImageLoad}
+                    />
+                </div>
             </div>
 
             <div
@@ -447,22 +449,24 @@ export default function Home() {
                     style={{
                         width: "104vw",
                         height: "104vh",
-                        backgroundImage: isDystopia
-                            ? "url(/homelayer/caveinner_dys.png)"
-                            : "url(/homelayer/caveinner.png)",
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
                         willChange: "transform",
                         zIndex: 1,
-                    }}></div>
+                    }}
+                >
+                    <Image
+                        src={isDystopia ? "/homelayer/caveinner_dys.png" : "/homelayer/caveinner.png"}
+                        alt="Cave Inner"
+                        fill
+                        className="object-cover"
+                        priority
+                        onLoad={handleImageLoad}
+                    />
+                </div>
 
                 <div
                     ref={title2Ref}
                     id="title2"
-                    className={`absolute -top-[30vh] font-bold text-[200px] text-center w-full bg-contain bg-center bg-no-repeat h-[35vh] ${isDystopia
-                        ? "bg-[url(/text-main-dys.png)]"
-                        : "bg-[url(/text-main-eut.png)]"
-                        }`}
+                    className="absolute -top-[30vh] w-full h-[35vh]"
                     style={{
                         willChange: "transform",
                         pointerEvents: "none",
@@ -470,7 +474,17 @@ export default function Home() {
                             ? "hue-rotate(180deg)"
                             : "hue-rotate(0deg)",
                         zIndex: 2,
-                    }}></div>
+                    }}
+                >
+                    <Image
+                        src={isDystopia ? "/text-main-dys.png" : "/text-main-eut.png"}
+                        alt="Title 2"
+                        fill
+                        className="object-contain"
+                        priority
+                        onLoad={handleImageLoad}
+                    />
+                </div>
 
                 <div
                     ref={rocketRef}
@@ -479,18 +493,22 @@ export default function Home() {
                     style={{
                         width: "100vw",
                         height: "70vh",
-                        backgroundImage: isDystopia
-                            ? "url(/homelayer/rocket_dys.png)"
-                            : "url(/homelayer/rocket.png)",
-                        backgroundSize: "contain",
-                        backgroundPosition: "center",
-                        backgroundRepeat: "no-repeat",
                         willChange: "transform",
                         zIndex: 5,
-                    }}></div>
+                    }}
+                >
+                    <Image
+                        src={isDystopia ? "/homelayer/rocket_dys.png" : "/homelayer/rocket.png"}
+                        alt="Rocket"
+                        fill
+                        className="object-contain"
+                        priority
+                        onLoad={handleImageLoad}
+                    />
+                </div>
 
                 <div
-                    className="absolute left-0"
+                    className="absolute left-0 overflow-hidden flex justify-center items-end"
                     id="cave-outer-sec2"
                     style={{
                         top: "-5px",
@@ -499,13 +517,20 @@ export default function Home() {
                             imgDims.splitBottom > 0
                                 ? `${imgDims.splitBottom}px`
                                 : "0px",
-                        backgroundImage: bottomImage,
-                        backgroundPosition: "bottom center",
-                        backgroundSize: `${imgDims.width}px ${imgDims.height}px`,
-                        backgroundRepeat: "no-repeat",
                         zIndex: 30,
                         pointerEvents: "none",
-                    }}></div>
+                    }}
+                >
+                    <Image
+                        src={isDystopia ? "/homelayer/bottom_dys.png" : "/homelayer/bottom.png"}
+                        alt="Cave Outer"
+                        width={imgDims.width || 1}
+                        height={imgDims.height || 1}
+                        className="max-w-none"
+                        priority
+                        onLoad={handleImageLoad}
+                    />
+                </div>
             </div>
         </>
     );
