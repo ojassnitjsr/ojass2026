@@ -5,9 +5,47 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import Loader from "@/components/Loader";
 
 export default function Home() {
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const loadImages = async () => {
+            const imagePaths = [
+                "/homelayer/bottom.png",
+                "/homelayer/bottom_dys.png",
+                "/homelayer/sky.png",
+                "/homelayer/sky_dys.png",
+                "/homelayer/behindmountain.png",
+                "/homelayer/behindmountain_dys.png",
+                "/homelayer/mainmountain.png",
+                "/homelayer/mainmountain_dys.png",
+                "/text-main-eut.png",
+                "/text-main-dys.png",
+                "/homelayer/caveinner.png",
+                "/homelayer/caveinner_dys.png",
+                "/homelayer/rocket.png",
+                "/homelayer/rocket_dys.png",
+            ];
+
+            const promises = imagePaths.map((path) => {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    img.src = path;
+                    img.onload = resolve;
+                    img.onerror = resolve;
+                });
+            });
+
+            await Promise.all(promises);
+            setIsLoading(false);
+        };
+
+        loadImages();
+    }, []);
+
     const [imgDims, setImgDims] = useState({
         width: 0,
         height: 0,
@@ -306,6 +344,7 @@ export default function Home() {
 
     return (
         <>
+            {isLoading && <Loader />}
             <div
                 ref={containerRef}
                 className="w-full h-screen bg-black relative overflow-hidden"
