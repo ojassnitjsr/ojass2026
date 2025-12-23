@@ -45,6 +45,7 @@ export default function Home() {
         if (typeof window === "undefined") return;
 
         gsap.registerPlugin(ScrollTrigger);
+        ScrollTrigger.config({ ignoreMobileResize: true });
 
         const isMobile = window.innerWidth <= 768;
         let lenis: Lenis | null = null;
@@ -65,13 +66,14 @@ export default function Home() {
             });
 
             gsap.ticker.lagSmoothing(0);
-        }
+        } else ScrollTrigger.normalizeScroll(true);
 
         return () => {
             if (lenis) {
                 gsap.ticker.remove(lenis.raf);
                 lenis.destroy();
             }
+            ScrollTrigger.normalizeScroll(false);
         };
     }, []);
 
@@ -303,7 +305,7 @@ export default function Home() {
                         trigger: containerRef.current,
                         start: "top+=50% top", // Starts when 50% scrolled
                         end: "bottom top",    // Ends when section is fully scrolled (100vh)
-                        scrub: 0,
+                        scrub: 0.2,
                     }
                 });
 
@@ -405,7 +407,7 @@ export default function Home() {
                     }}
                 >
                     <Image
-                        src={isDystopia ? "/text-main-dys.png" : "/text-main-eut.png"}
+                        src={isDystopia ? "/text-main-dys-1.png" : "/text-main-eut-1.png"}
                         alt="Title"
                         fill
                         className="object-contain"
@@ -477,7 +479,7 @@ export default function Home() {
                     }}
                 >
                     <Image
-                        src={isDystopia ? "/text-main-dys.png" : "/text-main-eut.png"}
+                        src={isDystopia ? "/text-main-dys-1.png" : "/text-main-eut-1.png"}
                         alt="Title 2"
                         fill
                         className="object-contain"
@@ -532,6 +534,8 @@ export default function Home() {
                     />
                 </div>
             </div>
+
+            <div className="sm:h-0 h-[8svh]"/>
         </>
     );
 }
