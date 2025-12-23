@@ -15,7 +15,8 @@ export default function Footer() {
         const handleScroll = () => {
             const scrollPosition = window.innerHeight + window.scrollY;
             const documentHeight = document.body.offsetHeight;
-            const isNearBottom = scrollPosition >= documentHeight - 10;
+            const isNearBottom =
+                scrollPosition >= documentHeight - (isSmallScreen ? 10 : 80);
 
             if (isNearBottom) {
                 gsap.to(footerRef.current, {
