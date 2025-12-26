@@ -5,9 +5,10 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Loader from "@/components/Loader";
+import ElectroBorder from "@/components/timeline/ElectroBorder";
 
 export default function Home() {
     const [isLoading, setIsLoading] = useState(true);
@@ -34,11 +35,13 @@ export default function Home() {
     const layer3Ref = useRef(null);
     const titleRef = useRef(null);
     const caveInnerRef = useRef(null);
-    const rocketRef = useRef(null);
+    const videoRef = useRef(null);
     const title2Ref = useRef(null);
 
     const { theme } = useTheme();
     const isDystopia = theme === "dystopia";
+
+    useEffect(() => setIsLoading(true), [theme]);
 
     // --- SETUP LENIS & SCROLLTRIGGER ---
     useLayoutEffect(() => {
@@ -129,7 +132,7 @@ export default function Home() {
 
     // --- MOUSE & SCROLL ANIMATIONS ---
     useGSAP(() => {
-        // Shared Rocket Timeline (Runs everywhere)
+        // Shared video Timeline (Runs everywhere)
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: "#second-section",
@@ -141,7 +144,7 @@ export default function Home() {
 
         tl.from(caveInnerRef.current, { y: "0vh", ease: "none" }, 0);
         tl.fromTo(
-            rocketRef.current,
+            videoRef.current,
             { y: 0 },
             { y: "-125vh", ease: "none" },
             0,
@@ -193,7 +196,7 @@ export default function Home() {
                     duration: 1,
                     ease: "power2.out",
                 });
-                gsap.to(rocketRef.current, {
+                gsap.to(videoRef.current, {
                     x: x * 80,
                     duration: 1,
                     overwrite: "auto",
@@ -489,9 +492,9 @@ export default function Home() {
                 </div>
 
                 <div
-                    ref={rocketRef}
-                    className="absolute top-[150vh] left-0"
-                    id="rocket"
+                    ref={videoRef}
+                    className="absolute top-[140vh] left-1/2 -translate-x-1/2 flex items-center justify-center"
+                    id="video"
                     style={{
                         width: "100vw",
                         height: "70vh",
@@ -499,14 +502,24 @@ export default function Home() {
                         zIndex: 5,
                     }}
                 >
-                    <Image
+                    {/* <Image
                         src={isDystopia ? "/homelayer/rocket_dys.png" : "/homelayer/rocket.png"}
                         alt="Rocket"
                         fill
                         className="object-contain"
                         priority
                         onLoad={handleImageLoad}
-                    />
+                        /> */}                    
+                    <ElectroBorder borderWidth={10} borderColor={theme === "dystopia" ? "#EAB308" : "#22D3EE"}>
+                        <iframe
+                            src="https://www.youtube.com/embed/h1gpXrnNNMI" 
+                            title="OJASS 2026 Theme" 
+                            className="aspect-video h-40 sm:h-60 md:h-80 m-2 sm:m-4"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerPolicy="strict-origin-when-cross-origin"
+                            allowFullScreen
+                        />
+                    </ElectroBorder>
                 </div>
 
                 <div
@@ -534,8 +547,6 @@ export default function Home() {
                     />
                 </div>
             </div>
-
-            <div className="sm:h-0 h-[8svh]"/>
         </>
     );
 }
