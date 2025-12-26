@@ -87,7 +87,7 @@ const EventDetailsContent = ({
                             <div className="bg-black/40 p-3">
                                 <div
                                     className={`text-[9px] uppercase mb-1 opacity-70 ${accentColor}`}>
-                                    Start Sequence
+                                    Start Time
                                 </div>
                                 <div className="font-mono text-white text-sm">
                                     {event.start.toLocaleTimeString([], {
@@ -99,7 +99,7 @@ const EventDetailsContent = ({
                             <div className="bg-black/40 p-3">
                                 <div
                                     className={`text-[9px] uppercase mb-1 opacity-70 ${accentColor}`}>
-                                    End Sequence
+                                    End Time
                                 </div>
                                 <div className="font-mono text-white text-sm">
                                     {event.end.toLocaleTimeString([], {
@@ -113,7 +113,7 @@ const EventDetailsContent = ({
                         {/* Description */}
                         <div className="space-y-2">
                             <h4 className="text-[10px] uppercase tracking-widest opacity-40">
-                                Decoded Data
+                                Details
                             </h4>
                             <p className="text-sm leading-relaxed text-white/80 font-light border-l-2 border-white/10 pl-3">
                                 {event.desc}
