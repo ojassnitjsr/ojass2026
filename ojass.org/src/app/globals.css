@@ -44,6 +44,8 @@
     --font-size-11xl: 11rem;
     --font-size-12xl: 12rem;
     --font-size-13xl: 13rem;
+
+    --font-courier: "Courier New", monospace;
 }
 
 :root {
