@@ -35,7 +35,7 @@ export default function Home() {
     const layer3Ref = useRef(null);
     const titleRef = useRef(null);
     const caveInnerRef = useRef(null);
-    const videoRef = useRef(null);
+    const secondScreenRef = useRef(null);
     const title2Ref = useRef(null);
 
     const { theme } = useTheme();
@@ -132,7 +132,7 @@ export default function Home() {
 
     // --- MOUSE & SCROLL ANIMATIONS ---
     useGSAP(() => {
-        // Shared video Timeline (Runs everywhere)
+        // Shared secondScreen Timeline (Runs everywhere)
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: "#second-section",
@@ -143,12 +143,7 @@ export default function Home() {
         });
 
         tl.from(caveInnerRef.current, { y: "0vh", ease: "none" }, 0);
-        tl.fromTo(
-            videoRef.current,
-            { y: 0 },
-            { y: "-125vh", ease: "none" },
-            0,
-        );
+        tl.fromTo(secondScreenRef.current, { y: 0 }, { y: "-125vh", ease: "none" }, 0);
 
         const mm = gsap.matchMedia();
 
@@ -196,7 +191,7 @@ export default function Home() {
                     duration: 1,
                     ease: "power2.out",
                 });
-                gsap.to(videoRef.current, {
+                gsap.to(secondScreenRef.current, {
                     x: x * 80,
                     duration: 1,
                     overwrite: "auto",
@@ -492,16 +487,32 @@ export default function Home() {
                 </div>
 
                 <div
-                    ref={videoRef}
-                    className="absolute top-[140vh] left-1/2 -translate-x-1/2 flex items-center justify-center"
-                    id="video"
+                    ref={secondScreenRef}
+                    className="absolute top-[140vh] left-1/2 -translate-x-1/2 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 px-4 backdrop-blur-sm p-4 rounded-xl bg-white/2"
+                    id="secondScreen"
                     style={{
                         width: "100vw",
-                        height: "70vh",
+                        minHeight: "70vh",
                         willChange: "transform",
                         zIndex: 5,
-                    }}
-                >
+                    }}>
+                    <div className="text-white max-w-xs sm:max-w-md md:max-w-lg text-center md:text-left z-10 font-courier">
+                        <h2
+                            className={`text-3xl md:text-5xl font-bold mb-4 md:mb-6 ${
+                                isDystopia ? "text-yellow-500" : "text-cyan-400"
+                            }`}>
+                            OJASS
+                        </h2>
+                        <p className="text-sm md:text-base leading-relaxed font-bold mb-4 text-gray-200">
+                            The annual national-level Techno-Management
+                            Festival of NIT Jamshedpur, stands as the second
+                            largest event of its kind in Eastern India. With a
+                            staggering turnout of over 15000+ footfall including
+                            students, professionals, educators, and artists from
+                            top colleges across the nation.
+                        </p>
+                    </div>
+                
                     {/* <Image
                         src={isDystopia ? "/homelayer/rocket_dys.png" : "/homelayer/rocket.png"}
                         alt="Rocket"
@@ -512,9 +523,9 @@ export default function Home() {
                         /> */}                    
                     <ElectroBorder borderWidth={10} borderColor={theme === "dystopia" ? "#EAB308" : "#22D3EE"}>
                         <iframe
-                            src="https://www.youtube.com/embed/h1gpXrnNNMI" 
-                            title="OJASS 2026 Theme" 
-                            className="aspect-video h-40 sm:h-60 md:h-80 m-2 sm:m-4"
+                            src="https://www.youtube.com/embed/h1gpXrnNNMI"
+                            title="OJASS 2026 Theme"
+                            className="aspect-video h-40 sm:h-60 md:max-h-80 m-2 sm:m-4 rounded-2xl"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             referrerPolicy="strict-origin-when-cross-origin"
                             allowFullScreen
