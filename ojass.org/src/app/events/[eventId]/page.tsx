@@ -257,8 +257,8 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
                             <span className="w-10 h-px bg-current opacity-50" />
                             <span>
                                 {eventData.isTeamEvent
-                                    ? "Team Protocol"
-                                    : "Solo Operative"}
+                                    ? "Team Event"
+                                    : "Solo Event"}
                             </span>
                         </div>
 
@@ -300,7 +300,7 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
                                 )}
                             />
                             <div className="relative bg-black p-1 clip-path-polygon">
-                                <div className="relative aspect-video overflow-hidden clip-path-polygon bg-gray-900">
+                                <div className="relative aspect-[3/4] sm:aspect-video overflow-hidden clip-path-polygon bg-gray-900">
                                     <Image
                                         src={eventData.img}
                                         alt={eventData.name}
@@ -356,7 +356,7 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
                                     )}
                                 />
                                 <span className={themeClasses.textGlow}>
-                                    Mission Brief
+                                    Description
                                 </span>
                             </h2>
                             <p
@@ -371,18 +371,21 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
                                 <MetaCard
                                     icon={<FaUsers />}
-                                    label="Team Configuration"
+                                    label="Team Details"
                                     value={
                                         eventData.isTeamEvent
-                                            ? `${eventData.teamSizeMin} - ${eventData.teamSizeMax} OPERATIVES`
-                                            : "SOLO OPERATIVE"
+                                            ? eventData.teamSizeMin ===
+                                              eventData.teamSizeMax
+                                                ? `${eventData.teamSizeMin} PARTICIPANT`
+                                                : `${eventData.teamSizeMin} - ${eventData.teamSizeMax} PARTICIPANTS`
+                                            : "SOLO PARTICIPANT"
                                     }
                                     themeClasses={themeClasses}
                                 />
                                 <MetaCard
                                     icon={<FaTrophy />}
-                                    label="Bounty Allocation"
-                                    value={eventData.prizes.total}
+                                    label="PRIZE MONEY"
+                                    value={"₹ " + eventData.prizes.total}
                                     themeClasses={themeClasses}
                                 />
                             </div>
@@ -455,7 +458,7 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
                                             className="mt-6 group flex items-center justify-center gap-3 w-full py-3 px-4 bg-transparent border border-gray-600 hover:border-gray-400 text-gray-300 hover:text-white transition-all text-xs font-mono tracking-wider uppercase relative overflow-hidden">
                                             <div className="absolute top-0 left-0 w-[2px] h-full bg-white scale-y-0 group-hover:scale-y-100 transition-transform origin-top" />
                                             <FaFileDownload className="group-hover:animate-bounce" />
-                                            Download Protocols
+                                            Download Rulebook
                                             <div className="absolute bottom-0 right-0 w-[2px] h-full bg-white scale-y-0 group-hover:scale-y-100 transition-transform origin-bottom" />
                                         </a>
                                     )}
@@ -463,10 +466,10 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
                             </div>
 
                             {/* Prizes Widget */}
-                            <PrizesWidget
+                            {/* <PrizesWidget
                                 eventData={eventData}
                                 themeClasses={themeClasses}
-                            />
+                            /> */}
 
                             {/* Coordinator Widget */}
                             {eventData.event_head && (
@@ -478,7 +481,7 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
 
                                         {/* eslint-disable-next-line react/jsx-no-comment-textnodes */}
                                         <h3 className="text-xs font-bold text-gray-500 uppercase tracking-[0.2em] mb-4 text-center">
-                                            // Communication Node
+                                            // Event Head
                                         </h3>
                                         <div className="flex items-center gap-4">
                                             <div
@@ -703,7 +706,7 @@ function EventDetailsSection({
                 <div className="space-y-6">
                     <h3 className="text-xl font-bold text-white flex items-center gap-3 border-b border-white/10 pb-2">
                         <FaFileAlt className={clsx(themeClasses.textColor)} />
-                        Engagement Rules
+                        Rules
                         <span className="ml-auto text-[10px] font-mono text-gray-600 bg-gray-900 border border-gray-800 px-2 py-1">
                             READ-ONLY
                         </span>
@@ -741,7 +744,7 @@ function EventDetailsSection({
                         <FaInfoCircle
                             className={clsx(themeClasses.textColor)}
                         />
-                        Data & Parameters
+                        Details
                         <span className="ml-auto text-[10px] font-mono text-gray-600 bg-gray-900 border border-gray-800 px-2 py-1">
                             INFO_SEC
                         </span>
@@ -830,14 +833,14 @@ function TeamSelectionView({
                 onClick={onCreate}
                 accentColor={accentColor}
                 accentHover={accentHover}>
-                Form Unit & Deploy
+                Form New Team
             </TechButton>
             <TechButton
                 onClick={onJoin}
                 className="bg-white hover:bg-gray-200"
                 accentColor="bg-white"
                 accentHover="hover:bg-gray-200">
-                Join Existing Unit
+                Join Existing Team
             </TechButton>
         </div>
     );
@@ -890,7 +893,7 @@ function CreateTeamView({
             }
             const data = await res.json();
             if (!res.ok) throw new Error(data.error);
-            alert("Team created! Assemble your unit.");
+            alert("Team created! Assemble your team.");
             onSuccess(data);
         } catch (err: any) {
             alert(err.message || "Team creation failed");
@@ -909,14 +912,14 @@ function CreateTeamView({
                     )}
                 />
                 <h4 className="text-white font-bold mb-4 flex items-center justify-between font-mono text-xs uppercase tracking-widest">
-                    New Unit Formation
+                    New Team Formation
                 </h4>
                 <div className="space-y-3">
                     <input
                         type="text"
                         value={teamName}
                         onChange={(e) => setTeamName(e.target.value)}
-                        placeholder="ENTER UNIT DESIGNATION"
+                        placeholder="ENTER TEAM NAME"
                         className={clsx(
                             "w-full bg-transparent border-b-2 border-gray-700 px-2 py-3 text-white placeholder-gray-600",
                             "focus:outline-none focus:border-current font-mono text-sm transition-colors",
@@ -934,12 +937,12 @@ function CreateTeamView({
                         themeClasses.accentColor,
                         (!teamName.trim() || isCreating) && "opacity-50",
                     )}>
-                    {isCreating ? "CREATING..." : "INITIATE"}
+                    {isCreating ? "CREATING..." : "CREATE"}
                 </button>
                 <button
                     onClick={onBack}
                     className="px-6 py-3 bg-transparent border border-gray-600 hover:border-gray-400 text-gray-400 hover:text-white font-mono text-xs uppercase tracking-wider transition-colors">
-                    ABORT
+                    Cancel
                 </button>
             </div>
         </div>
@@ -1013,7 +1016,7 @@ function JoinTeamView({
                     )}
                 />
                 <h4 className="text-white font-bold mb-4 flex items-center justify-between font-mono text-xs uppercase tracking-widest">
-                    Join Existing Unit
+                    Join Existing Team
                 </h4>
                 <div className="space-y-3">
                     <input
@@ -1043,12 +1046,12 @@ function JoinTeamView({
                         themeClasses.accentColor,
                         (!joinInput.trim() || isJoining) && "opacity-50",
                     )}>
-                    {isJoining ? "ENGAGING..." : "ENGAGE"}
+                    {isJoining ? "JOINING..." : "JOIN"}
                 </button>
                 <button
                     onClick={onBack}
                     className="px-6 py-3 bg-transparent border border-gray-600 hover:border-gray-400 text-gray-400 hover:text-white font-mono text-xs uppercase tracking-wider transition-colors">
-                    ABORT
+                    Cancel
                 </button>
             </div>
         </div>
@@ -1115,7 +1118,7 @@ function TeamLobbyView({
 
                 <div className="flex justify-between items-center mb-3">
                     <span className="text-gray-300 font-bold text-xs font-mono uppercase">
-                        UNIT: {team.teamName}
+                        TEAM: {team.teamName}
                     </span>
                     <span
                         className={clsx(
@@ -1124,7 +1127,7 @@ function TeamLobbyView({
                                 ? "bg-green-900/30 border-green-500/50 text-green-400"
                                 : "bg-red-900/30 border-red-500/50 text-red-400",
                         )}>
-                        {memberCount}/{maxMembers} UNITS
+                        {memberCount}/{maxMembers} members
                     </span>
                 </div>
 
@@ -1147,13 +1150,13 @@ function TeamLobbyView({
                         onClick={copyToClipboard}
                         className="py-2 px-3 bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500 text-gray-300 text-xs font-mono flex items-center justify-center gap-2 transition-all">
                         <FaShareAlt className="text-[10px]" />
-                        Share Uplink
+                        Share Link
                     </button>
                     <button
                         onClick={() => router.push("/dashboard")}
                         className="py-2 px-3 bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500 text-gray-300 text-xs font-mono flex items-center justify-center gap-2 transition-all">
                         <RiTeamFill className="text-[10px]" />
-                        Manage Unit
+                        Manage Team
                     </button>
                 </div>
             </div>
@@ -1173,8 +1176,8 @@ function TeamLobbyView({
                     accentColor={accentColor}
                     accentHover={accentHover}>
                     {isRegistering
-                        ? "Processing Protocol..."
-                        : "Confirm Deployment [Register]"}
+                        ? "Processing registration..."
+                        : "Register Team"}
                 </TechButton>
             )}
         </div>
@@ -1242,7 +1245,7 @@ function RegisterButton({
                 onClick={() => router.push("/login")}
                 accentColor={accentColor}
                 accentHover={accentHover}>
-                Initialize Session [Login]
+                Login
             </TechButton>
         );
     }
@@ -1257,7 +1260,7 @@ function RegisterButton({
                 }}
                 accentColor={accentColor}
                 accentHover={accentHover}>
-                Credits Required [Pay]
+                Complete Payment
             </TechButton>
         );
     }
@@ -1297,9 +1300,10 @@ function RegisterButton({
                     {needsMore && (
                         <div className="bg-red-500/10 border border-red-500/20 p-3 text-center animate-pulse">
                             <p className="text-red-400 font-mono text-xs uppercase tracking-widest font-bold">
-                                Warning: Low Unit Strength (
-                                {teamSizeMin - memberCount} required).
-                                Recruitment Mandatory.
+                                Warning: Low Team Strength
+                                <br />
+                                Recruit {teamSizeMin - memberCount} more members
+                                to proceed.
                             </p>
                         </div>
                     )}
@@ -1308,14 +1312,14 @@ function RegisterButton({
                         onClick={copyLink}
                         accentColor={accentColor}
                         accentHover={accentHover}>
-                        <FaShareAlt /> Share Uplink
+                        <FaShareAlt /> Share Link
                     </TechButton>
                     <TechButton
                         className="bg-gray-200 hover:bg-white"
                         accentColor="bg-gray-200"
                         accentHover="hover:bg-white"
                         onClick={() => router.push("/dashboard")}>
-                        <RiTeamFill /> Manage Unit
+                        <RiTeamFill /> Manage Team
                     </TechButton>
                 </div>
             );
@@ -1437,7 +1441,7 @@ function RegisterButton({
             }}
             accentColor={accentColor}
             accentHover={accentHover}>
-            Engage Protocol [Register]
+            Register
         </TechButton>
     );
 }

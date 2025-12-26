@@ -89,7 +89,7 @@ export default function RightPanel() {
                         }`}
                         title="Dashboard">
                         <CgProfile className="size-6" />
-                        <div className="text-[8px] sm:text-[10px]">Board</div>
+                        <div className="text-[8px] sm:text-[10px] w-10 font-bold tracking-tighter text-center wrap-anywhere">Board</div>
                     </Link>
                 ) : (
                     <Link
@@ -99,7 +99,7 @@ export default function RightPanel() {
                         }`}
                         title="Login ">
                         <MdLogin className="size-6" />
-                        <div className="text-[8px] sm:text-[10px]">LOGIN</div>
+                        <div className="text-[8px] sm:text-[10px] w-10 font-bold tracking-tighter text-center wrap-anywhere">LOGIN</div>
                     </Link>
                 )}
 

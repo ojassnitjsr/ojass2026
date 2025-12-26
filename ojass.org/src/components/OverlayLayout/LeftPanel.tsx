@@ -53,11 +53,14 @@ export default function LeftPanel() {
                                 ? "/"
                                 : item.title.toLowerCase().replace(" ", "-")
                         }
-                        className={`layout-text cursor-pointer hover:scale-110 transition-transform ${
+                        className={`layout-text flex flex-col items-center cursor-pointer hover:scale-110 transition-transform ${
                             isDystopia ? "is-dystopia" : ""
                         }`}
                         title={item.title}>
                         <item.element className="size-6" />
+                        <div className="text-[10px] w-10 font-bold tracking-tighter text-center wrap-anywhere">
+                            {item.title}
+                        </div>
                     </Link>
                 ))}
             </div>

@@ -2,7 +2,7 @@
     {
         "id": 1,
         "name": "Anurag Das",
-        "imageUrl": "/team/supercore/Anurag Das_.png",
+        "imageUrl": "/team/supercore/Anurag Das_copy.png",
         "designation": "Convenor",
         "phone": "+918340671871",
         "email": "techsec.sc@nitjsr.ac.in",
@@ -153,7 +153,7 @@
         "category": "Web"
     },
     {
-        "id": 18,
+        "id": 17,
         "name": "Aprajita Thakur",
         "imageUrl": "/team/web/aprajita.jpeg",
         "designation": "Web Team",
@@ -162,7 +162,7 @@
         "category": "Web"
     },
     {
-        "id": 19,
+        "id": 18,
         "name": "Roshni Kumari",
         "imageUrl": "/team/web/roshni.png",
         "designation": "Web Team",
@@ -180,7 +180,7 @@
         "category": "Web"
     },
     {
-        "id": 19,
+        "id": 20,
         "name": "Anoop kumar",
         "imageUrl": "/team/web/anoop.png",
         "designation": "Web Team",
@@ -189,7 +189,7 @@
         "category": "Web"
     },
     {
-        "id": 19,
+        "id": 21,
         "name": "Neha kumari",
         "imageUrl": "/team/web/neha.png",
         "designation": "Web Team",
@@ -198,7 +198,7 @@
         "category": "Web"
     },
     {
-        "id": 19,
+        "id": 22,
         "name": "Aditya Raj",
         "imageUrl": "/team/web/aditya.png",
         "designation": "Web Team",

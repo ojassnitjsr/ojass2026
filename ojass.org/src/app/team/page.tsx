@@ -116,24 +116,23 @@ export default function TeamPage() {
                                 display: "grid",
                                 gridTemplateColumns:
                                     "repeat(auto-fill, minmax(280px, 1fr))",
-                                gap: "2rem",
+                                gap: "1rem 2rem",
                                 width: "100%",
                                 margin: "0 auto",
                             }}>
                             {coreTeam.map((member) => (
                                 <div
                                     key={member.id}
-                                    style={{
-                                        display: "flex",
-                                        justifyContent: "center",
-                                    }}>
-                                    <TeamCard
-                                        name={member.name}
-                                        role={member.designation}
-                                        imageUrl={member.imageUrl}
-                                        phone={member.phone || ""}
-                                        email={member.email || ""}
-                                    />
+                                    className="flex justify-center items-center relative md:w-full md:h-full my-0 mx-auto w-[235px] h-[347px]">
+                                    <div className="origin-center transform scale-75 absolute md:sticky md:scale-100">
+                                        <TeamCard
+                                            name={member.name}
+                                            role={member.designation}
+                                            imageUrl={member.imageUrl}
+                                            phone={member.phone || ""}
+                                            email={member.email || ""}
+                                        />
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -150,24 +149,25 @@ export default function TeamPage() {
                                 display: "grid",
                                 gridTemplateColumns:
                                     "repeat(auto-fill, minmax(350px, 1fr))",
-                                gap: "2rem",
+                                gap: "1rem 2rem",
                                 width: "100%",
                                 margin: "0 auto",
                             }}>
                             {webTeam.map((member) => (
                                 <div
                                     key={member.id}
-                                    style={{
-                                        display: "flex",
-                                        justifyContent: "center",
-                                    }}>
-                                    <WebTeamCard
-                                        name={member.name}
-                                        role={member.designation}
-                                        imageUrl={member.imageUrl}
-                                        linkedinUrl={member.linkedinUrl || "#"}
-                                        githubUrl={member.githubUrl || "#"}
-                                    />
+                                    className="flex justify-center items-center relative md:w-full md:h-full my-0 mx-auto w-[210px] h-[210px]">
+                                    <div className="origin-center transform scale-75 absolute md:sticky md:scale-100">
+                                        <WebTeamCard
+                                            name={member.name}
+                                            role={member.designation}
+                                            imageUrl={member.imageUrl}
+                                            linkedinUrl={
+                                                member.linkedinUrl || "#"
+                                            }
+                                            githubUrl={member.githubUrl || "#"}
+                                        />
+                                    </div>
                                 </div>
                             ))}
                         </div>
@@ -189,20 +189,20 @@ export default function TeamPage() {
                 }
                 .custom-scrollbar::-webkit-scrollbar-track {
                     background: ${isDystopia
-                    ? "rgba(40, 20, 10, 0.3)"
-                    : "rgba(0, 20, 40, 0.3)"};
+                        ? "rgba(40, 20, 10, 0.3)"
+                        : "rgba(0, 20, 40, 0.3)"};
                     border-radius: 4px;
                 }
                 .custom-scrollbar::-webkit-scrollbar-thumb {
                     background: ${isDystopia
-                    ? "rgba(255, 100, 0, 0.5)"
-                    : "rgba(0, 255, 255, 0.5)"};
+                        ? "rgba(255, 100, 0, 0.5)"
+                        : "rgba(0, 255, 255, 0.5)"};
                     border-radius: 4px;
                 }
                 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
                     background: ${isDystopia
-                    ? "rgba(255, 100, 0, 0.7)"
-                    : "rgba(0, 255, 255, 0.7)"};
+                        ? "rgba(255, 100, 0, 0.7)"
+                        : "rgba(0, 255, 255, 0.7)"};
                 }
             `}</style>
         </div>
