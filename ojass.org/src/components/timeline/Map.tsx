@@ -226,11 +226,10 @@ const EventMap = ({ selectedDay }: { selectedDay: DayKey }) => {
         };
     }, []);
 
-    const events = useMemo(() => {
-        const t = new Date();
-        const hour = 60 * 60 * 1000;
-        return timelineData(hour, t)[selectedDay].events;
-    }, [selectedDay]);
+    const events = useMemo(
+        () => timelineData[selectedDay].events,
+        [selectedDay],
+    );
 
     const getEventStatus = (start: Date, end: Date) => {
         if (now > end) return "COMPLETED";
