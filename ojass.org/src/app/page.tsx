@@ -521,7 +521,7 @@ export default function Home() {
                         priority
                         onLoad={handleImageLoad}
                         /> */}                    
-                    <ElectroBorder borderWidth={10} borderColor={theme === "dystopia" ? "#EAB308" : "#22D3EE"}>
+                    {/* <ElectroBorder borderWidth={10} borderColor={theme === "dystopia" ? "#EAB308" : "#22D3EE"}> */}
                         <iframe
                             src="https://www.youtube.com/embed/h1gpXrnNNMI"
                             title="OJASS 2026 Theme"
@@ -530,7 +530,7 @@ export default function Home() {
                             referrerPolicy="strict-origin-when-cross-origin"
                             allowFullScreen
                         />
-                    </ElectroBorder>
+                    {/* </ElectroBorder> */}
                 </div>
 
                 <div
