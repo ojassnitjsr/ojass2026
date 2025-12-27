@@ -102,10 +102,28 @@ const EventDetailsContent = ({
                                     End Time
                                 </div>
                                 <div className="font-mono text-white text-sm">
-                                    {event.end.toLocaleTimeString([], {
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                    })}
+                                    {event.end.getDate() !==
+                                    event.start.getDate() ? (
+                                        <div className="flex flex-col">
+                                            <span>
+                                                {event.end.toLocaleDateString(
+                                                    [],
+                                                    {month: "short", day: "numeric"},
+                                                )}
+                                            </span>
+                                            <span>
+                                                {event.end.toLocaleTimeString(
+                                                    [],
+                                                    {hour: "2-digit", minute: "2-digit"},
+                                                )}
+                                            </span>
+                                        </div>
+                                    ) : (
+                                        event.end.toLocaleTimeString([], {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        })
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -118,6 +136,16 @@ const EventDetailsContent = ({
                             <p className="text-sm leading-relaxed text-white/80 font-light border-l-2 border-white/10 pl-3">
                                 {event.desc}
                             </p>
+                        </div>
+
+                        {/* Tentative Warning */}
+                        <div
+                            className={`mt-6 pt-4 border-t border-dashed  text-[9px] uppercase tracking-widest opacity-50 ${
+                                isDystopian
+                                    ? "border-yellow-500/20 text-yellow-500"
+                                    : "border-cyan-500/20 text-cyan-500"
+                            }`}>
+                            * All dates and times are tentative
                         </div>
                     </div>
                 </ElectroBorder>
@@ -226,11 +254,10 @@ const EventMap = ({ selectedDay }: { selectedDay: DayKey }) => {
         };
     }, []);
 
-    const events = useMemo(() => {
-        const t = new Date();
-        const hour = 60 * 60 * 1000;
-        return timelineData(hour, t)[selectedDay].events;
-    }, [selectedDay]);
+    const events = useMemo(
+        () => timelineData[selectedDay].events,
+        [selectedDay],
+    );
 
     const getEventStatus = (start: Date, end: Date) => {
         if (now > end) return "COMPLETED";
@@ -261,24 +288,52 @@ const EventMap = ({ selectedDay }: { selectedDay: DayKey }) => {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#000000_90%)] pointer-events-none" />
 
             {/* --- Header --- */}
-            <header className="relative w-full p-6 flex justify-end items-center pointer-events-none z-20">
-                <div className="flex flex-col justify-center items-end">
-                    <div className="text-[10px] uppercase tracking-widest mb-1 opacity-70">
-                        Local System Time
+            <header className="relative w-full p-6 flex justify-end items-start pointer-events-none z-20">
+                <div
+                    className={`flex flex-col items-end border-r-2 pr-4 ${
+                        !isDystopian
+                            ? "border-cyan-500/30"
+                            : "border-yellow-500/30"
+                    }`}>
+                    <div className="flex items-center gap-2 mb-2">
+                        <div
+                            className={`w-2 h-2 rounded-full animate-pulse ${
+                                !isDystopian ? "bg-cyan-400" : "bg-yellow-400"
+                            }`}
+                        />
+                        <div
+                            className={`text-[10px] font-bold tracking-[0.2em] ${
+                                !isDystopian
+                                    ? "text-cyan-400"
+                                    : "text-yellow-400"
+                            }`}>
+                            SYS.TIME // {isDystopian ? "DYSTOPIA" : "UTOPIA"}
+                        </div>
                     </div>
 
                     <div
-                        className={`text-2xl font-bold text-white tabular-nums drop-shadow-[0_0_10px_currentColor] ${!isDystopian ? "text-cyan-400" : "text-yellow-400"
-                            }`}>
+                        className={`text-4xl md:text-5xl font-black tabular-nums tracking-tighter leading-none mb-1 drop-shadow-[0_0_15px_currentColor] ${
+                            !isDystopian ? "text-white" : "text-white"
+                        }`}>
+                        {now.toLocaleTimeString([], { hour12: false })}
+                    </div>
+
+                    <div
+                        className={`text-sm font-mono tracking-widest uppercase opacity-80 ${
+                            !isDystopian ? "text-cyan-300" : "text-yellow-300"
+                        }`}>
                         {now.toLocaleDateString([], {
+                            weekday: "short",
                             day: "numeric",
-                            month: "long",
+                            month: "short",
+                            year: "numeric",
                         })}
                     </div>
                     <div
-                        className={`text-3xl font-bold text-white tabular-nums drop-shadow-[0_0_10px_currentColor] ${!isDystopian ? "text-cyan-400" : "text-yellow-400"
-                            }`}>
-                        {now.toLocaleTimeString([], { hour12: false })}
+                        className={`mt-2 text-[8px] tracking-[0.3em] opacity-50 ${
+                            !isDystopian ? "text-cyan-500" : "text-yellow-500"
+                        }`}>
+                        COORD: {now.getTime().toString().slice(-6)}
                     </div>
                 </div>
             </header>

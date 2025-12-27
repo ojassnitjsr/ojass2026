@@ -9,9 +9,23 @@ import TimelineDial from "./TimelineDial";
 import SpaceTunnel from "@/components/login/SpaceTunnel";
 
 const TimelinePage = () => {
-    const [selectedDay, setSelectedDay] = useState<DayKey>(2);
+    const getInitialDay = (): DayKey => {
+        const today = new Date();
+        const currentYear = today.getFullYear();
+        const currentMonth = today.getMonth();
+        const currentDate = today.getDate();
+
+        if (currentYear === 2026 && currentMonth === 1) {
+            if (currentDate === 19) return 1;
+            if (currentDate === 20) return 2;
+            if (currentDate === 21) return 3;
+            if (currentDate === 22) return 4;
+        }
+        return 1;
+    };
+    const [selectedDay, setSelectedDay] = useState<DayKey>(getInitialDay);
     const [isAnimating, setIsAnimating] = useState(false);
-    const [angle, setAngle] = useState(90);
+    const [angle, setAngle] = useState((getInitialDay() - 1) * 90);
     const [isThrottled, setIsThrottled] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const [showTransition, setShowTransition] = useState(false);
