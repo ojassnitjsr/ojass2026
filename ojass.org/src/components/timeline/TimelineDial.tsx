@@ -26,10 +26,10 @@ const TimelineDial = ({
     textContainerRef,
 }: TimelineDialProps) => {
     const dayLabels = [
-        { angle: 0, day: 1, label: "DAY 1", subtext: "Monday" },
-        { angle: 90, day: 2, label: "DAY 2", subtext: "Tuesday" },
-        { angle: 180, day: 3, label: "DAY 3", subtext: "Wednesday" },
-        { angle: 270, day: 4, label: "DAY 4", subtext: "Thursday" },
+        { angle: 0, day: 1, label: "DAY 1", subtext: "Thursday" },
+        { angle: 90, day: 2, label: "DAY 2", subtext: "Friday" },
+        { angle: 180, day: 3, label: "DAY 3", subtext: "Saturday" },
+        { angle: 270, day: 4, label: "DAY 4", subtext: "Sunday" },
     ];
 
     return (
