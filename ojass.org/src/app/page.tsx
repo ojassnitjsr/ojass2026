@@ -466,7 +466,7 @@ export default function Home() {
                 <div
                     ref={title2Ref}
                     id="title2"
-                    className="absolute -top-[30vh] w-full h-[35vh]"
+                    className="absolute -top-[45vh] w-full h-[35vh]"
                     style={{
                         willChange: "transform",
                         pointerEvents: "none",
@@ -488,7 +488,7 @@ export default function Home() {
 
                 <div
                     ref={secondScreenRef}
-                    className="absolute top-[140vh] left-1/2 -translate-x-1/2 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 px-4 backdrop-blur-sm p-4 rounded-xl bg-white/2"
+                    className="absolute top-[150vh] left-1/2 -translate-x-1/2 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 px-4 p-4 rounded-xl"
                     id="secondScreen"
                     style={{
                         width: "100vw",
@@ -496,41 +496,14 @@ export default function Home() {
                         willChange: "transform",
                         zIndex: 5,
                     }}>
-                    <div className="text-white max-w-xs sm:max-w-md md:max-w-lg text-center md:text-left z-10 font-courier">
-                        <h2
-                            className={`text-3xl md:text-5xl font-bold mb-4 md:mb-6 ${
-                                isDystopia ? "text-yellow-500" : "text-cyan-400"
-                            }`}>
-                            OJASS
-                        </h2>
-                        <p className="text-sm md:text-base leading-relaxed font-bold mb-4 text-gray-200">
-                            The annual national-level Techno-Management
-                            Festival of NIT Jamshedpur, stands as the second
-                            largest event of its kind in Eastern India. With a
-                            staggering turnout of over 15000+ footfall including
-                            students, professionals, educators, and artists from
-                            top colleges across the nation.
-                        </p>
-                    </div>
-                
-                    {/* <Image
-                        src={isDystopia ? "/homelayer/rocket_dys.png" : "/homelayer/rocket.png"}
-                        alt="Rocket"
-                        fill
-                        className="object-contain"
-                        priority
-                        onLoad={handleImageLoad}
-                        /> */}                    
-                    {/* <ElectroBorder borderWidth={10} borderColor={theme === "dystopia" ? "#EAB308" : "#22D3EE"}> */}
-                        <iframe
-                            src="https://www.youtube.com/embed/h1gpXrnNNMI"
-                            title="OJASS 2026 Theme"
-                            className="aspect-video h-40 sm:h-60 md:max-h-80 m-2 sm:m-4 rounded-2xl"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerPolicy="strict-origin-when-cross-origin"
-                            allowFullScreen
-                        />
-                    {/* </ElectroBorder> */}
+                    <iframe
+                        src="https://www.youtube.com/embed/h1gpXrnNNMI"
+                        title="OJASS 2026 Theme"
+                        className="aspect-video h-40 sm:h-60 md:max-h-80 m-2 sm:m-4 rounded-2xl"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerPolicy="strict-origin-when-cross-origin"
+                        allowFullScreen
+                    />
                 </div>
 
                 <div

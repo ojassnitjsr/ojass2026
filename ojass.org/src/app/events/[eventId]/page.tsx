@@ -20,7 +20,7 @@ import {
     FaTrophy,
     FaUsers,
 } from "react-icons/fa";
-import { GiPodiumSecond, GiPodiumThird, GiPodiumWinner } from "react-icons/gi";
+import { GiPodiumSecond, GiPodiumWinner } from "react-icons/gi";
 import { RiTeamFill } from "react-icons/ri";
 
 // Types

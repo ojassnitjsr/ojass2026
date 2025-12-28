@@ -190,9 +190,9 @@ export default function Page() {
             selectedCategory === "All"
                 ? rawEvents
                 : rawEvents.filter((e) => {
-                      const orgs = e.category.split(",").map((s) => s.trim());
-                      return orgs.includes(selectedCategory);
-                  });
+                    const orgs = e.category.split(",").map((s) => s.trim());
+                    return orgs.includes(selectedCategory);
+                });
 
         setAllEvents(filtered);
 
@@ -319,11 +319,10 @@ export default function Page() {
             </AnimatePresence>
             <Link
                 href="/"
-                className={`clip-left absolute top-6 left-6 z-50 flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 ${
-                    isDystopia
-                        ? "bg-[#ee8f59]/20 hover:bg-[#ee8f59]/40 text-white"
-                        : "bg-cyan-500/20 hover:bg-cyan-500/40 text-white"
-                }`}>
+                className={`clip-left absolute top-6 left-6 z-50 flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 ${isDystopia
+                    ? "bg-[#ee8f59]/20 hover:bg-[#ee8f59]/40 text-white"
+                    : "bg-cyan-500/20 hover:bg-cyan-500/40 text-white"
+                    }`}>
                 <IoExitOutline size={20} />
                 <span className="font-semibold tracking-wider">EXIT</span>
             </Link>
@@ -332,18 +331,16 @@ export default function Page() {
             <div className="absolute top-6 right-6 z-50">
                 <button
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className={`clip-right flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 w-48 justify-between ${
-                        isDystopia
-                            ? "bg-[#ee8f59]/20 hover:bg-[#ee8f59]/40 text-white"
-                            : "bg-cyan-500/20 hover:bg-cyan-500/40 text-white"
-                    }`}>
+                    className={`clip-right flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 w-48 justify-between ${isDystopia
+                        ? "bg-[#ee8f59]/20 hover:bg-[#ee8f59]/40 text-white"
+                        : "bg-cyan-500/20 hover:bg-cyan-500/40 text-white"
+                        }`}>
                     <span className="font-medium truncate">
                         {selectedCategory}
                     </span>
                     <IoChevronDown
-                        className={`transition-transform duration-300 ${
-                            isDropdownOpen ? "rotate-180" : ""
-                        }`}
+                        className={`transition-transform duration-300 ${isDropdownOpen ? "rotate-180" : ""
+                            }`}
                     />
                 </button>
 
@@ -353,9 +350,8 @@ export default function Page() {
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
-                            className={`clip-right absolute top-full right-0 mt-2 w-48 backdrop-blur-md overflow-hidden shadow-xl max-h-60 overflow-y-auto ${
-                                isDystopia ? "bg-black/90" : "bg-black/80"
-                            }`}>
+                            className={`clip-right absolute top-full right-0 mt-2 w-48 backdrop-blur-md overflow-hidden shadow-xl max-h-60 overflow-y-auto ${isDystopia ? "bg-black/90" : "bg-black/80"
+                                }`}>
                             {categories.map((category) => (
                                 <button
                                     key={category}
@@ -363,15 +359,14 @@ export default function Page() {
                                         setSelectedCategory(category);
                                         setIsDropdownOpen(false);
                                     }}
-                                    className={`w-full text-left px-4 py-3 transition-colors duration-200 text-sm ${
-                                        selectedCategory === category
-                                            ? isDystopia
-                                                ? "bg-[#ee8f59]/30 text-white"
-                                                : "bg-cyan-500/40 text-white"
-                                            : isDystopia
+                                    className={`w-full text-left px-4 py-3 transition-colors duration-200 text-sm ${selectedCategory === category
+                                        ? isDystopia
+                                            ? "bg-[#ee8f59]/30 text-white"
+                                            : "bg-cyan-500/40 text-white"
+                                        : isDystopia
                                             ? "text-gray-300 hover:bg-[#ee8f59]/20"
                                             : "text-gray-300 hover:bg-cyan-500/20"
-                                    }`}>
+                                        }`}>
                                     {category}
                                 </button>
                             ))}
@@ -418,7 +413,7 @@ export default function Page() {
                     }}
                 />
 
-                <div className="absolute inset-0 flex items-center justify-center w-full md:w-1/2 -top-[10vh] pointer-events-auto left-4 md:left-[calc(50%+65px)] md:-translate-x-1/2 z-20">
+                <div className="absolute inset-0 flex items-center justify-center w-full md:w-1/2 -top-[10vh] pointer-events-auto left-1/2 -translate-x-1/2 z-20">
                     <div className="swiper-3d-container w-full h-full">
                         <Swiper
                             key={`swiper-${selectedCategory}-${allEvents.length}`}
@@ -493,7 +488,7 @@ export default function Page() {
                     <>
                         {/* 🌤 UTOPIA BUTTONS */}
                         <button
-                            className="events-prev absolute left-60 top-1/2 -translate-y-1/2 z-30 
+                            className="events-prev absolute left-[15%] top-1/2 -translate-y-1/2 z-30 
               pointer-events-auto text-white 
               px-3 py-2 rounded-full 
               bg-cyan-500/20 backdrop-blur-sm
@@ -510,7 +505,7 @@ export default function Page() {
                         </button>
 
                         <button
-                            className="events-next absolute right-50 top-1/2 -translate-y-1/2 z-30 
+                            className="events-next absolute right-[15%] top-1/2 -translate-y-1/2 z-30 
               pointer-events-auto text-white 
               px-3 py-2 rounded-full 
               bg-cyan-500/20 backdrop-blur-sm

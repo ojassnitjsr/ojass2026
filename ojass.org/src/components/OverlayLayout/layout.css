@@ -50,7 +50,8 @@
     text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 15px #00ffff,
         0 0 20px #0080ff, 0 0 25px #ffffff;
     animation: text-glow 2s ease-in-out infinite alternate;
-    font-family: "Courier New", monospace;
+    /* font-family: "Courier New", monospace; */
+    font-family: "Oxanium", sans-serif;
     font-weight: bold;
     letter-spacing: 0.1em;
 }
