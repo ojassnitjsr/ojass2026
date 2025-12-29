@@ -18,7 +18,7 @@ export default function Home() {
     const handleImageLoad = () => {
         loadedCountRef.current += 1;
         if (loadedCountRef.current >= totalImages) {
-            setIsLoading(false);
+            setTimeout(() => setIsLoading(false), 1000);
         }
     };
 
