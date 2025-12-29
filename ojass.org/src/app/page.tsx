@@ -13,7 +13,7 @@ import ElectroBorder from "@/components/timeline/ElectroBorder";
 export default function Home() {
     const [isLoading, setIsLoading] = useState(true);
     const loadedCountRef = useRef(0);
-    const totalImages = 9;
+    const totalImages = 8;
 
     const handleImageLoad = () => {
         loadedCountRef.current += 1;
