@@ -319,9 +319,6 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
                                         <div className="w-2 h-2 bg-red-500/50" />
                                         <div className="w-2 h-2 bg-red-500/20" />
                                     </div>
-                                    <div className="absolute bottom-4 right-4 font-mono text-[10px] text-white/70 bg-black/60 px-2 py-1 border border-white/20">
-                                        IMG_SRC_RENDER // V.2.0
-                                    </div>
                                 </div>
                             </div>
 
@@ -707,9 +704,6 @@ function EventDetailsSection({
                     <h3 className="text-xl font-bold text-white flex items-center gap-3 border-b border-white/10 pb-2">
                         <FaFileAlt className={clsx(themeClasses.textColor)} />
                         Rules
-                        <span className="ml-auto text-[10px] font-mono text-gray-600 bg-gray-900 border border-gray-800 px-2 py-1">
-                            READ-ONLY
-                        </span>
                     </h3>
                     <ul className="grid gap-3">
                         {eventData.rules!.map((r, i) => (
@@ -745,9 +739,6 @@ function EventDetailsSection({
                             className={clsx(themeClasses.textColor)}
                         />
                         Details
-                        <span className="ml-auto text-[10px] font-mono text-gray-600 bg-gray-900 border border-gray-800 px-2 py-1">
-                            INFO_SEC
-                        </span>
                     </h3>
                     <div className="bg-black/40 border border-white/10 p-6 relative">
                         {/* Corner markers */}
