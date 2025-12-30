@@ -257,7 +257,7 @@ export const timelineData: TimelineData = {
             },
             {
                 id: 9,
-                title: "KURUKSHETRA QUALIFIERS",
+                title: "KURUKSHETRA - ROBO WARS (QUALIFIERS)",
                 location: "PARKING LOT",
                 coords: { x: 20, y: 50 },
                 start: new Date("2026-02-19T17:00:00"),
@@ -353,7 +353,7 @@ export const timelineData: TimelineData = {
             },
             {
                 id: 19,
-                title: "KURUKSHETRA FINALS",
+                title: "KURUKSHETRA - ROBO WARS (FINALS)",
                 location: "PARKING LOT",
                 coords: { x: 20, y: 80 },
                 start: new Date("2026-02-20T17:00:00"),
@@ -377,7 +377,7 @@ export const timelineData: TimelineData = {
             },
             {
                 id: 21,
-                title: "NO GROUND ZONE",
+                title: "NO GROUND ZONE - RC PLANE CONTEST",
                 location: "DOWNS GROUND",
                 coords: { x: 35, y: 15 },
                 start: new Date("2026-02-21T09:00:00"),
