@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import connectToDatabase from "@/lib/mongodb";
 import Event from "@/models/Event";
+import { Types } from "mongoose";
 
 export async function GET(req: Request, { params }: { params: Promise<{ eventId: string }> }) {
   await connectToDatabase();
   const { eventId } = await params;
-  const event = await Event.findById(eventId);
+  let event;
+  if(Types.ObjectId.isValid(eventId)) event = await Event.findById(eventId);
+  if (!event) event = await Event.findOne({ redirect: eventId });
   if (!event) return NextResponse.json({ error: "Event not found" }, { status: 404 });
   return NextResponse.json(event);
 }

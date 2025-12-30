@@ -69,7 +69,7 @@ const useEventThemeClasses = () => {
 // --- Main Component ---
 export default function EventPage({ params }: { params: { eventId: string } }) {
     const router = useRouter();
-    const eventId = params.eventId;
+    const eventSlug = params.eventId;
 
     const themeClasses = useEventThemeClasses();
     const { theme } = useTheme();
@@ -114,15 +114,15 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
 
     // --- Data fetching
     useEffect(() => {
-        if (!eventId) {
+        if (!eventSlug) {
             router.push("/events");
             return;
         }
 
-        const token = localStorage.getItem("token");
+        setLoading(true);
 
         // Fetch event
-        fetch(`/api/events/${eventId}`)
+        fetch(`/api/events/${eventSlug}`)
             .then((res) => {
                 if (!res.ok) throw new Error("Event not found");
                 return res.json();
@@ -135,10 +135,32 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
                 console.error("Failed to load event:", err);
                 router.push("/events");
             });
+    }, [eventSlug, router]);
+
+    useEffect(() => {
+        // Only run if event data fetched and _id available
+        if (!eventData?._id) return;
+
+        const token = localStorage.getItem("token");
+
+        // User data
+        try {
+            const userStr = localStorage.getItem("user");
+            if (userStr) {
+                const userData = JSON.parse(userStr);
+                setUser({
+                    paid: Boolean(userData.isPaid),
+                    events: userData.events || [],
+                });
+            }
+        } catch (err) {
+            console.error("User data parse error:", err);
+        }
 
         // Authenticated requests
         if (token) {
             const promises = [];
+            const eventId = eventData._id;
 
             // Registration status
             promises.push(
@@ -166,22 +188,8 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
             Promise.allSettled(promises).then(() =>
                 setUserStatusLoading(false),
             );
-
-            // User data
-            try {
-                const userStr = localStorage.getItem("user");
-                if (userStr) {
-                    const userData = JSON.parse(userStr);
-                    setUser({
-                        paid: Boolean(userData.isPaid),
-                        events: userData.events || [],
-                    });
-                }
-            } catch (err) {
-                console.error("User data parse error:", err);
-            }
         } else setUserStatusLoading(false);
-    }, [eventId, router]);
+    }, [eventData]);
 
     if (loading) {
         return (

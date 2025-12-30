@@ -139,7 +139,7 @@ export default function Page() {
                         name: event.name,
                         description: event.description || "",
                         img: event.img,
-                        redirect: `/events/${eventId}`, // Always use new format with event ID
+                        redirect: `/events/${event.redirect}`, // Always use new format with event ID
                         cardposition: "center",
                         category: event.organizer || "General",
                     };
