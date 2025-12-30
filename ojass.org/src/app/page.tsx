@@ -8,12 +8,11 @@ import Lenis from "lenis";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Loader from "@/components/Loader";
-import ElectroBorder from "@/components/timeline/ElectroBorder";
 
 export default function Home() {
     const [isLoading, setIsLoading] = useState(true);
     const loadedCountRef = useRef(0);
-    const totalImages = 8;
+    const totalImages = 4;
 
     const handleImageLoad = () => {
         loadedCountRef.current += 1;
@@ -433,8 +432,6 @@ export default function Home() {
                         width={imgDims.width || 1}
                         height={imgDims.height || 1}
                         className="max-w-none"
-                        priority
-                        onLoad={handleImageLoad}
                     />
                 </div>
             </div>
@@ -458,15 +455,13 @@ export default function Home() {
                         alt="Cave Inner"
                         fill
                         className="object-cover"
-                        priority
-                        onLoad={handleImageLoad}
                     />
                 </div>
 
                 <div
                     ref={title2Ref}
                     id="title2"
-                    className="absolute -top-[45vh] w-full h-[35vh]"
+                    className="absolute -top-[40vh] md:-top-[47vh] w-full h-[35vh]"
                     style={{
                         willChange: "transform",
                         pointerEvents: "none",
@@ -481,14 +476,12 @@ export default function Home() {
                         alt="Title 2"
                         fill
                         className="object-contain"
-                        priority
-                        onLoad={handleImageLoad}
                     />
                 </div>
 
                 <div
                     ref={secondScreenRef}
-                    className="absolute top-[150vh] left-1/2 -translate-x-1/2 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 px-4 p-4 rounded-xl"
+                    className="absolute top-[145vh] md:top-[152vh] left-1/2 -translate-x-1/2 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 px-4 p-4 rounded-xl"
                     id="secondScreen"
                     style={{
                         width: "100vw",
@@ -499,7 +492,7 @@ export default function Home() {
                     <iframe
                         src="https://www.youtube.com/embed/h1gpXrnNNMI"
                         title="OJASS 2026 Theme"
-                        className="aspect-video h-40 sm:h-60 md:max-h-80 m-2 sm:m-4 rounded-2xl"
+                        className="aspect-video h-40 sm:h-60 md:h-70 m-2 sm:m-4 rounded-2xl"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerPolicy="strict-origin-when-cross-origin"
                         allowFullScreen
@@ -526,8 +519,6 @@ export default function Home() {
                         width={imgDims.width || 1}
                         height={imgDims.height || 1}
                         className="max-w-none"
-                        priority
-                        onLoad={handleImageLoad}
                     />
                 </div>
             </div>
