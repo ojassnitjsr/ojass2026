@@ -232,7 +232,7 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
                     className="absolute inset-0 w-full h-full object-cover opacity-40 grayscale-[50%]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/90 backdrop-blur-[2px]" />
-                <div className="absolute inset-0 bg-[url('/events/eventbg.png')] bg-cover bg-center sm:h-screen h-[100vw] w-[100vh] origin-top-left top-0 left-full rotate-90 sm:w-screen sm:scale-95 sm:rotate-0 sm:origin-center sm:left-0" />
+                <div className={`absolute inset-0 bg-[url('/events/eventbg.png')] bg-cover bg-center sm:h-screen h-[100vw] w-[100vh] origin-top-left top-0 left-full rotate-90 sm:w-screen sm:scale-95 sm:rotate-0 sm:origin-center sm:left-0 ${isDystopia ? "hue-rotate-180" : ""}`} />
             </div>
 
             <Link

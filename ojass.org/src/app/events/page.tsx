@@ -5,7 +5,7 @@ import { gsap } from "gsap";
 import Image from "next/image";
 import { IoExitOutline, IoChevronDown } from "react-icons/io5";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+
 import { useEffect, useRef, useState } from "react";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -27,7 +27,7 @@ interface CardData {
 
 export default function Page() {
     const { theme } = useTheme();
-    const router = useRouter();
+
     const isDystopia = theme === "dystopia";
     const containerRef = useRef<HTMLDivElement>(null);
     const [allEvents, setAllEvents] = useState<CardData[]>([]);
@@ -457,15 +457,10 @@ export default function Page() {
                             {allEvents.map((card) => (
                                 <SwiperSlide key={card.id}>
                                     <div className="w-full h-full flex items-center justify-center">
-                                        <div
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                // Navigate to event detail page
-                                                if (card.redirect) {
-                                                    router.push(card.redirect);
-                                                }
-                                            }}
-                                            className="cursor-pointer">
+                                        <Link
+                                            href={card.redirect}
+                                            onClick={(e) => e.stopPropagation()}
+                                            className="cursor-pointer block">
                                             <div className="card-wrap w-[260px] md:w-[320px] lg:w-[360px] h-full">
                                                 <EventCard
                                                     id={card.id}
@@ -476,7 +471,7 @@ export default function Page() {
                                                     img={card.img}
                                                 />
                                             </div>
-                                        </div>
+                                        </Link>
                                     </div>
                                 </SwiperSlide>
                             ))}
