@@ -109,7 +109,7 @@ export default function HomePhone() {
                 <motion.div
                     style={{ filter: isDystopia ? "hue-rotate(180deg)" : "hue-rotate(0deg)", }}
                     id="title"
-                    className="fixed top-[30%] w-full h-[35vh] z-10 pointer-events-none"
+                    className="fixed top-[20%] w-full h-[35vh] z-10 pointer-events-none"
                 >
                     <Image
                         src={isDystopia ? "/text-main-dys-1.png" : "/text-main-eut-1.png"}
@@ -136,6 +136,9 @@ export default function HomePhone() {
                         width={imgDims.width || 1}
                         height={imgDims.height || 1}
                         className="max-w-none"
+                        style={{
+                            objectPosition: "center top",
+                        }}
                     />
                 </div>
             </div>
@@ -150,11 +153,12 @@ export default function HomePhone() {
                     height: '100dvh'
                 }}>
 
-                {/* Cave Inner */}
+                {/* Cave Inner - positioned to connect with bottom segment from Screen 1 */}
                 <div
-                    className="absolute -bottom-[2vh] -left-[2vw]"
+                    className="absolute -left-[2vw]"
                     id="cave-inner"
                     style={{
+                        top: "0px",
                         width: "104vw",
                         height: "104vh",
                         zIndex: 1,
@@ -163,7 +167,7 @@ export default function HomePhone() {
                         src={isDystopia ? "/homelayer/caveinner_dys.png" : "/homelayer/caveinner.png"}
                         alt="Cave Inner"
                         fill
-                        className="object-cover"
+                        className="object-cover object-top"
                         priority
                     />
                 </div>
@@ -207,7 +211,7 @@ export default function HomePhone() {
                     </div>
                 </div>
 
-                {/* Bottom Segment 2 (Cave top) */}
+                {/* Bottom Segment 2 (Cave Overlay) - Creates the rocky frame at top of cave */}
                 <div
                     className="absolute left-0 overflow-hidden flex justify-center items-end"
                     id="cave-outer-sec2"

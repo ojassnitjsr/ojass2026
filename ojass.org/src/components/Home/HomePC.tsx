@@ -425,8 +425,8 @@ export default function HomePC() {
                         zIndex: 5,
                     }}>
                     <iframe
-                        src="https://www.youtube.com/embed/h1gpXrnNNMI"
-                        title="OJASS 2026 Theme"
+                        src="https://www.youtube.com/embed/lzJDI164T-k"
+                        title="OJASS 2025 : After Movie"
                         className="aspect-video h-40 sm:h-60 md:h-70 m-2 sm:m-4 rounded-2xl"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         referrerPolicy="strict-origin-when-cross-origin"
