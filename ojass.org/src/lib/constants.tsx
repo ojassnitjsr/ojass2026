@@ -190,7 +190,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 10, y: 20 },
                 start: new Date("2026-02-19T09:00:00"),
                 end: new Date("2026-02-19T12:00:00"),
-                desc: "The ultimate aptitude test. Challenge your logical and scientific reasoning against the best minds.",
+                desc: "A competitive academic examination that assesses aptitude in mathematics and science. Evaluates conceptual understanding, logic, and problem-solving skills through time-bound objective testing.",
             },
             {
                 id: 2,
@@ -199,7 +199,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 30, y: 15 },
                 start: new Date("2026-02-19T09:00:00"),
                 end: new Date("2026-02-19T12:00:00"),
-                desc: "Digital art competition. Create stunning visuals and designs within a time limit.",
+                desc: "A fast-paced UI/UX hackathon where teams design and build complete frontend interfaces from scratch. Combines design thinking and technical execution for responsive, user-focused results.",
             },
             {
                 id: 3,
@@ -208,7 +208,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 50, y: 30 },
                 start: new Date("2026-02-19T09:00:00"),
                 end: new Date("2026-02-20T21:00:00"),
-                desc: "36-hour hackathon. Build innovative software solutions for real-world scientific problems.",
+                desc: "A 36-hour offline hackathon where teams design and build fully functional web applications. Emphasizes teamwork, problem-solving, and practical development skills for real-world challenges.",
             },
             {
                 id: 4,
@@ -217,7 +217,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 70, y: 20 },
                 start: new Date("2026-02-19T09:00:00"),
                 end: new Date("2026-02-19T12:00:00"),
-                desc: "Clash of metal. Combat robots fight for survival in a high-stakes arena.",
+                desc: "An all-terrain robotics challenge testing mechanical design and control across rugged obstacle courses. Emphasizes engineering innovation, reliability, and adaptability under competitive pressure.",
             },
             {
                 id: 5,
@@ -226,7 +226,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 90, y: 30 },
                 start: new Date("2026-02-19T10:30:00"),
                 end: new Date("2026-02-19T13:30:00"),
-                desc: "Analyze complex business scenarios and present strategic solutions to industry experts.",
+                desc: "A competitive data analytics challenge solving real-world business problems with practical datasets. Teams generate insights and propose data-driven solutions through analytical rigor and innovation.",
             },
             {
                 id: 6,
@@ -235,7 +235,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 80, y: 60 },
                 start: new Date("2026-02-19T11:00:00"),
                 end: new Date("2026-02-19T14:30:00"),
-                desc: "Strategic warfare on 64 squares. Checkmate your opponents in this classic battle of wits.",
+                desc: "A competitive chess tournament combining strategic depth with structured progression from online qualifiers to over-the-board finals. Emphasizes analytical thinking, discipline, and sportsmanship.",
             },
             {
                 id: 7,
@@ -244,7 +244,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 60, y: 50 },
                 start: new Date("2026-02-19T14:00:00"),
                 end: new Date("2026-02-19T17:00:00"),
-                desc: "Structural engineering challenge. Design and build stable structures under constraints.",
+                desc: "A hands-on engineering challenge applying structural concepts to design and construct functional bridges. Tests creativity, precision, and problem-solving with limited materials under time constraints.",
             },
             {
                 id: 8,
@@ -253,7 +253,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 40, y: 60 },
                 start: new Date("2026-02-19T14:30:00"),
                 end: new Date("2026-02-19T17:00:00"),
-                desc: "Innovate for rural India. Ideate solutions for agriculture, healthcare, and education.",
+                desc: "An innovation-driven ideathon designing practical technology solutions for rural problems. Teams advance through idea presentation and prototype stages, emphasizing feasibility and social impact.",
             },
             {
                 id: 9,
@@ -262,7 +262,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 20, y: 50 },
                 start: new Date("2026-02-19T17:00:00"),
                 end: new Date("2026-02-19T21:00:00"),
-                desc: "The e-sports battle begins. Qualifiers for the main gaming championship.",
+                desc: "A high-intensity robotics combat challenge with remote-controlled fighting robots across weight categories. Tests mechanical design, control systems, weapon integration, and strategic aggression.",
             },
         ],
     },
@@ -277,7 +277,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 10, y: 20 },
                 start: new Date("2026-02-20T09:00:00"),
                 end: new Date("2026-02-20T13:00:00"),
-                desc: "Autonomous line-follower robots race against time and obstacles.",
+                desc: "An autonomous robotics challenge with line-following robots navigating complex tracks. Evaluated on path optimization, speed, and reliability through sensor integration and algorithmic control.",
             },
             {
                 id: 11,
@@ -286,7 +286,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 30, y: 30 },
                 start: new Date("2026-02-20T09:00:00"),
                 end: new Date("2026-02-20T12:00:00"),
-                desc: "A vibrant showcase of culture, food, crafts, and creativity.",
+                desc: "A lively quiz celebrating Indian and global pop culture across music, entertainment, and arts. Features diverse quiz formats testing knowledge depth and quick thinking in an engaging atmosphere.",
             },
             {
                 id: 12,
@@ -295,7 +295,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 70, y: 30 },
                 start: new Date("2026-02-20T09:00:00"),
                 end: new Date("2026-02-20T11:00:00"),
-                desc: "Radio-controlled water bots race across the lake surface.",
+                desc: "A fast-paced aquatic robotics challenge with electronic boats navigating zigzag watercourses. Tests control, stability, and engineering efficiency through precision maneuvering and speed.",
             },
             {
                 id: 13,
@@ -304,7 +304,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 90, y: 20 },
                 start: new Date("2026-02-20T09:00:00"),
                 end: new Date("2026-02-20T21:00:00"),
-                desc: "Photography and storytelling exhibition contest.",
+                desc: "A creative photography challenge transforming themes into compelling visual narratives. Combines technical photography with storytelling to produce cohesive, time-limited photo sequences.",
             },
             {
                 id: 14,
@@ -313,7 +313,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 100, y: 50 },
                 start: new Date("2026-02-20T10:30:00"),
                 end: new Date("2026-02-20T12:30:00"),
-                desc: "High-speed process simulation and modeling contest.",
+                desc: "A high-intensity technical challenge testing practical MATLAB expertise through progressive problem-solving. Competitors build and simulate real-world digital communication systems with engineering rigor.",
             },
             {
                 id: 15,
@@ -322,7 +322,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 80, y: 60 },
                 start: new Date("2026-02-20T11:00:00"),
                 end: new Date("2026-02-20T13:00:00"),
-                desc: "Underwater autonomous robot navigation and tracing challenge.",
+                desc: "An advanced underwater robotics challenge with compact waterproof robots navigating controlled pool arenas. Tests maneuverability, precision, and autonomous capabilities in dynamic aquatic environments.",
             },
             {
                 id: 16,
@@ -331,7 +331,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 60, y: 70 },
                 start: new Date("2026-02-20T12:30:00"),
                 end: new Date("2026-02-20T14:30:00"),
-                desc: "Strategic bidding war. Build the dream team with limited virtual budget.",
+                desc: "A strategic simulation experiencing the thrill of building competitive T20 teams through real-time auctions. Manages virtual budgets and evaluates player statistics for calculated bidding decisions.",
             },
             {
                 id: 17,
@@ -340,7 +340,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 50, y: 50 },
                 start: new Date("2026-02-20T11:00:00"),
                 end: new Date("2026-02-20T14:30:00"),
-                desc: "Competitive coding marathon. Solve algorithmic challenges against the clock.",
+                desc: "A high-intensity competitive programming contest challenging teams to solve algorithmic problems. Uses ICPC-style scoring to test logic, efficiency, and time management under offline-style discipline.",
             },
             {
                 id: 18,
@@ -349,7 +349,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 20, y: 50 },
                 start: new Date("2026-02-20T15:00:00"),
                 end: new Date("2026-02-20T17:00:00"),
-                desc: "Virtual football championship using EA Sports FC 24.",
+                desc: "A competitive one-on-one football gaming event testing strategic decision-making and in-game adaptability. Players compete on standardized settings emphasizing sportsmanship and skill-based performance.",
             },
             {
                 id: 19,
@@ -358,7 +358,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 20, y: 80 },
                 start: new Date("2026-02-20T17:00:00"),
                 end: new Date("2026-02-20T21:00:00"),
-                desc: "The final showdown. Top gamers compete for the championship title.",
+                desc: "The final combat showdown of remote-controlled fighting robots competing for championship glory. Battles test mechanical design, weapon systems, and strategic combat under intense competitive pressure.",
             },
         ],
     },
@@ -373,7 +373,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 15, y: 25 },
                 start: new Date("2026-02-21T09:00:00"),
                 end: new Date("2026-02-21T13:00:00"),
-                desc: "Building the future. Develop AI models to solve complex datasets.",
+                desc: "An applied AI challenge using Python to build, tune, and evaluate machine learning models on real datasets. Emphasizes practical AI skills, data preprocessing, algorithm selection, and performance benchmarking.",
             },
             {
                 id: 21,
@@ -382,7 +382,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 35, y: 15 },
                 start: new Date("2026-02-21T09:00:00"),
                 end: new Date("2026-02-21T11:00:00"),
-                desc: "Drone obstacle course. Pilots maneuver through tight spaces without touching ground.",
+                desc: "An aerial engineering challenge designing and operating RC aircraft to maximize payload capacity and drop accuracy. Evaluated through design reporting and flight rounds testing performance and precision.",
             },
             {
                 id: 22,
@@ -391,7 +391,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 55, y: 25 },
                 start: new Date("2026-02-21T09:00:00"),
                 end: new Date("2026-02-21T12:00:00"),
-                desc: "Pitch your billion-dollar idea to investors and industry leaders.",
+                desc: "An entrepreneurial pitching platform presenting innovative startup ideas with structured business models. Teams progress from pitch deck submissions to live presentations evaluated by judges and industry experts.",
             },
             {
                 id: 23,
@@ -400,7 +400,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 75, y: 15 },
                 start: new Date("2026-02-21T13:00:00"),
                 end: new Date("2026-02-21T21:00:00"),
-                desc: "Robots playing football. Fast-paced 1v1 and 2v2 bot matches.",
+                desc: "A competitive robotics sport where teams design robots to maneuver balls and score goals in head-to-head arenas. Tests robot control, mechanical design, and precision under strict constraints.",
             },
             {
                 id: 24,
@@ -409,7 +409,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 85, y: 55 },
                 start: new Date("2026-02-21T12:30:00"),
                 end: new Date("2026-02-21T14:30:00"),
-                desc: "Tactical shooter tournament. 5v5 teams compete for dominance.",
+                desc: "A high-intensity tactical shooter tournament challenging teams in competitive 5v5 format. Delivers professional BYOC esports experience emphasizing strategy, coordination, and mechanical skill.",
             },
             {
                 id: 25,
@@ -418,7 +418,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 65, y: 65 },
                 start: new Date("2026-02-21T14:30:00"),
                 end: new Date("2026-02-21T16:30:00"),
-                desc: "Short film making and scriptwriting competition for aspiring fillmmakers.",
+                desc: "A fast-paced short film challenge where teams conceptualize, shoot, and edit original films within defined timeframes. Celebrates creativity, technical excellence, and emotional resonance through pure storytelling.",
             },
             {
                 id: 26,
@@ -427,7 +427,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 45, y: 75 },
                 start: new Date("2026-02-21T16:30:00"),
                 end: new Date("2026-02-21T18:30:00"),
-                desc: "Hardware debugging challenge. Diagnose and fix broken electronic circuits.",
+                desc: "A quality-focused innovation challenge redesigning existing products to enhance performance and user experience. Teams apply quality improvement principles to propose structured, value-driven solutions.",
             },
             {
                 id: 27,
@@ -436,7 +436,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 25, y: 65 },
                 start: new Date("2026-02-21T18:30:00"),
                 end: new Date("2026-02-21T21:00:00"),
-                desc: "Mock TATA Crucible Quiz. The ultimate business and cognitive quiz.",
+                desc: "A high-intensity business quiz simulating premier corporate competition format and rigor. Teams progress through written preliminaries to on-stage finals testing business awareness and analytical thinking.",
             },
             {
                 title: "MAZE MARATHON",
@@ -445,7 +445,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 50, y: 45 },
                 start: new Date("2026-02-21T19:00:00"),
                 end: new Date("2026-02-21T21:00:00"),
-                desc: "Micromouse competition. Autonomous bots solve complex mazes.",
+                desc: "An autonomous robotics challenge with intelligent robots navigating complex mazes to reach centers in minimum time. Tests path-planning algorithms, sensor integration, and real-time decision-making.",
             },
         ],
     },
@@ -460,7 +460,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 20, y: 20 },
                 start: new Date("2026-02-22T09:00:00"),
                 end: new Date("2026-02-22T11:00:00"),
-                desc: "High-speed FPV drone racing track for professional pilots.",
+                desc: "A high-speed aerial racing challenge piloting drones through demanding obstacle courses against the clock. Tests precision flying, control, and strategic navigation across qualifying and final rounds.",
             },
             {
                 id: 30,
@@ -469,7 +469,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 40, y: 30 },
                 start: new Date("2026-02-22T09:00:00"),
                 end: new Date("2026-02-22T11:00:00"),
-                desc: "Battle Royale survival tournament. Winner takes all.",
+                desc: "A competitive battle royale gaming event challenging strategy, teamwork, and decision-making. Teams compete through qualifiers and finals with structured scoring based on placement and eliminations.",
             },
             {
                 id: 31,
@@ -478,7 +478,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 60, y: 20 },
                 start: new Date("2026-02-22T09:00:00"),
                 end: new Date("2026-02-22T12:00:00"),
-                desc: "Market simulation and strategy game. Dominate the virtual economy.",
+                desc: "A strategy-driven challenge building and managing complete business models from branding to operations. Teams design workflows, pricing strategies, and respond to real-time business crises.",
             },
             {
                 id: 32,
@@ -487,7 +487,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 80, y: 30 },
                 start: new Date("2026-02-22T09:00:00"),
                 end: new Date("2026-02-22T13:00:00"),
-                desc: "Fluid dynamics and mechanics challenge for engineering minds.",
+                desc: "A hands-on automation challenge designing smart workflows using no-code and low-code automation tools. Teams integrate APIs and create efficient multi-step automated systems through live demonstrations.",
             },
             {
                 id: 33,
@@ -496,7 +496,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 80, y: 60 },
                 start: new Date("2026-02-22T11:00:00"),
                 end: new Date("2026-02-22T13:30:00"),
-                desc: "Gripper bot challenge. Robots must pick and place objects with precision.",
+                desc: "A hands-on robotics challenge with manually controlled bots gripping objects, navigating obstacles, and completing precision tasks. Evaluated on mechanical design, control accuracy, and time efficiency.",
             },
             {
                 id: 34,
@@ -505,7 +505,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 60, y: 70 },
                 start: new Date("2026-02-22T12:30:00"),
                 end: new Date("2026-02-22T14:30:00"),
-                desc: "Engineering design analysis competition using industry-standard software.",
+                desc: "A technical design challenge testing skills in 3D modeling, drafting, and finite element analysis. Teams create precise mechanical models and evaluate structural performance using industry-standard software.",
             },
             {
                 id: 35,
@@ -514,7 +514,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 40, y: 60 },
                 start: new Date("2026-02-22T14:30:00"),
                 end: new Date("2026-02-22T16:30:00"),
-                desc: "Filmmaking and cinematography showcase under the stars.",
+                desc: "An on-the-spot short-form video challenge capturing the fest's energy through creative reels. Teams document events and transform highlights into engaging visual stories within defined timeframes.",
             },
 
             {
@@ -524,7 +524,7 @@ export const timelineData: TimelineData = {
                 coords: { x: 20, y: 70 },
                 start: new Date("2026-02-22T14:30:00"),
                 end: new Date("2026-02-22T16:30:00"),
-                desc: "Literary and creative writing event. Unleash the writer within.",
+                desc: "A creative storytelling challenge testing imagination, adaptability, and narrative skills through engaging rounds. Teams craft stories using visual prompts, questions, and emotional twists with unexpected elements.",
             },
         ],
     },

@@ -476,6 +476,16 @@ export default function Page() {
                                 </SwiperSlide>
                             ))}
                         </Swiper>
+
+                        {/* Event Counter Display */}
+                        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 z-40 pointer-events-none">
+                            <div className={`px-6 py-3 rounded-full backdrop-blur-md border-2 font-mono text-lg font-bold ${isDystopia
+                                ? "bg-[#ee8f59]/20 border-[#ee8f59]/40 text-[#ee8f59] shadow-lg shadow-[#ee8f59]/20"
+                                : "bg-cyan-500/20 border-cyan-400/40 text-cyan-300 shadow-lg shadow-cyan-500/20"
+                                }`}>
+                                {selectedEventIndex + 1} / {allEvents.length}
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -485,10 +495,13 @@ export default function Page() {
                         <button
                             className="events-prev absolute left-[15%] top-1/2 -translate-y-1/2 z-30 
               pointer-events-auto text-white 
-              px-3 py-2 rounded-full 
-              bg-cyan-500/20 backdrop-blur-sm
+              px-4 py-4 rounded-full 
+              bg-cyan-500/60 backdrop-blur-md
+              border-2 border-cyan-300/80
+              shadow-xl shadow-cyan-400/50
               transition-all duration-300 ease-in-out
-              hover:bg-cyan-500/40 hover:scale-105 active:scale-95
+              hover:bg-cyan-400/80 hover:scale-110 hover:shadow-2xl hover:shadow-cyan-400/70
+              active:scale-95
               hidden md:block"
                             aria-label="Previous">
                             <Image
@@ -502,10 +515,13 @@ export default function Page() {
                         <button
                             className="events-next absolute right-[15%] top-1/2 -translate-y-1/2 z-30 
               pointer-events-auto text-white 
-              px-3 py-2 rounded-full 
-              bg-cyan-500/20 backdrop-blur-sm
+              px-4 py-4 rounded-full 
+              bg-cyan-500/60 backdrop-blur-md
+              border-2 border-cyan-300/80
+              shadow-xl shadow-cyan-400/50
               transition-all duration-300 ease-in-out
-              hover:bg-cyan-500/40 hover:scale-105 active:scale-95
+              hover:bg-cyan-400/80 hover:scale-110 hover:shadow-2xl hover:shadow-cyan-400/70
+              active:scale-95
               hidden md:block"
                             aria-label="Next">
                             <Image
@@ -522,10 +538,13 @@ export default function Page() {
                         <button
                             className="events-prev absolute left-60 top-1/2 -translate-y-1/2 z-30 
               pointer-events-auto text-white 
-              px-3 py-2 rounded-full 
-              bg-[#ee8f59]/10 backdrop-blur-sm
+              px-4 py-4 rounded-full 
+              bg-[#ee8f59]/50 backdrop-blur-md
+              border-3 border-[#ff9d6e]
+              shadow-2xl shadow-[#ee8f59]/80
               transition-all duration-300 ease-in-out
-              hover:bg-[#ee8f59]/30 hover:scale-105 active:scale-95
+              hover:bg-[#ee8f59]/70 hover:scale-110 hover:shadow-2xl hover:shadow-[#ff9d6e]
+              active:scale-95
               hidden md:block"
                             aria-label="Previous">
                             <Image
@@ -539,10 +558,13 @@ export default function Page() {
                         <button
                             className="events-next absolute right-50 top-1/2 -translate-y-1/2 z-30 
               pointer-events-auto text-white 
-              px-3 py-2 rounded-full 
-              bg-[#ee8f59]/10 backdrop-blur-sm
+              px-4 py-4 rounded-full 
+              bg-[#ee8f59]/50 backdrop-blur-md
+              border-3 border-[#ff9d6e]
+              shadow-2xl shadow-[#ee8f59]/80
               transition-all duration-300 ease-in-out
-              hover:bg-[#ee8f59]/30 hover:scale-105 active:scale-95
+              hover:bg-[#ee8f59]/70 hover:scale-110 hover:shadow-2xl hover:shadow-[#ff9d6e]
+              active:scale-95
               hidden md:block"
                             aria-label="Next">
                             <Image

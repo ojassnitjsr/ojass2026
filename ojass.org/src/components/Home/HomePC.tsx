@@ -306,11 +306,11 @@ export default function HomePC() {
 
                 <div
                     ref={layer3Ref}
-                    className="fixed bottom-[5vh] -left-[5vw] w-full"
+                    className="fixed bottom-[18vh] left-[15vw] w-full"
                     id="layer3"
                     style={{
-                        width: "110vw",
-                        height: "72vh",
+                        width: "90vw",
+                        height: "60vh",
                         transformStyle: "preserve-3d",
                         willChange: "transform",
                     }}
@@ -328,7 +328,7 @@ export default function HomePC() {
                 <div
                     ref={titleRef}
                     id="title"
-                    className="fixed top-[30%] w-full h-[35vh]"
+                    className="fixed top-[20%] w-full h-[35vh]"
                     style={{
                         willChange: "transform",
                         pointerEvents: "none",
@@ -339,7 +339,8 @@ export default function HomePC() {
                     }}
                 >
                     <Image
-                        src={isDystopia ? "/text-main-dys-1.png" : "/text-main-eut-1.png"}
+                        // src={!isDystopia ? "/text-main-dys.png" : "/text-main-eut.png"}
+                        src="/text-main-dys.png"
                         alt="Title"
                         fill
                         className="object-contain"
@@ -407,7 +408,7 @@ export default function HomePC() {
                     }}
                 >
                     <Image
-                        src={isDystopia ? "/text-main-dys-1.png" : "/text-main-eut-1.png"}
+                        src="/text-main-dys.png"
                         alt="Title 2"
                         fill
                         className="object-contain"

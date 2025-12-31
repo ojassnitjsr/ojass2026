@@ -112,7 +112,7 @@ export default function HomePhone() {
                     className="fixed top-[20%] w-full h-[35vh] z-10 pointer-events-none"
                 >
                     <Image
-                        src={isDystopia ? "/text-main-dys-1.png" : "/text-main-eut-1.png"}
+                        src="/text-main-dys.png"
                         alt="Title"
                         fill
                         className="object-contain"
@@ -182,7 +182,7 @@ export default function HomePhone() {
                         zIndex: 2,
                     }}>
                     <Image
-                        src={isDystopia ? "/text-main-dys-1.png" : "/text-main-eut-1.png"}
+                        src="/text-main-dys.png"
                         alt="Title 2"
                         fill
                         className="object-contain"

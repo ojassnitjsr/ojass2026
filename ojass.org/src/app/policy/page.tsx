@@ -122,7 +122,7 @@ const POLICIES = [
                     <div className="pl-4 border-l-2 border-white/10 space-y-1">
                         <p>For queries or concerns, reach out to the OJASS team at:</p>
                         <p><strong className="text-white">Email:</strong> ojass@nitjsr.ac.in</p>
-                        <p><strong className="text-white">Phone:</strong> +91-8863832703</p>
+                        <p><strong className="text-white">Phone:</strong> 83406 71871</p>
                         <p><strong className="text-white">Location:</strong> NIT Jamshedpur, Adityapur, Jamshedpur, Jharkhand - 831014</p>
                     </div>
                 </div>
