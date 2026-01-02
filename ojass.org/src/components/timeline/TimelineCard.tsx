@@ -42,7 +42,7 @@ function TimelineCard({
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                className="min-h-screen bg-transparent absolute inset-0">
+                className="min-h-screen absolute inset-0">
                 <EventMap selectedDay={selectedDay} />
             </motion.div>
         </AnimatePresence>

@@ -103,18 +103,18 @@ const EventDetailsContent = ({
                                 </div>
                                 <div className="font-mono text-white text-sm">
                                     {event.end.getDate() !==
-                                    event.start.getDate() ? (
+                                        event.start.getDate() ? (
                                         <div className="flex flex-col">
                                             <span>
                                                 {event.end.toLocaleDateString(
                                                     [],
-                                                    {month: "short", day: "numeric"},
+                                                    { month: "short", day: "numeric" },
                                                 )}
                                             </span>
                                             <span>
                                                 {event.end.toLocaleTimeString(
                                                     [],
-                                                    {hour: "2-digit", minute: "2-digit"},
+                                                    { hour: "2-digit", minute: "2-digit" },
                                                 )}
                                             </span>
                                         </div>
@@ -140,11 +140,10 @@ const EventDetailsContent = ({
 
                         {/* Tentative Warning */}
                         <div
-                            className={`mt-6 pt-4 border-t border-dashed  text-[9px] uppercase tracking-widest opacity-50 ${
-                                isDystopian
+                            className={`mt-6 pt-4 border-t border-dashed  text-[9px] uppercase tracking-widest opacity-50 ${isDystopian
                                     ? "border-yellow-500/20 text-yellow-500"
                                     : "border-cyan-500/20 text-cyan-500"
-                            }`}>
+                                }`}>
                             * All dates and times are tentative
                         </div>
                     </div>
@@ -290,38 +289,33 @@ const EventMap = ({ selectedDay }: { selectedDay: DayKey }) => {
             {/* --- Header --- */}
             <header className="relative w-full p-6 flex justify-end items-start pointer-events-none z-20">
                 <div
-                    className={`flex flex-col items-end border-r-2 pr-4 ${
-                        !isDystopian
+                    className={`flex flex-col items-end border-r-2 pr-4 ${!isDystopian
                             ? "border-cyan-500/30"
                             : "border-yellow-500/30"
-                    }`}>
+                        }`}>
                     <div className="flex items-center gap-2 mb-2">
                         <div
-                            className={`w-2 h-2 rounded-full animate-pulse ${
-                                !isDystopian ? "bg-cyan-400" : "bg-yellow-400"
-                            }`}
+                            className={`w-2 h-2 rounded-full animate-pulse ${!isDystopian ? "bg-cyan-400" : "bg-yellow-400"
+                                }`}
                         />
                         <div
-                            className={`text-[10px] font-bold tracking-[0.2em] ${
-                                !isDystopian
+                            className={`text-[10px] font-bold tracking-[0.2em] ${!isDystopian
                                     ? "text-cyan-400"
                                     : "text-yellow-400"
-                            }`}>
+                                }`}>
                             SYS.TIME // {isDystopian ? "DYSTOPIA" : "UTOPIA"}
                         </div>
                     </div>
 
                     <div
-                        className={`text-4xl md:text-5xl font-black tabular-nums tracking-tighter leading-none mb-1 drop-shadow-[0_0_15px_currentColor] ${
-                            !isDystopian ? "text-white" : "text-white"
-                        }`}>
+                        className={`text-4xl md:text-5xl font-black tabular-nums tracking-tighter leading-none mb-1 drop-shadow-[0_0_15px_currentColor] ${!isDystopian ? "text-white" : "text-white"
+                            }`}>
                         {now.toLocaleTimeString([], { hour12: false })}
                     </div>
 
                     <div
-                        className={`text-sm font-mono tracking-widest uppercase opacity-80 ${
-                            !isDystopian ? "text-cyan-300" : "text-yellow-300"
-                        }`}>
+                        className={`text-sm font-mono tracking-widest uppercase opacity-80 ${!isDystopian ? "text-cyan-300" : "text-yellow-300"
+                            }`}>
                         {now.toLocaleDateString([], {
                             weekday: "short",
                             day: "numeric",
@@ -330,9 +324,8 @@ const EventMap = ({ selectedDay }: { selectedDay: DayKey }) => {
                         })}
                     </div>
                     <div
-                        className={`mt-2 text-[8px] tracking-[0.3em] opacity-50 ${
-                            !isDystopian ? "text-cyan-500" : "text-yellow-500"
-                        }`}>
+                        className={`mt-2 text-[8px] tracking-[0.3em] opacity-50 ${!isDystopian ? "text-cyan-500" : "text-yellow-500"
+                            }`}>
                         COORD: {now.getTime().toString().slice(-6)}
                     </div>
                 </div>
@@ -400,7 +393,8 @@ const EventMap = ({ selectedDay }: { selectedDay: DayKey }) => {
                 {/* Details Panel */}
                 <div
                     className={`
-                    fixed md:static inset-0 z-40 
+                    fixed md:static z-40 
+                    left-0 right-0 top-0 bottom-auto h-[50vh] md:inset-0 md:h-auto
                     md:border-l md:border-white/5 md:bg-black/20
                     transition-all duration-500 transform
                     ${selectedEventId
