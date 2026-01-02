@@ -105,15 +105,6 @@ export default function LoginPage() {
                             />
                         )}
                     </div>
-
-                    {/* Footer */}
-                    <div
-                        className={cn(
-                            "absolute bottom-[-60px] text-xs tracking-[0.3em] font-mono animate-pulse",
-                            theme.textColorDim,
-                        )}>
-                        SYSTEM_STATUS: ONLINE // SECURE_CONNECTION_ESTABLISHED
-                    </div>
                 </div>
             </div>
         </div>

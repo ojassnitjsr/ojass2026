@@ -520,13 +520,13 @@ export default function Page() {
                     <div className="swiper-3d-container w-full h-full">
                         <Swiper
                             key={`swiper-${selectedCategory}-${allEvents.length}`}
-                            loop={allEvents.length > 4}
+                            loop={allEvents.length > 1}
                             spaceBetween={80}
                             slidesPerView={allEvents.length >= 3 ? 3 : allEvents.length}
                             centeredSlides={true}
                             initialSlide={selectedEventIndex}
                             onSlideChange={(swiper) =>
-                                setSelectedEventIndex(allEvents.length > 4 ? swiper.realIndex : swiper.activeIndex)
+                                setSelectedEventIndex(swiper.realIndex)
                             }
                             watchSlidesProgress={true}
                             onSwiper={(swiper) => {

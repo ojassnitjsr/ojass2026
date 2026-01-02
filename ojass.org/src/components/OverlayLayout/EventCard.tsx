@@ -81,7 +81,7 @@ export default function EventCard({ name, img }: EventCardProps) {
             {/* Event Name - Top Section */}
             <div
                 ref={textContainerRef}
-                className="absolute top-4 z-20 px-[20px] h-[75px] w-full flex items-end justify-center overflow-hidden text-center"
+                className="absolute top-1 z-20 px-[20px] h-[75px] w-full flex items-end justify-center overflow-hidden text-center"
                 style={{
                     textShadow: theme === "utopia"
                         ? "0 0 20px rgba(0, 255, 255, 0.8)"

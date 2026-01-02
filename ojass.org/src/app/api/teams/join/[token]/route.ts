@@ -19,9 +19,16 @@ export async function POST(
     // Verify authentication and payment
     const authResult = await requireAuthAndPayment(request);
     if (!authResult.success) {
+      let status = 401;
+      if (authResult.error === 'Payment required to register for events') {
+        status = 402;
+      } else if (authResult.error === 'Email verification required') {
+        status = 403;
+      }
+
       return NextResponse.json(
         { error: authResult.error },
-        { status: authResult.error === 'Payment required to register for events' ? 402 : 401 }
+        { status }
       );
     }
 

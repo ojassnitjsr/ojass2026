@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export default function Profile({ profileData }: { profileData: any }) {
+export default function Profile({ profileData, onProfileUpdate }: { profileData: any; onProfileUpdate?: (data: any) => void }) {
     const theme = useLoginTheme();
     const [idCardImageUrl, setIdCardImageUrl] = useState<string | null>(
         profileData?.idCardImageUrl || null,
@@ -126,6 +126,10 @@ export default function Profile({ profileData }: { profileData: any }) {
             user.idCardCloudinaryId = uploadedFile.cloudinaryId;
             localStorage.setItem("user", JSON.stringify(user));
 
+            if (onProfileUpdate) {
+                onProfileUpdate(user);
+            }
+
             // Clear success message after 3 seconds
             setTimeout(() => {
                 setUploadSuccess(false);
@@ -171,6 +175,9 @@ export default function Profile({ profileData }: { profileData: any }) {
                 user.idCardImageUrl = null;
                 user.idCardCloudinaryId = null;
                 localStorage.setItem("user", JSON.stringify(user));
+                if (onProfileUpdate) {
+                    onProfileUpdate(user);
+                }
                 setUploadSuccess(true); // Reusing success state to show a message? Logic below might need check.
                 // Actually let's not reuse uploadSuccess for delete as it might say "ID card uploaded successfully!"
             }

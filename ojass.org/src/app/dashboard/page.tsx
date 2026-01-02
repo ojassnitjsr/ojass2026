@@ -295,7 +295,16 @@ export default function OjassDashboard() {
                                 onRegisterNow={() => setActiveTab("events")}
                                 onDownloadReceipt={() => { }}>
                                 <div className="h-[calc(90vh-240px)] lg:h-[62vh] overflow-y-auto scrollbar-none">
-                                    <Profile profileData={profileData} />
+                                    <Profile
+                                        profileData={profileData}
+                                        onProfileUpdate={(updatedUser: any) => {
+                                            setProfileData((prev: any) => ({
+                                                ...prev,
+                                                idCardImageUrl: updatedUser.idCardImageUrl,
+                                                idCardCloudinaryId: updatedUser.idCardCloudinaryId
+                                            }));
+                                        }}
+                                    />
                                 </div>
                             </Board>
                         </div>
