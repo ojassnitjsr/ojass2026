@@ -108,7 +108,7 @@ export default function Home() {
                             transition={{ duration: 0.8, ease: "easeOut" }}
                         >
                             <motion.h2
-                                className={`layout-text text-xl md:text-3xl lg:text-4xl font-bold mb-2 md:mb-4 ${isDystopia ? "is-dystopia" : ""}`}
+                                className={`layout-text text-xl md:text-3xl lg:text-4xl font-bold mb-2 md:mb-4 ${isDystopia ? "is-dystopia" : ""} md:pl-5 lg:pl-6`}
                                 style={{
                                     textShadow: isDystopia
                                         ? "0 0 20px rgba(255, 100, 0, 0.8)"
