@@ -10,7 +10,6 @@ import { useEffect, useMemo, useState } from "react";
 import {
     FaArrowLeft,
     FaCheck,
-    FaChevronRight,
     FaFileAlt,
     FaFileDownload,
     FaInfoCircle,
@@ -237,11 +236,10 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
 
             <Link
                 href="/events"
-                className={`clip-left absolute top-6 left-6 z-50 flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 ${
-                    isDystopia
-                        ? "bg-[#ee8f59]/20 hover:bg-[#ee8f59]/40 text-white"
-                        : "bg-cyan-500/20 hover:bg-cyan-500/40 text-white"
-                }`}>
+                className={`clip-left absolute top-6 left-6 z-50 flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 ${isDystopia
+                    ? "bg-[#ee8f59]/20 hover:bg-[#ee8f59]/40 text-white"
+                    : "bg-cyan-500/20 hover:bg-cyan-500/40 text-white"
+                    }`}>
                 <FaArrowLeft size={20} />
                 <span className="font-semibold tracking-wider">Go Back</span>
             </Link>
@@ -373,14 +371,14 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
                             </p>
 
                             {/* Tags / Meta Grid */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 mr-4">
                                 <MetaCard
                                     icon={<FaUsers />}
                                     label="Team Details"
                                     value={
                                         eventData.isTeamEvent
                                             ? eventData.teamSizeMin ===
-                                              eventData.teamSizeMax
+                                                eventData.teamSizeMax
                                                 ? `${eventData.teamSizeMin} PARTICIPANT`
                                                 : `${eventData.teamSizeMin} - ${eventData.teamSizeMax} PARTICIPANTS`
                                             : "SOLO PARTICIPANT"
@@ -596,14 +594,14 @@ function MetaCard({
     themeClasses: any;
 }) {
     return (
-        <div className="bg-white/5 border border-white/10 p-4 relative overflow-hidden group">
+        <div className="bg-white/5 border border-white/10 p-4 relative overflow-hidden group w-full">
             <div
                 className={clsx(
-                    "absolute top-0 right-0 w-2 h-2 opacity-50",
+                    "absolute top-0 left-0 w-2 h-2 opacity-50",
                     themeClasses.accentColor,
                 )}
             />
-            <div className="flex items-start gap-3 relative z-1">
+            <div className="flex items-start gap-3 relative z-1 w-full justify-between">
                 <div
                     className={clsx(
                         "p-2 bg-black/50 rounded-sm border border-white/10",
@@ -748,29 +746,30 @@ function EventDetailsSection({
                         />
                         Details
                     </h3>
-                    <div className="bg-black/40 border border-white/10 p-6 relative">
-                        {/* Corner markers */}
-                        <div className="absolute top-0 left-0 w-2 h-2 border-l border-t border-white/30" />
-                        <div className="absolute top-0 right-0 w-2 h-2 border-r border-t border-white/30" />
-                        <div className="absolute bottom-0 left-0 w-2 h-2 border-l border-b border-white/30" />
-                        <div className="absolute bottom-0 right-0 w-2 h-2 border-r border-b border-white/30" />
-
-                        <div className="space-y-4">
-                            {eventData.details!.map((d, i) => (
+                    <ul className="grid gap-3">
+                        {eventData.details!.map((d, i) => (
+                            <li
+                                key={i}
+                                className="group relative flex items-center gap-4 text-gray-300 leading-relaxed pl-4">
+                                {/* Decorative line */}
                                 <div
-                                    key={i}
-                                    className="text-gray-300 leading-relaxed flex items-center gap-3 text-sm">
-                                    <FaChevronRight
-                                        className={clsx(
-                                            "w-3 h-3 shrink-0",
-                                            themeClasses.textColor,
-                                        )}
-                                    />
+                                    className={clsx(
+                                        "absolute left-0 top-2 bottom-2 w-[2px] bg-white/10 group-hover:bg-current transition-colors",
+                                        themeClasses.textColor,
+                                    )}
+                                />
+                                <span
+                                    className={clsx(
+                                        "font-mono font-bold text-sm mt-1 opacity-50",
+                                    )}>
+                                    {(i + 1).toString().padStart(2, "0")}
+                                </span>
+                                <span className="text-sm font-light hover:text-white transition-colors">
                                     {d}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             )}
         </div>

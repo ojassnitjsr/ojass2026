@@ -99,10 +99,10 @@ export default function EventCard({ name, img }: EventCardProps) {
                 <image
                     href={img}
                     x="0"
-                    y="0"
+                    y="30"
                     width="300"
                     height="400"
-                    preserveAspectRatio="xMidYMid slice"
+                    preserveAspectRatio="xMidYMid meet"
                     clipPath="url(#card-clip)"
                 />
             </svg>

@@ -122,10 +122,10 @@ export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
                         theme.textColor,
                         theme.textGlow,
                     )}>
-                    NEW ENTITY
+                    NEW REGISTRATION
                 </h2>
                 <p className="text-slate-400 text-xs mt-2 uppercase tracking-wide">
-                    Enter details for system clearance
+                    Enter details to register in OJASS
                 </p>
             </div>
 
@@ -161,7 +161,7 @@ export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
                 <Input
                     name="email"
                     type="email"
-                    label="Comm Link (Email)"
+                    label="Email"
                     placeholder="Enter Email"
                     value={formData.email}
                     onChange={handleChange}
@@ -172,7 +172,7 @@ export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
                 <Input
                     name="phone"
                     type="tel"
-                    label="Contact Digits"
+                    label="Phone"
                     placeholder="Phone Number"
                     value={formData.phone}
                     onChange={(e) =>
@@ -189,7 +189,7 @@ export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
 
                 <Select
                     name="gender"
-                    label="Biological Type"
+                    label="Gender"
                     value={formData.gender}
                     onChange={handleChange}
                     required>
@@ -201,7 +201,7 @@ export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
 
                 <Input
                     name="city"
-                    label="Base City"
+                    label="City"
                     placeholder="City"
                     value={formData.city}
                     onChange={handleChange}
@@ -209,15 +209,52 @@ export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
                     required
                 />
 
-                <Input
+                <Select
                     name="state"
-                    label="Region State"
-                    placeholder="State"
+                    label="State"
                     value={formData.state}
                     onChange={handleChange}
-                    icon={<FaMapMarkerAlt />}
-                    required
-                />
+                    required>
+                    <option value="">Select State/UT</option>
+                    {/* States */}
+                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                    <option value="Assam">Assam</option>
+                    <option value="Bihar">Bihar</option>
+                    <option value="Chhattisgarh">Chhattisgarh</option>
+                    <option value="Goa">Goa</option>
+                    <option value="Gujarat">Gujarat</option>
+                    <option value="Haryana">Haryana</option>
+                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                    <option value="Jharkhand">Jharkhand</option>
+                    <option value="Karnataka">Karnataka</option>
+                    <option value="Kerala">Kerala</option>
+                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Manipur">Manipur</option>
+                    <option value="Meghalaya">Meghalaya</option>
+                    <option value="Mizoram">Mizoram</option>
+                    <option value="Nagaland">Nagaland</option>
+                    <option value="Odisha">Odisha</option>
+                    <option value="Punjab">Punjab</option>
+                    <option value="Rajasthan">Rajasthan</option>
+                    <option value="Sikkim">Sikkim</option>
+                    <option value="Tamil Nadu">Tamil Nadu</option>
+                    <option value="Telangana">Telangana</option>
+                    <option value="Tripura">Tripura</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                    <option value="Uttarakhand">Uttarakhand</option>
+                    <option value="West Bengal">West Bengal</option>
+                    {/* Union Territories */}
+                    <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                    <option value="Chandigarh">Chandigarh</option>
+                    <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                    <option value="Ladakh">Ladakh</option>
+                    <option value="Lakshadweep">Lakshadweep</option>
+                    <option value="Puducherry">Puducherry</option>
+                </Select>
 
                 {!formData.email.endsWith("@nitjsr.ac.in") && (
                     <div className="md:col-span-2">
@@ -252,7 +289,7 @@ export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
                 <div className="relative">
                     <Input
                         name="password"
-                        label="Security Key"
+                        label="Password"
                         type={showPassword ? "text" : "password"}
                         placeholder="Password"
                         value={formData.password}
@@ -274,7 +311,7 @@ export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
                 <div className="relative">
                     <Input
                         name="confirmPassword"
-                        label="Confirm Key"
+                        label="Confirm Password"
                         type={showConfirmPassword ? "text" : "password"}
                         placeholder="Confirm Password"
                         value={formData.confirmPassword}

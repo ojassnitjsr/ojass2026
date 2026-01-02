@@ -106,7 +106,7 @@ export const LoginForm = ({
                 )}
 
                 <Input
-                    label="Identity"
+                    label="Email"
                     placeholder="Email or Phone"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
@@ -115,7 +115,7 @@ export const LoginForm = ({
 
                 <div className="relative">
                     <Input
-                        label="Security Code"
+                        label="Password"
                         type={showPassword ? "text" : "password"}
                         placeholder="Password"
                         value={password}
@@ -144,7 +144,7 @@ export const LoginForm = ({
                     type="submit"
                     isLoading={loading}
                     className="w-full text-lg">
-                    Initialize Session
+                    Login
                 </Button>
 
                 <div className="flex flex-col gap-4">
@@ -158,7 +158,7 @@ export const LoginForm = ({
                                 theme.textColorSlate,
                                 `hover:${theme.textColor}`,
                             )}>
-                            Create New Identity
+                            Register Now
                         </button>
                         <button
                             type="button"
@@ -168,7 +168,7 @@ export const LoginForm = ({
                                 theme.textColorSlate,
                                 `hover:${theme.textColor}`,
                             )}>
-                            Reset Access Credentials
+                            Reset Password
                         </button>
                     </div>
                 </div>

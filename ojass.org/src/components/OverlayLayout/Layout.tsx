@@ -49,7 +49,7 @@ export default function OverlayLayout() {
                 isVisible={showGlitch}
                 src={"glitch-effect.mov"}
             />
-            
+
         </>
     );
 }

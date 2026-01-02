@@ -1,0 +1,560 @@
+[{
+  "name": "BGMI",
+  "teamSizeMin": 4,
+  "teamSizeMax": 4,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1emvDocUDc-y5TzlQa9EQBuLfPpzueJ2v/edit?usp=sharing&ouid=101342579955467901015&rtpof=true&sd=true",
+  "redirect": "bgmi",
+  "description": "A competitive battle royale gaming event that challenges participants to demonstrate strategy, teamwork, and in-game decision-making in a high-pressure environment.Teams compete across qualifier and final stages, with performance evaluated through a structured scoring system based on placement and eliminations.\nThe event emphasizes fair play, sportsmanship, and skill, offering an engaging on-campus e-sports experience for competitive gamers.",
+  "prizes": {
+    "total": "20,000.00"
+  },
+  "event_head": {
+    "name": "Abhishek Kumar",
+    "Phone": "9798687024"
+  }
+},
+{
+  "name": "Fix-It Fiesta",
+  "teamSizeMin": 3,
+  "teamSizeMax": 3,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1b3K1NJgLlB2mOkMH2Kt3SByAmDOEWbHQ/edit",
+  "redirect": "fix-it-fiesta",
+  "description": "A quality-focused innovation challenge where teams redesign an existing product or service to enhance performance, reliability, and user experience.Participants apply quality improvement principles and analytical tools to propose structured, value-driven solutions.The event emphasizes originality, methodological thinking, and professional presentation of impactful redesign ideas.",
+  "prizes": {
+    "total": "25,000/-"
+  },
+  "event_head": {
+    "name": "Samikhya Mohanty ",
+    "Phone": "8917380946"
+  }
+},
+{
+  "name": "Case Study Challenge",
+  "teamSizeMin": 2,
+  "teamSizeMax": 2,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/11dRLRpaAj6kzzj6aUw_xKMvnMtSsktEX/edit",
+  "redirect": "case-study-challenge",
+  "description": "A competitive data analytics challenge where students solve real-world business problems using practical datasets.Participants work in two-member, interdisciplinary teams to generate insights and propose actionable, data-driven solutions.The event emphasizes analytical rigor, innovation, and professional communication, bridging academic learning with industry application.",
+  "prizes": {
+    "total": "25,000.00"
+  },
+  "event_head": {
+    "name": "Anshu Raj",
+    "Phone": "9939747627"
+  }
+},
+{
+  "name": "Ulysses",
+  "teamSizeMin": 2,
+  "teamSizeMax": 2,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1oxBYwvbdx_6s83nVPbQgdNe8jIyFz6xs/edit?usp=sharing&ouid=114230431800648848757&rtpof=true&sd=true",
+  "redirect": "ulysses",
+  "description": "A creative storytelling challenge that tests participants’ imagination, adaptability, and narrative skills across multiple engaging rounds.Teams craft stories using visual prompts, question-only interactions, and emotional twists, while seamlessly integrating unexpected elements.The event rewards originality, coherence, and expressive thinking, making it a dynamic platform for showcasing creative communication.",
+  "prizes": {
+    "total": "25,000.00/-"
+  },
+  "event_head": {
+    "name": "Asmi Srivastava ",
+    "Phone": "8252547682"
+  }
+},
+{
+  "name": "Mock IPL Auction",
+  "teamSizeMin": 5,
+  "teamSizeMax": 5,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1vJeR6vgUFf-hIuy1liConPcaG_CnDd6u/edit?usp=sharing&ouid=110202538904772979471&rtpof=true&sd=true",
+  "redirect": "mock-ipl-auction",
+  "description": "A strategic simulation that lets participants experience the thrill of building a competitive T20 team through a real-time auction format.Teams manage a fixed virtual budget, evaluate player categories and statistics, and make calculated bidding decisions under pressure.The event rewards cricket knowledge, analytical thinking, and smart resource allocation to form the highest-scoring team.",
+  "prizes": {
+    "total": "25,000.00/-"
+  },
+  "event_head": {
+    "name": "Filza Ahsan",
+    "Phone": "8864042110"
+  }
+},
+{
+  "name": "Chess",
+  "teamSizeMin": 1,
+  "teamSizeMax": 1,
+  "isTeamEvent": false,
+  "rulebookurl": "https://docs.google.com/document/d/1aBN89UTOXzkHJcVd6il-E8hfm58Rbb00/edit",
+  "redirect": "chess",
+  "description": "A competitive chess tournament that combines strategic depth with a structured progression from online qualifiers to over-the-board finals.Participants compete under standardized time controls and fair-play guidelines, with top performers advancing through knockout rounds.The event emphasizes analytical thinking, discipline, and sportsmanship, offering a balanced test of skill in both digital and physical formats.",
+  "prizes": {
+    "total": "20,000.00/-"
+  },
+  "event_head": {
+    "name": "Abhigyan Karn",
+    "Phone": "6200646920"
+  }
+},
+{
+  "name": "Valorant",
+  "teamSizeMin": 5,
+  "teamSizeMax": 5,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1oAEPWyVPzLiijD0xydSy3NKT-Qcm0Xjh/edit",
+  "redirect": "valorant",
+  "description": "A high-intensity tactical shooter tournament that challenges teams to demonstrate strategy, coordination, and mechanical skill in a competitive 5v5 format.Participants compete in knockout qualifiers and best-of-three finals under standardized tournament settings and strict fair-play guidelines.The event delivers a professional BYOC esports experience, emphasizing teamwork, discipline, and competitive integrity.",
+  "prizes": {
+    "total": "20,000.00/-"
+  },
+  "event_head": {
+    "name": "Om Diwan",
+    "Phone": "8669160769"
+  }
+},
+{
+  "name": "FC-24",
+  "teamSizeMin": 1,
+  "teamSizeMax": 1,
+  "isTeamEvent": false,
+  "rulebookurl": "https://docs.google.com/document/d/13_fYI1fNHNrtfSaUQ5D3U6HsUcjdBbX1/edit",
+  "redirect": "fc-24",
+  "description": "A competitive one-on-one football gaming event that tests participants’ strategic decision-making and in-game adaptability in a structured digital format.Players compete individually on standardized settings, ensuring fairness, discipline, and adherence to official gameplay rules.The event emphasizes sportsmanship and skill-based performance, offering an engaging and professional competitive gaming experience.",
+  "prizes": {
+    "total": "20,000.00/-"
+  },
+  "event_head": {
+    "name": "Om Diwan",
+    "Phone": "8669160769"
+  }
+},
+{
+  "name": "Frames and Tales",
+  "teamSizeMin": 1,
+  "teamSizeMax": 1,
+  "isTeamEvent": false,
+  "rulebookurl": "https://docs.google.com/document/d/1Psb43S7gGfNJrSaOoVRJv2s0WfvxfNWA/edit?usp=sharing&ouid=102727884365931980340&rtpof=true&sd=true",
+  "redirect": "frames-and-tales",
+  "description": "A creative photography challenge where participants transform a given theme into a compelling visual narrative through a curated photo story.Teams combine technical photography skills with storytelling to produce a cohesive sequence of images within a limited timeframe.The event celebrates originality, aesthetic excellence, and narrative impact while upholding professionalism and fair play.",
+  "prizes": {
+    "total": "20,000.00/-"
+  },
+  "event_head": {
+    "name": "Uday kesharwani",
+    "Phone": "8470948486"
+  }
+},
+{
+  "name": "Cinescript",
+  "teamSizeMin": 3,
+  "teamSizeMax": 5,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1T5xFEp150Mt_1I_DhYaZ0Z1xLFVBmC7smQ29tPun0ls/edit?usp=sharing",
+  "redirect": "cinescript",
+  "description": "A fast-paced short film challenge where teams conceptualize, shoot, and edit an original film within a defined timeframe, exploring storytelling in its purest form.Participants collaborate across filmmaking roles to create impactful cinema under open thematic freedom and professional guidelines.The event celebrates creativity, technical excellence, and emotional resonance while upholding originality, discipline, and cinematic craft.",
+  "prizes": {
+    "total": "40,000.00/-"
+  },
+  "event_head": {
+    "name": "Rimo Roy",
+    "Phone": "7763930044"
+  }
+},
+{
+  "name": "Lights, Camera, OJASS!",
+  "teamSizeMin": 1,
+  "teamSizeMax": 1,
+  "isTeamEvent": false,
+  "rulebookurl": "https://docs.google.com/document/d/1ZpmkW7UdlEtjisF-_H-N5JbkqtTtdVQR/edit?usp=sharing&ouid=101532960471356071924&rtpof=true&sd=true",
+  "redirect": "light-camera-OJASS!",
+  "description": "An on-the-spot short-form video challenge where participants capture the energy, moments, and atmosphere of the fest through creative reels.Teams document events and behind-the-scenes highlights on campus and transform them into engaging visual stories within a defined timeframe.The event emphasizes creativity, storytelling, and professionalism while celebrating the vibrant spirit of the fest.",
+  "prizes": {
+    "total": "25,000.00/-"
+  },
+  "event_head": {
+    "name": "Ansh Raj",
+    "Phone": "7632904999"
+  }
+},
+{
+  "name": "Rural Tech Ideathon",
+  "teamSizeMin": 1,
+  "teamSizeMax": 4,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1eGPkiRwVw7OCGymX4eP9D-uUuSsI8RDs/edit?usp=sharing&ouid=109393840731687507412&rtpof=true&sd=true",
+  "redirect": "rural-tech-ideathon",
+  "description": "An innovation-driven ideathon that challenges participants to design practical, technology-based solutions for real rural problems.Teams progress through idea presentation and prototype demonstration stages, emphasizing feasibility, functionality, and social impact.The event promotes originality, technical understanding, and market relevance while encouraging responsible and ethical innovation.",
+  "prizes": {
+    "total": "30,000.00/-"
+  },
+  "event_head": {
+    "name": "R. Rajak",
+    "Phone": "7432805168"
+  }
+},
+{
+  "name": "Hack De Science",
+  "teamSizeMin": 4,
+  "teamSizeMax": 4,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1R73WfSYgkHbmco3nkZgF9cu2g8GhBfqI/edit?usp=sharing&ouid=102727884365931980340&rtpof=true&sd=true",
+  "redirect": "hack-de-science",
+  "description": "A 36-hour offline hackathon where teams collaborate to design and build fully functional web applications from real-world problem statements.Participants are evaluated across multiple stages on planning, functionality, innovation, and technical execution.The event emphasizes teamwork, problem-solving, and practical development skills while encouraging creativity and meaningful impact.",
+  "prizes": {
+    "total": "50,000.00"
+  },
+  "event_head": {
+    "name": "Hemanvitha Pullela",
+    "Phone": "8919034799"
+  }
+},
+{
+  "name": "Vishwa Code Mania",
+  "teamSizeMin": 3,
+  "teamSizeMax": 3,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1M9oVeccWc5ijoyMMADnr2M3KROLB3fNL/edit",
+  "redirect": "vishwa-code-mania",
+  "description": "A high-intensity on-site competitive programming contest that challenges teams to solve algorithmic problems under strict offline-style discipline.Participants compete across preliminary and final rounds using ICPC-style scoring, testing logic, efficiency, and time management.The event emphasizes originality, integrity, and technical excellence, offering a rigorous platform for showcasing competitive coding skills.",
+  "prizes": {
+    "total": "25,000.00/-"
+  },
+  "event_head": {
+    "name": "Om Raj",
+    "Phone": "9955909462"
+  }
+},
+{
+  "name": "AI Hackathon",
+  "teamSizeMin": 3,
+  "teamSizeMax": 3,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1BDqCaPWAIeAr6mPWtmw4bvbkL8BCav1Q/edit?usp=sharing&ouid=101342579955467901015&rtpof=true&sd=true",
+  "redirect": "ai-hackathon",
+  "description": "An applied artificial intelligence challenge where participants use Python to build, tune, and evaluate machine learning models on real datasets.Teams work under a time-bound format to preprocess data, select algorithms, and achieve defined performance benchmarks.The event emphasizes practical AI skills, analytical thinking, and clear technical reasoning through model development and reporting.",
+  "prizes": {
+    "total": "30,000.00/-"
+  },
+  "event_head": {
+    "name": "Keshav Trivedi",
+    "Phone": "8401229069"
+  }
+},
+{
+  "name": "Pixel Sync",
+  "teamSizeMin": 3,
+  "teamSizeMax": 3,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1rbn869Ujxi-wTKyAlfgHO88B9Q_RZRAm/edit?usp=sharing&ouid=114230431800648848757&rtpof=true&sd=true",
+  "redirect": "pixel-sync",
+  "description": "A fast-paced UI/UX hackathon where teams design and build a complete frontend interface from scratch within a limited time.Participants combine design thinking and technical execution to deliver responsive, visually appealing, and user-focused interfaces.The event emphasizes creativity, clean implementation, and clear presentation of design logic under real-world constraints.",
+  "prizes": {
+    "total": "20,000.00/-"
+  },
+  "event_head": {
+    "name": "Sujal Kumar",
+    "Phone": "9835515226"
+  }
+},
+{
+  "name": "Flow Forge",
+  "teamSizeMin": 3,
+  "teamSizeMax": 3,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1BWZTBYiwrpd02AoffF-mLCVVaRG3auwO/edit?usp=sharing&ouid=112114163691973846093&rtpof=true&sd=true",
+  "redirect": "flow-forge",
+  "description": "A hands-on automation challenge where teams design and build smart, real-world workflows using modern no-code and low-code automation tools.Participants tackle a practical problem by integrating APIs, applying logic, and creating efficient multi-step automated systems.The event emphasizes workflow design, technical depth, efficiency, and creative problem-solving through live demonstrations.",
+  "prizes": {
+    "total": "20,000.00/-"
+  },
+  "event_head": {
+    "name": "Aakash Jaiswal",
+    "Phone": "9572991083"
+  }
+},
+{
+  "name": "Sanrachana",
+  "teamSizeMin": 4,
+  "teamSizeMax": 4,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/17X7t_wU-JTJptnv7wVmxQfQSytObbYTp/edit",
+  "redirect": "sanrachna",
+  "description": "A hands-on engineering challenge where teams apply structural concepts to design and construct a functional bridge using limited materials.Participants progress from a concept-based quiz to a time-bound construction round, testing creativity, precision, and problem-solving skills. The event emphasizes structural stability, efficient material usage, and disciplined teamwork under real-world constraints",
+  "prizes": {
+    "total": "25,000.00/-"
+  },
+  "event_head": {
+    "name": "Krishna Kumar ",
+    "Phone": "8252694965"
+  }
+},
+{
+  "name": "Simulation Sprint",
+  "teamSizeMin": 1,
+  "teamSizeMax": 1,
+  "isTeamEvent": false,
+  "rulebookurl": "https://docs.google.com/document/d/1CcykkhMq7yteh3AUJ8GXsRYC4mQSwRMm/edit",
+  "redirect": "simulation-sprint",
+  "description": "A high-intensity technical challenge that tests participants’ practical expertise in MATLAB through progressive, hands-on problem solving.Competitors advance from a fundamentals-based screening round to building and simulating a real-world digital communication system.The event emphasizes accuracy, efficient coding, and sound engineering methodology under strict fair-play guidelines",
+  "prizes": {
+    "total": "25000/-"
+  },
+  "event_head": {
+    "name": "Saumya Prakash Jha",
+    "Phone": "9693171024"
+  }
+},
+{
+  "name": "Finite Element Analysis",
+  "teamSizeMin": 2,
+  "teamSizeMax": 2,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1fdLBO2oA13Ce-EMjGqeynA8MuWIjOe9M/edit",
+  "redirect": "finite-element-analysis",
+  "description": "A technical design and simulation challenge that tests participants’ skills in 3D modelling, drafting, and finite element analysis.Teams progress from creating precise mechanical models to evaluating their structural performance using industry-standard software.The event emphasizes design accuracy, analytical thinking, and clear presentation of simulation-based insights.",
+  "prizes": {
+    "total": "25,000/-"
+  },
+  "event_head": {
+    "name": "Ravi Ranjan",
+    "Phone": "9508674540"
+  }
+},
+{
+  "name": "Business Simulation Challenge",
+  "teamSizeMin": 4,
+  "teamSizeMax": 4,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1HRJpEfotSUas3hTOMbwzH2UMFSF36CnE/edit?usp=sharing&ouid=109393840731687507412&rtpof=true&sd=true",
+  "redirect": "business-simulation challenge",
+  "description": "A strategy-driven challenge where teams build and manage a complete business model from branding to operations and market execution.Participants design brand identity, customer and internal workflows, pricing strategies, and respond to real-time business crises.The event evaluates creativity, business logic, adaptability, and clarity of presentation in a simulated real-world environment.",
+  "prizes": {
+    "total": "30,000/-"
+  },
+  "event_head": {
+    "name": "Ayush Singh",
+    "Phone": "8299797516"
+  }
+},
+{
+  "name": "Start Up Ideathon",
+  "teamSizeMin": 1,
+  "teamSizeMax": 4,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1hu8epkISIxbfNu9ZzA2crgEl2WcWZcaJ/edit",
+  "redirect": "start-up-ideathon",
+  "description": "An entrepreneurial pitching platform where participants present innovative startup ideas backed by structured business models and growth strategies. Teams progress from online pitch deck submissions to live presentations evaluated by judges and industry experts.The event emphasizes originality, strategic clarity, and professional communication in a startup-focused environment.",
+  "prizes": {
+    "total": "30,000/-"
+  },
+  "event_head": {
+    "name": "Raj Aryan",
+    "Phone": "8252233759"
+  }
+},
+{
+  "name": "OJASS Olympiad",
+  "teamSizeMin": 1,
+  "teamSizeMax": 1,
+  "isTeamEvent": false,
+  "rulebookurl": "https://docs.google.com/document/d/1UT8gpzu9AQsxsO-CTzV6VrEXapSt-CT3/edit?usp=sharing&ouid=109393840731687507412&rtpof=true&sd=true",
+  "redirect": "ojass-olympiad",
+  "description": "A competitive academic examination that assesses students’ aptitude in mathematics and science across structured grade-based categories. Participants attempt a time-bound, objective test designed to evaluate conceptual understanding, logic, and problem-solving skills.The event promotes fair competition, academic integrity, and excellence in core STEM disciplines.",
+  "prizes": {
+    "total": "20,000"
+  },
+  "event_head": {
+    "name": "Tushar Kumar",
+    "Phone": "8789254518"
+  }
+},
+{
+  "name": "The Great Indian MELA Quiz",
+  "teamSizeMin": 2,
+  "teamSizeMax": 2,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1SgbL6YUNUiuZS4D8SOpy5EpwR8cKgK-b/edit",
+  "redirect": "the-great-indian-mela-quiz",
+  "description": "A lively quiz competition that celebrates Indian and global pop culture across music, entertainment, literature, and the arts.Teams compete through a preliminary round and an interactive final featuring diverse quiz formats.The event emphasizes knowledge depth, quick thinking, and sportsmanlike competition in an engaging quizzing atmosphere.",
+  "prizes": {
+    "total": "20,000/-"
+  },
+  "event_head": {
+    "name": "Aameya Devansh",
+    "Phone": "9234102388"
+  }
+},
+{
+  "name": "The Forge: Mock Tata Crucible Quiz",
+  "teamSizeMin": 2,
+  "teamSizeMax": 2,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1jKrKyAQDmsRN52dMTAZGbkdOgki6DOUe/edit?usp=sharing&ouid=109393840731687507412&rtpof=true&sd=true",
+  "redirect": "the-forge",
+  "description": "A high-intensity business quiz that simulates the format and rigor of a premier corporate quizzing competition.\n Teams progress from a written preliminary round to an on-stage final featuring buzzer-based and rapid-fire formats.The event tests business awareness, analytical thinking, and composure under pressure in a professional quizzing environment.",
+  "prizes": {
+    "total": "20,000/-"
+  },
+  "event_head": {
+    "name": "Harsh Mishra",
+    "Phone": "7266888295"
+  }
+},
+{
+  "name": "Kurukshetra",
+  "teamSizeMin": 4,
+  "teamSizeMax": 4,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1IaG2R8vdFkGqm5l_IsKjwLG7Lz6OXrEtbgftmb-k1Mg/edit?tab=t.0",
+  "redirect": "kurukshetra",
+  "description": "A high-intensity robotics combat challenge where teams design and build remote-controlled fighting robots across multiple weight categories.Participants compete in head-to-head battles that test mechanical design, control systems, weapon integration, and strategic aggression.The event emphasizes engineering innovation, safety, and combat effectiveness under strict technical and competition guidelines.",
+  "prizes": {
+    "total": "1,50,000"
+  },
+  "event_head": {
+    "name": "Prashant Sharma",
+    "Phone": "6200469967"
+  }
+},
+{
+  "name": "Robo Soccer",
+  "teamSizeMin": 4,
+  "teamSizeMax": 4,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1mKBRfGJ4UbhHfsx6KMLcfP1n8wT_8nD3lnISBh5Botk/edit?usp=sharing",
+  "redirect": "robo-soccer",
+  "description": "A competitive robotics sport where teams design and operate robots to maneuver a ball and score goals in a head-to-head arena format.Participants are tested on robot control, mechanical design, strategy, and precision under strict size, weight, and safety constraints.The event blends engineering skill with fast-paced gameplay, emphasizing fair play, reliability, and technical innovation.",
+  "prizes": {
+    "total": "50,000/-"
+  },
+  "event_head": {
+    "name": "Aditya Bharadwaj ",
+    "Phone": "7858912463"
+  }
+},
+{
+  "name": "Robo Rumble",
+  "teamSizeMin": 4,
+  "teamSizeMax": 4,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1scgqCLaXku3yO5mEhzsZm6kcT6bWXt5WdWTel9QnYaI/edit?usp=sharing",
+  "redirect": "robo-rumble",
+  "description": "An all-terrain robotics challenge where teams design and race robots across a rugged obstacle course under strict technical constraints.Participants are tested on mechanical design, control systems, and adaptability while aiming for the fastest, penalty-free run.The event emphasizes engineering innovation, reliability, and safety in a high-intensity competitive environment.",
+  "prizes": {
+    "total": "35,000/-"
+  },
+  "event_head": {
+    "name": "Souvik Nath",
+    "Phone": "9430337672"
+  }
+},
+{
+  "name": "Trace Bot Challenge",
+  "teamSizeMin": 1,
+  "teamSizeMax": 4,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1rburGyPlTacB2l5MNMsqCnxkFNe_d2DM/edit?usp=sharing&ouid=109393840731687507412&rtpof=true&sd=true",
+  "redirect": "trace-bot-challenge",
+  "description": "An autonomous robotics challenge where teams design line-following robots capable of navigating complex tracks with precision and efficiency.Participants are evaluated on path optimization, speed, and reliability across progressive individual and head-to-head rounds.The event emphasizes sensor integration, algorithmic control, and disciplined execution under strict technical and ethical guidelines.",
+  "prizes": {
+    "total": "30,000/-"
+  },
+  "event_head": {
+    "name": "Armaan Srivastava ",
+    "Phone": "8736935331"
+  }
+},
+{
+  "name": "Maze Marathon",
+  "teamSizeMin": 4,
+  "teamSizeMax": 4,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/14XYNoviLElHrYhJlK7Tkv7w5KsPh4nFk/edit?usp=sharing&ouid=109393840731687507412&rtpof=true&sd=true",
+  "redirect": "maze-marathon",
+  "description": "An autonomous robotics challenge where participants design intelligent robots to navigate a complex maze and reach its center in minimum time.The competition tests path-planning algorithms, sensor integration, and real-time decision-making without external control.The event emphasizes precision, reliability, and efficient navigation under standardized technical and fair-play constraints.",
+  "prizes": {
+    "total": "35,000/-"
+  },
+  "event_head": {
+    "name": "Rituraj Singh",
+    "Phone": "8235509190"
+  }
+},
+{
+  "name": "Cozmo Clench",
+  "teamSizeMin": 4,
+  "teamSizeMax": 4,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1QfjiNMC2FTelIIOiQU0LaYkrHIrUTcNU/edit?usp=sharing&ouid=109130128576370972359&rtpof=true&sd=true",
+  "redirect": "cozmo-clench",
+  "description": "A hands-on robotics challenge where teams design and operate a manually controlled bot to grip objects, navigate obstacles, and complete precision-based tasks. Participants are evaluated on mechanical design, control accuracy, strategy, and time efficiency within a dynamic arena.The event emphasizes engineering creativity, real-time decision-making, and disciplined execution under strict technical guidelines.",
+  "prizes": {
+    "total": "30,000/-"
+  },
+  "event_head": {
+    "name": "Afshan Anjum",
+    "Phone": "9546293285"
+  }
+},
+{
+  "name": "Aqua Race",
+  "teamSizeMin": 4,
+  "teamSizeMax": 4,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1mFEEuk1ApClLW8hMwe11KT_9sQPT8cIu/edit?usp=sharing&ouid=109393840731687507412&rtpof=true&sd=true",
+  "redirect": "aqua-race",
+  "description": "A fast-paced aquatic robotics challenge where teams design electronic boats to navigate a zigzag watercourse with speed and precision.Participants are tested on control, stability, and engineering efficiency while maneuvering through obstacles under strict technical rules.The event emphasizes innovation, accuracy, and reliability in a competitive, time-based racing format.",
+  "prizes": {
+    "total": "30,000/-"
+  },
+  "event_head": {
+    "name": "Ayush Kumar Singh",
+    "Phone": "9555030023"
+  }
+},
+{
+  "name": "Underwater Tracing",
+  "teamSizeMin": 4,
+  "teamSizeMax": 4,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1lIexmZZ92D4dsJpKUZQkNLZUfvGcgNsY/edit#heading=h.vehhsfkxhesq",
+  "redirect": "underwater-tracing",
+  "description": "An advanced underwater robotics challenge where teams design compact, waterproof robots to navigate and perform tasks in a controlled pool arena.Participants are tested on maneuverability, precision, object handling, and strategic navigation under time-bound conditions.The event emphasizes engineering innovation, autonomous capabilities, and disciplined execution in a dynamic underwater environment.",
+  "prizes": {
+    "total": "40,000/-"
+  },
+  "event_head": {
+    "name": "Krishna Agrawal ",
+    "Phone": "9576348528"
+  }
+},
+{
+  "name": "No Ground Zone",
+  "teamSizeMin": 4,
+  "teamSizeMax": 4,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1UHC4HePkg5H9X_tcYJu_9x5LPU99p6Hs/edit?usp=sharing&ouid=109393840731687507412&rtpof=true&sd=true",
+  "redirect": "no-ground-zone",
+  "description": "An aerial engineering challenge where teams design, build, and operate an RC aircraft to maximize payload capacity and drop accuracy.Participants are evaluated through design reporting and multiple flight rounds that test performance, stability, and precision.The event emphasizes aerodynamic design, payload optimization, and safe flight operations under competitive constraints.",
+  "prizes": {
+    "total": "60,000.00/-"
+  },
+  "event_head": {
+    "name": "Rajanya Sarkar",
+    "Phone": "6291765492"
+  }
+},
+{
+  "name": "Drone Race Challenge",
+  "teamSizeMin": 4,
+  "teamSizeMax": 4,
+  "isTeamEvent": true,
+  "rulebookurl": "https://docs.google.com/document/d/1o7U5mP7OwDdhAScFePcWCpXlPooNnMCw/edit",
+  "redirect": "drone-race-challenge",
+  "description": "A high-speed aerial racing challenge where participants pilot drones through a demanding obstacle course against the clock.The event tests precision flying, control, and strategic navigation across qualifying and final rounds.It emphasizes piloting skill, safety compliance, and consistency under competitive racing conditions.",
+  "prizes": {
+    "total": "50,000.00/-"
+  },
+  "event_head": {
+    "name": "Anuj Kumar",
+    "Phone": "6299412656"
+  }
+}]

@@ -41,9 +41,8 @@ export default function LoginPage() {
             )}>
             {/* Backgrounds */}
             <div
-                className={`fixed inset-0 w-full h-full transition-opacity duration-1000 ${
-                    fadeOut ? "opacity-100" : "opacity-0"
-                }`}>
+                className={`fixed inset-0 w-full h-full transition-opacity duration-1000 ${fadeOut ? "opacity-100" : "opacity-0"
+                    }`}>
                 {/* Space */}
                 <Image
                     src="/login/space-bg.png"
@@ -59,27 +58,24 @@ export default function LoginPage() {
                     alt="Spacecraft"
                     width={1000}
                     height={1000}
-                    className={`absolute w-full h-full object-cover transition-transform duration-2000 pointer-events-none ${
-                        fadeOut ? "scale-100" : "scale-10"
-                    }`}
+                    className={`absolute w-full h-full object-cover transition-transform duration-2000 pointer-events-none ${fadeOut ? "scale-100" : "scale-10"
+                        }`}
                 />
             </div>
 
             {/* Tunnel Overlay */}
             {showTunnel && (
                 <div
-                    className={`fixed w-full h-full inset-0 z-50 overflow-hidden transition-all duration-1000 ${
-                        fadeOut ? "opacity-0 scale-90" : "opacity-100 scale-100"
-                    }`}>
+                    className={`fixed w-full h-full inset-0 z-50 overflow-hidden transition-all duration-1000 ${fadeOut ? "opacity-0 scale-90" : "opacity-100 scale-100"
+                        }`}>
                     <SpaceTunnel />
                 </div>
             )}
 
             {/* Main Content */}
             <div
-                className={`fixed inset-0 flex items-center justify-center p-4 transition-all duration-1000 z-10 ${
-                    showForm ? "opacity-100 scale-100" : "opacity-0 scale-90"
-                }`}>
+                className={`fixed inset-0 flex items-center justify-center p-4 transition-all duration-1000 z-10 ${showForm ? "opacity-100 scale-100" : "opacity-0 scale-90"
+                    }`}>
                 <div className="w-full max-w-7xl flex flex-col items-center justify-center relative">
                     <div
                         className={cn(
@@ -89,7 +85,7 @@ export default function LoginPage() {
                     />
 
                     {/* Container */}
-                    <div className="relative z-20 w-full mb-12">
+                    <div className="relative z-20 w-[80%] mb-12">
                         {mode === "login" && (
                             <LoginForm
                                 onSwitchToRegister={() => setMode("register")}

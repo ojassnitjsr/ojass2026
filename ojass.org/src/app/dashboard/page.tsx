@@ -11,8 +11,10 @@ import RegisteredEvent from "@/components/OverlayLayout/dashboard/RegisteredEven
 import Team from "@/components/OverlayLayout/dashboard/Team";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { FaArrowLeft } from "react-icons/fa";
 
 export default function OjassDashboard() {
     const router = useRouter();
@@ -107,13 +109,13 @@ export default function OjassDashboard() {
                                     teamLeader:
                                         typeof team.teamLeader === "object"
                                             ? {
-                                                  _id: team.teamLeader._id,
-                                                  name:
-                                                      team.teamLeader.name ||
-                                                      "Unknown",
-                                                  ojassId:
-                                                      team.teamLeader.ojassId,
-                                              }
+                                                _id: team.teamLeader._id,
+                                                name:
+                                                    team.teamLeader.name ||
+                                                    "Unknown",
+                                                ojassId:
+                                                    team.teamLeader.ojassId,
+                                            }
                                             : team.teamLeader,
                                     teamMembers: team.teamMembers
                                         .filter((member: any) => {
@@ -124,7 +126,7 @@ export default function OjassDashboard() {
                                                     : member;
                                             const leaderId =
                                                 typeof team.teamLeader ===
-                                                "object"
+                                                    "object"
                                                     ? team.teamLeader._id
                                                     : team.teamLeader;
                                             return (
@@ -254,6 +256,21 @@ export default function OjassDashboard() {
                 <div className="absolute inset-0 bg-black/20" />
             </div>
 
+            {/* Back to Home Button */}
+            <Link
+                href="/"
+                className={cn(
+                    "absolute top-4 left-4 md:top-8 md:left-8 z-50 flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 transition-all duration-300 hover:scale-105 active:scale-95 group",
+                    "bg-black/50 border border-white/10 hover:border-white/30 backdrop-blur-md",
+                    "text-white font-mono text-sm tracking-wider uppercase"
+                )}
+                style={{
+                    clipPath: "polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)"
+                }}>
+                <FaArrowLeft className="group-hover:-translate-x-1 transition-transform duration-300" />
+                <span>Home</span>
+            </Link>
+
             {/* 🪩 Dashboard Layout */}
             <div className="relative h-full flex items-center justify-center px-4 md:px-8 py-8 md:py-12">
                 <div className="w-full max-w-[90rem] xl:max-w-[110rem] 2xl:max-w-[130rem]">
@@ -268,11 +285,15 @@ export default function OjassDashboard() {
                                 isPaid={paymentData?.isPaid || false}
                                 pricing={pricing}
                                 onPaymentClick={() => setActiveTab("receipt")}
-                                onEmailVerificationClick={() =>
-                                    setShowEmailVerificationModal(true)
-                                }
+                                onEmailVerificationClick={() => {
+                                    if (!profileData?.idCardImageUrl) {
+                                        alert("Please upload your ID card image first before verifying your email.");
+                                        return;
+                                    }
+                                    setShowEmailVerificationModal(true);
+                                }}
                                 onRegisterNow={() => setActiveTab("events")}
-                                onDownloadReceipt={() => {}}>
+                                onDownloadReceipt={() => { }}>
                                 <div className="h-[calc(90vh-240px)] lg:h-[62vh] overflow-y-auto scrollbar-none">
                                     <Profile profileData={profileData} />
                                 </div>
@@ -329,7 +350,7 @@ export default function OjassDashboard() {
                                 {/* Tab Content */}
                                 <div className="h-[60vh] lg:h-[65vh] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent pr-2">
                                     {activeTab === "receipt" && (
-                                        <Receipt userData={profileData} pricing={pricing}/>
+                                        <Receipt userData={profileData} pricing={pricing} />
                                     )}
                                     {activeTab === "events" && (
                                         <RegisteredEvent

@@ -201,7 +201,7 @@ export default function HomePhone() {
                     <div className={`aspect-video w-[90%] max-w-sm rounded-2xl overflow-hidden border-2 shadow-2xl ${isDystopia ? "border-[#ee8f59]/50 shadow-[#ee8f59]/20" : "border-cyan-400/50 shadow-cyan-400/20"
                         }`}>
                         <iframe
-                            src="https://www.youtube.com/embed/h1gpXrnNNMI"
+                            src="https://www.youtube.com/embed/lzJDI164T-k"
                             title="OJASS 2026 Theme"
                             className="w-full h-full"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

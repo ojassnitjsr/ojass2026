@@ -33,9 +33,20 @@ export default function Page() {
     const [allEvents, setAllEvents] = useState<CardData[]>([]);
     const [rawEvents, setRawEvents] = useState<CardData[]>([]);
     const [categories, setCategories] = useState<string[]>(["All"]);
-    const [selectedCategory, setSelectedCategory] = useState<string>("All");
+    const [selectedCategory, setSelectedCategory] = useState<string>(() => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem("ojass26_event_category") || "All";
+        }
+        return "All";
+    });
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [selectedEventIndex, setSelectedEventIndex] = useState<number>(1);
+    const [selectedEventIndex, setSelectedEventIndex] = useState<number>(() => {
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem("ojass26_event_index");
+            return saved ? parseInt(saved) : 0;
+        }
+        return 0;
+    });
     const [swiperInstance, setSwiperInstance] = useState<any>(null);
     const [selectedEvent, setSelectedEvent] = useState<CardData | null>(null);
     const [user, setUser] = useState<any>(null);
@@ -47,6 +58,7 @@ export default function Page() {
     >("fade");
     const [isLoading, setIsLoading] = useState(true);
     const [isMobile, setIsMobile] = useState(false);
+    const [hasRestoredSwiperState, setHasRestoredSwiperState] = useState(false);
     const pendingIndexRef = useRef<number | null>(null);
 
     useEffect(() => {
@@ -126,62 +138,152 @@ export default function Page() {
     }, []);
 
     useEffect(() => {
+        const CACHE_KEY = "ojass26_events_cache";
+        const CACHE_DURATION = 30 * 60 * 1000; // 30 minutes in milliseconds
+
         setIsLoading(true);
-        fetch("/api/events")
-            .then((response) => response.json())
-            .then((events: any[]) => {
-                // Transform API events to CardData format
-                const transformedEvents: CardData[] = events.map((event) => {
-                    // Use event ID for redirect, ignore old redirect field from database
-                    const eventId = event._id || event.id;
-                    return {
-                        id: eventId,
-                        name: event.name,
-                        description: event.description || "",
-                        img: event.img,
-                        redirect: `/events/${event.redirect}`, // Always use new format with event ID
-                        cardposition: "center",
-                        category: event.organizer || "General",
-                    };
-                });
 
-                // Extract unique categories
-                const uniqueCategoriesSet = new Set<string>();
-                transformedEvents.forEach((event) => {
-                    const orgs = event.category.split(",").map((s) => s.trim());
-                    orgs.forEach((org) => {
-                        if (org) uniqueCategoriesSet.add(org);
-                    });
-                });
+        // Helper function to check if cache is valid
+        const isCacheValid = (timestamp: number) => {
+            return Date.now() - timestamp < CACHE_DURATION;
+        };
 
-                const uniqueCategories = [
-                    "All",
-                    ...Array.from(uniqueCategoriesSet),
-                ].sort();
-                setCategories(uniqueCategories);
-                setRawEvents(transformedEvents);
-            })
-            .catch((error) => {
-                console.error("Error fetching event data:", error);
-                // Fallback to empty array
-                setAllEvents([]);
-                setRawEvents([]);
-            })
-            .finally(() => {
-                // Restore state from session storage
-                const savedCategory = sessionStorage.getItem("ojass26_event_category");
-                const savedIndex = sessionStorage.getItem("ojass26_event_index");
-
-                if (savedCategory) {
-                    setSelectedCategory(savedCategory);
+        // Try to load from cache first
+        const loadFromCache = () => {
+            try {
+                const cached = localStorage.getItem(CACHE_KEY);
+                if (cached) {
+                    const { data, timestamp } = JSON.parse(cached);
+                    if (isCacheValid(timestamp)) {
+                        console.log("Loading events from cache");
+                        return data;
+                    } else {
+                        console.log("Cache expired, fetching fresh data");
+                        localStorage.removeItem(CACHE_KEY);
+                    }
                 }
-                if (savedIndex) {
-                    pendingIndexRef.current = parseInt(savedIndex);
-                }
+            } catch (error) {
+                console.error("Error reading cache:", error);
+                localStorage.removeItem(CACHE_KEY);
+            }
+            return null;
+        };
 
-                // Add a small delay to ensure smooth transition
-                setTimeout(() => setIsLoading(false), 800);
+        // Try cache first
+        const cachedData = loadFromCache();
+
+        if (cachedData) {
+            // Use cached data
+            const transformedEvents: CardData[] = cachedData.map((event: any) => {
+                const eventId = event._id || event.id;
+                return {
+                    id: eventId,
+                    name: event.name,
+                    description: event.description || "",
+                    img: event.img,
+                    redirect: `/events/${event.redirect}`,
+                    cardposition: "center",
+                    category: event.organizer || "General",
+                };
             });
+
+            // Extract unique categories
+            const uniqueCategoriesSet = new Set<string>();
+            transformedEvents.forEach((event) => {
+                const orgs = event.category.split(",").map((s) => s.trim());
+                orgs.forEach((org) => {
+                    if (org) uniqueCategoriesSet.add(org);
+                });
+            });
+
+            const uniqueCategories = [
+                "All",
+                ...Array.from(uniqueCategoriesSet),
+            ].sort();
+            setCategories(uniqueCategories);
+            setRawEvents(transformedEvents);
+
+            // Restore state from local storage
+            const savedCategory = localStorage.getItem("ojass26_event_category");
+            const savedIndex = localStorage.getItem("ojass26_event_index");
+
+            if (savedCategory) {
+                setSelectedCategory(savedCategory);
+            }
+            if (savedIndex) {
+                pendingIndexRef.current = parseInt(savedIndex);
+            }
+
+            setTimeout(() => setIsLoading(false), 300);
+        } else {
+            // Fetch from API
+            fetch("/api/events")
+                .then((response) => response.json())
+                .then((events: any[]) => {
+                    // Save to cache
+                    try {
+                        localStorage.setItem(
+                            CACHE_KEY,
+                            JSON.stringify({
+                                data: events,
+                                timestamp: Date.now(),
+                            })
+                        );
+                        console.log("Events cached successfully");
+                    } catch (error) {
+                        console.error("Error caching events:", error);
+                    }
+
+                    // Transform API events to CardData format
+                    const transformedEvents: CardData[] = events.map((event) => {
+                        const eventId = event._id || event.id;
+                        return {
+                            id: eventId,
+                            name: event.name,
+                            description: event.description || "",
+                            img: event.img,
+                            redirect: `/events/${event.redirect}`,
+                            cardposition: "center",
+                            category: event.organizer || "General",
+                        };
+                    });
+
+                    // Extract unique categories
+                    const uniqueCategoriesSet = new Set<string>();
+                    transformedEvents.forEach((event) => {
+                        const orgs = event.category.split(",").map((s) => s.trim());
+                        orgs.forEach((org) => {
+                            if (org) uniqueCategoriesSet.add(org);
+                        });
+                    });
+
+                    const uniqueCategories = [
+                        "All",
+                        ...Array.from(uniqueCategoriesSet),
+                    ].sort();
+                    setCategories(uniqueCategories);
+                    setRawEvents(transformedEvents);
+                })
+                .catch((error) => {
+                    console.error("Error fetching event data:", error);
+                    setAllEvents([]);
+                    setRawEvents([]);
+                })
+                .finally(() => {
+                    // Restore state from local storage
+                    const savedCategory = localStorage.getItem("ojass26_event_category");
+                    const savedIndex = localStorage.getItem("ojass26_event_index");
+
+                    if (savedCategory) {
+                        setSelectedCategory(savedCategory);
+                    }
+                    if (savedIndex) {
+                        pendingIndexRef.current = parseInt(savedIndex);
+                    }
+
+                    setTimeout(() => setIsLoading(false), 800);
+                });
+        }
     }, []);
 
     useEffect(() => {
@@ -196,19 +298,19 @@ export default function Page() {
 
         setAllEvents(filtered);
 
-        // Restore index if pending, otherwise reset
+        // Restore index if pending (from localStorage on initial load)
         if (pendingIndexRef.current !== null) {
             setSelectedEventIndex(pendingIndexRef.current);
             pendingIndexRef.current = null;
-        } else {
-            setSelectedEventIndex(0); // Reset to first slide on filter change
         }
+        // Don't reset to 0 on initial load - the state is already initialized from localStorage
+        // Only reset when user actively changes category (which will be handled by the category change itself)
     }, [selectedCategory, rawEvents]);
 
     useEffect(() => {
         if (!isLoading) {
-            sessionStorage.setItem("ojass26_event_category", selectedCategory);
-            sessionStorage.setItem(
+            localStorage.setItem("ojass26_event_category", selectedCategory);
+            localStorage.setItem(
                 "ojass26_event_index",
                 selectedEventIndex.toString(),
             );
@@ -357,6 +459,7 @@ export default function Page() {
                                     key={category}
                                     onClick={() => {
                                         setSelectedCategory(category);
+                                        setSelectedEventIndex(0); // Reset to first event when changing category
                                         setIsDropdownOpen(false);
                                     }}
                                     className={`w-full text-left px-4 py-3 transition-colors duration-200 text-sm ${selectedCategory === category
@@ -384,11 +487,11 @@ export default function Page() {
                     backfaceVisibility: "hidden",
                 }}>
                 <Image
-                    src={isDystopia ? "/bg_main_dys.png" : "/bg_main_eut.jpg"}
+                    src="/home1.jpg"
                     alt="Event 1"
                     width={1000}
                     height={1000}
-                    className="w-full h-full object-cover object-center-bottom"
+                    className={`w-full h-full object-cover object-center-bottom ${isDystopia ? "hue-rotate-180" : ""}`}
                     style={{ objectPosition: "center center" }}
                 />
             </div>
@@ -397,32 +500,33 @@ export default function Page() {
                 id="events-fg"
                 className="w-full h-full absolute bottom-0 left-0 pointer-events-none"
                 style={{
-                    transform: "scale(1.1)",
+                    transform: "scale(1)",
                     willChange: "transform",
                     backfaceVisibility: "hidden",
                 }}>
                 <Image
-                    src={isDystopia ? "/events/bg_dys.png" : "/events/bg.png"}
+                    src={isDystopia ? "/events/ship.png" : "/events/ship.png"}
                     alt="Event 1"
                     width={1000}
                     height={1000}
-                    className="w-full h-full object-cover object-center-bottom"
+                    className={`w-full h-full object-cover object-center-center ${isDystopia ? "hue-rotate-180" : ""} scale-105`}
                     style={{
-                        objectPosition: "center top",
+                        objectPosition: "center center",
                         pointerEvents: "none",
                     }}
                 />
 
-                <div className="absolute inset-0 flex items-center justify-center w-full md:w-1/2 -top-[10vh] pointer-events-auto left-1/2 -translate-x-1/2 z-20">
+                <div className="absolute inset-0 flex items-center justify-center w-full md:w-1/2 top-[0vh] pointer-events-auto left-1/2 -translate-x-1/2 z-20">
                     <div className="swiper-3d-container w-full h-full">
                         <Swiper
                             key={`swiper-${selectedCategory}-${allEvents.length}`}
+                            loop={allEvents.length > 4}
                             spaceBetween={80}
-                            slidesPerView={3}
+                            slidesPerView={allEvents.length >= 3 ? 3 : allEvents.length}
                             centeredSlides={true}
                             initialSlide={selectedEventIndex}
                             onSlideChange={(swiper) =>
-                                setSelectedEventIndex(swiper.activeIndex)
+                                setSelectedEventIndex(allEvents.length > 4 ? swiper.realIndex : swiper.activeIndex)
                             }
                             watchSlidesProgress={true}
                             onSwiper={(swiper) => {
@@ -433,6 +537,13 @@ export default function Page() {
                                     swiper.updateSlides();
                                     swiper.updateProgress();
                                     swiper.updateSlidesClasses();
+
+                                    // Restore saved index after Swiper is ready, only once
+                                    if (selectedEventIndex > 0 && !hasRestoredSwiperState) {
+                                        swiper.slideTo(selectedEventIndex, 0); // 0 = no animation for instant restore
+                                        console.log(`Restored to saved index: ${selectedEventIndex}`);
+                                        setHasRestoredSwiperState(true); // Set flag to true after restoration
+                                    }
                                 });
                             }}
                             className="w-full h-full events-swiper"
@@ -445,9 +556,13 @@ export default function Page() {
                                 padding: 0,
                             }}
                             breakpoints={{
-                                0: { slidesPerView: 1, spaceBetween: 20 },
-                                640: { slidesPerView: 1, spaceBetween: 40 },
-                                1024: { slidesPerView: 3, spaceBetween: 80 },
+                                0: { slidesPerView: 1, spaceBetween: 20, loop: allEvents.length > 1 },
+                                640: { slidesPerView: 1, spaceBetween: 40, loop: allEvents.length > 1 },
+                                1024: {
+                                    slidesPerView: allEvents.length >= 3 ? 3 : allEvents.length,
+                                    spaceBetween: 80,
+                                    loop: allEvents.length > 4
+                                },
                             }}
                             modules={[Navigation]}
                             navigation={{
@@ -459,7 +574,13 @@ export default function Page() {
                                     <div className="w-full h-full flex items-center justify-center">
                                         <Link
                                             href={card.redirect}
-                                            onClick={(e) => e.stopPropagation()}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                // Save current state before navigating
+                                                localStorage.setItem("ojass26_event_category", selectedCategory);
+                                                localStorage.setItem("ojass26_event_index", selectedEventIndex.toString());
+                                                console.log(`Saved state: category=${selectedCategory}, index=${selectedEventIndex}`);
+                                            }}
                                             className="cursor-pointer block">
                                             <div className="card-wrap w-[260px] md:w-[320px] lg:w-[360px] h-full">
                                                 <EventCard

@@ -11,6 +11,10 @@ import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { z } from "zod";
 
+// Import events data and metadata
+import eventsData from "./events.json";
+import eventsMetadata from "./events-metadata.json";
+
 // =========================================================
 // CONFIG
 // =========================================================
@@ -38,9 +42,21 @@ const session = {
 // STATIC CONTEXT
 // =========================================================
 const OJASS_CONTEXT = `
-Ojass is the annual Techno-Management Fest of NIT Jamshedpur.
-It is one of the largest fests in East India.
-Theme: Future, Technology, Management, Innovation.
+**${eventsMetadata.festInfo.name}** - ${eventsMetadata.festInfo.fullName}
+- **Edition:** ${eventsMetadata.festInfo.edition}
+- **Theme:** "${eventsMetadata.festInfo.theme}"
+- **Dates:** ${eventsMetadata.festInfo.dates}
+- **Location:** ${eventsMetadata.festInfo.location}
+- **Organized by:** ${eventsMetadata.festInfo.organizer}
+- **Presented by:** ${eventsMetadata.festInfo.presenter}
+
+**Event Categories:**
+${Object.entries(eventsMetadata.eventCategories).map(([key, cat]: [string, any]) => `- **${cat.name}**: ${cat.description}`).join('\n')}
+
+**Quick Links:**
+${Object.entries(eventsMetadata.quickLinks).map(([name, url]) => `- ${name}: ${url}`).join('\n')}
+- Sponsor Portal: ${eventsMetadata.festInfo.sponsorPortal}
+- CA Program: ${eventsMetadata.festInfo.caPortal}
 `;
 
 // =========================================================
@@ -184,9 +200,12 @@ async function event_info_tool(query: string): Promise<string> {
 
   const synonymMap: Record<string, string[]> = {
     contest: ["event", "competition"],
-    coding: ["computer", "programming", "code"],
-    robotics: ["robot", "bot", "robo"],
-    quiz: ["trivia"],
+    coding: ["computer", "programming", "code", "hackathon", "developer"],
+    robotics: ["robot", "bot", "robo", "drone", "autonomous"],
+    quiz: ["trivia", "question", "knowledge"],
+    gaming: ["esports", "game", "play", "tournament"],
+    management: ["business", "mba", "case", "strategy"],
+    creative: ["film", "photo", "video", "art", "design"],
   };
 
   const expanded = new Set(keywords);
@@ -195,6 +214,35 @@ async function event_info_tool(query: string): Promise<string> {
   });
 
   const uniqKeywords = Array.from(expanded);
+
+  // Check if query is asking for a category
+  const categoryMatch = Object.entries(eventsMetadata.eventCategories).find(
+    ([key, cat]: [string, any]) =>
+      query.toLowerCase().includes(key) ||
+      query.toLowerCase().includes(cat.name.toLowerCase())
+  );
+
+  if (categoryMatch) {
+    const [_catKey, category]: [string, any] = categoryMatch;
+    const categoryEvents = category.events;
+    const eventsList = eventsData
+      .filter((e: any) => categoryEvents.includes(e.name))
+      .map((e: any) => `- **${e.name}**: ${e.description.substring(0, 150)}...`);
+
+    if (eventsList.length > 0) {
+      return `**${category.name}**\n${category.description}\n\n**Events in this category:**\n${eventsList.join('\n')}`;
+    }
+  }
+
+  // Tag-based search using metadata
+  const matchingEventsByTags = new Set<string>();
+  uniqKeywords.forEach(keyword => {
+    Object.entries(eventsMetadata.eventTags).forEach(([eventName, tags]: [string, any]) => {
+      if (tags.some((tag: string) => tag.includes(keyword) || keyword.includes(tag))) {
+        matchingEventsByTags.add(eventName);
+      }
+    });
+  });
 
   // Partial matches for generic terms
   const regexPattern = uniqKeywords.length
@@ -207,14 +255,24 @@ async function event_info_tool(query: string): Promise<string> {
       { name: { $regex: regexPattern, $options: "i" } },
       { description: { $regex: regexPattern, $options: "i" } },
       { "event_head.name": { $regex: regexPattern, $options: "i" } },
-      // Note: Category and Tags do not exist on the current Event model
     ],
   };
 
   const results = await Event.find(primaryQuery).limit(5).lean();
 
+  // Merge database results with tag-based matches
+  const dbEventNames = new Set(results.map((e: any) => e.name));
+  matchingEventsByTags.forEach(name => {
+    if (!dbEventNames.has(name)) {
+      const eventData = eventsData.find((e: any) => e.name === name);
+      if (eventData) {
+        results.push(eventData as any);
+      }
+    }
+  });
+
   if (results.length > 0) {
-    return results.map(e => format_event(e as unknown as IEvent)).join("\n\n");
+    return results.slice(0, 5).map(e => format_event(e as unknown as IEvent)).join("\n\n");
   }
 
   // Fallback: If no specific name matched, but user asked for "events" generally
@@ -225,7 +283,12 @@ async function event_info_tool(query: string): Promise<string> {
     }
   }
 
-  return "No matching event found in the database.";
+  // Suggest categories if no match
+  const categoryList = Object.entries(eventsMetadata.eventCategories)
+    .map(([_k, cat]: [string, any]) => `- **${cat.name}**`)
+    .join('\n');
+
+  return `No matching event found. Here are our event categories:\n${categoryList}\n\nYou can ask about events in any category!`;
 }
 
 async function website_info_tool(query: string): Promise<string> {

@@ -20,8 +20,13 @@ export async function POST(request: NextRequest) {
         try {
             jwt.verify(token, JWT_SECRET);
         } catch (err) {
-            console.warn('Logout: invalid or expired token', err);
-            return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 });
+            // For logout, we don't strictly need a valid token since the purpose is to discard it anyway
+            // Log the warning but allow logout to proceed
+            console.warn('Logout: invalid or expired token - allowing logout to proceed', err);
+            // Still return success since the client should discard the token
+            return NextResponse.json({
+                message: 'Logout successful (token was already invalid or expired)'
+            }, { status: 200 });
         }
 
         // Stateless JWT: nothing to revoke unless you implement a blacklist. Client should discard the token.

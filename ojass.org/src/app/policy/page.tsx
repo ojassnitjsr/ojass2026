@@ -122,7 +122,7 @@ const POLICIES = [
                     <div className="pl-4 border-l-2 border-white/10 space-y-1">
                         <p>For queries or concerns, reach out to the OJASS team at:</p>
                         <p><strong className="text-white">Email:</strong> ojass@nitjsr.ac.in</p>
-                        <p><strong className="text-white">Phone:</strong> 83406 71871</p>
+                        <p><strong className="text-white">Phone:</strong> +91 83406 71871</p>
                         <p><strong className="text-white">Location:</strong> NIT Jamshedpur, Adityapur, Jamshedpur, Jharkhand - 831014</p>
                     </div>
                 </div>
@@ -339,6 +339,14 @@ const POLICIES = [
                                 <li>OJASS organizers are not liable for any losses or damages arising from event cancellations, delays, or changes.</li>
                             </ul>
                         </div>
+                        <div>
+                            <h4 className="text-white font-medium mb-1">Minimum Participation Requirements:</h4>
+                            <ul className="list-disc pl-5 space-y-1 marker:text-white/50">
+                                <li>If fewer than 10 teams register for a team event, or fewer than 20 individuals register for an individual event, the organizing members reserve the right to cancel the event entirely.</li>
+                                <li>Alternatively, in such cases, the organizing members may reduce the prize money at their discretion based on the level of participation.</li>
+                                {/* <li>If required participants will be notified of any such changes through the contact details provided during registration.</li> */}
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
@@ -475,7 +483,7 @@ export default function PolicyPage() {
                             themeClasses.primaryColor
                         )}>
                         <FaArrowLeft className="group-hover:-translate-x-1 transition-transform" />
-                        <span className="font-mono text-xs md:text-sm tracking-widest uppercase">Eject</span>
+                        <span className="font-mono text-xs md:text-sm tracking-widest uppercase">EXIT</span>
                     </Link>
 
                     <div className="hidden md:flex items-center gap-4">

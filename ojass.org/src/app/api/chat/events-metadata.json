@@ -1,0 +1,355 @@
+{
+    "eventCategories": {
+        "gaming": {
+            "name": "Gaming & E-Sports",
+            "description": "Competitive gaming events including BGMI, Valorant, FC-24, and Chess",
+            "events": [
+                "BGMI",
+                "Valorant",
+                "FC-24",
+                "Chess"
+            ]
+        },
+        "management": {
+            "name": "Management & Business",
+            "description": "Business strategy, case studies, quizzes, and entrepreneurship events",
+            "events": [
+                "Mock IPL Auction",
+                "Case Study Challenge",
+                "Fix-It Fiesta",
+                "Business Simulation Challenge",
+                "Start Up Ideathon",
+                "The Forge: Mock Tata Crucible Quiz"
+            ]
+        },
+        "coding": {
+            "name": "Programming & Development",
+            "description": "Hackathons, competitive programming, AI/ML, and web development challenges",
+            "events": [
+                "Hack De Science",
+                "Vishwa Code Mania",
+                "AI Hackathon",
+                "Pixel Sync",
+                "Flow Forge"
+            ]
+        },
+        "robotics": {
+            "name": "Robotics & Automation",
+            "description": "Robot competitions including combat bots, line followers, and autonomous robots",
+            "events": [
+                "Kurukshetra",
+                "Robo Soccer",
+                "Robo Rumble",
+                "Trace Bot Challenge",
+                "Maze Marathon",
+                "Cozmo Clench",
+                "Aqua Race",
+                "Underwater Tracing",
+                "No Ground Zone",
+                "Drone Race Challenge"
+            ]
+        },
+        "creative": {
+            "name": "Media & Creative Arts",
+            "description": "Photography, filmmaking, and creative content creation events",
+            "events": [
+                "Frames and Tales",
+                "Cinescript",
+                "Lights, Camera, OJASS!",
+                "Ulysses"
+            ]
+        },
+        "technical": {
+            "name": "Technical & Engineering",
+            "description": "CAD, simulation, structural design, and engineering challenges",
+            "events": [
+                "Sanrachana",
+                "Simulation Sprint",
+                "Finite Element Analysis",
+                "Rural Tech Ideathon"
+            ]
+        },
+        "quiz": {
+            "name": "Quiz & Knowledge",
+            "description": "Quiz competitions covering various domains",
+            "events": [
+                "OJASS Olympiad",
+                "The Great Indian MELA Quiz",
+                "The Forge: Mock Tata Crucible Quiz"
+            ]
+        }
+    },
+    "eventTags": {
+        "BGMI": [
+            "gaming",
+            "esports",
+            "team",
+            "strategy",
+            "battle-royale"
+        ],
+        "Valorant": [
+            "gaming",
+            "esports",
+            "team",
+            "fps",
+            "tactical-shooter"
+        ],
+        "FC-24": [
+            "gaming",
+            "esports",
+            "individual",
+            "sports",
+            "football"
+        ],
+        "Chess": [
+            "strategy",
+            "board-game",
+            "individual",
+            "mental-sport"
+        ],
+        "Fix-It Fiesta": [
+            "management",
+            "quality",
+            "team",
+            "innovation",
+            "product-design"
+        ],
+        "Case Study Challenge": [
+            "management",
+            "analytics",
+            "team",
+            "business",
+            "data-driven"
+        ],
+        "Ulysses": [
+            "creative",
+            "storytelling",
+            "team",
+            "narrative",
+            "writing"
+        ],
+        "Mock IPL Auction": [
+            "management",
+            "strategy",
+            "team",
+            "cricket",
+            "auction"
+        ],
+        "Frames and Tales": [
+            "creative",
+            "photography",
+            "individual",
+            "visual-storytelling"
+        ],
+        "Cinescript": [
+            "creative",
+            "filmmaking",
+            "team",
+            "short-film",
+            "cinema"
+        ],
+        "Lights, Camera, OJASS!": [
+            "creative",
+            "video",
+            "individual",
+            "reels",
+            "fest-coverage"
+        ],
+        "Rural Tech Ideathon": [
+            "innovation",
+            "tech",
+            "team",
+            "social-impact",
+            "rural-development"
+        ],
+        "Hack De Science": [
+            "coding",
+            "hackathon",
+            "team",
+            "web-development",
+            "36-hour"
+        ],
+        "Vishwa Code Mania": [
+            "coding",
+            "competitive-programming",
+            "team",
+            "algorithms"
+        ],
+        "AI Hackathon": [
+            "coding",
+            "ai-ml",
+            "team",
+            "machine-learning",
+            "python"
+        ],
+        "Pixel Sync": [
+            "coding",
+            "ui-ux",
+            "team",
+            "frontend",
+            "design"
+        ],
+        "Flow Forge": [
+            "coding",
+            "automation",
+            "team",
+            "no-code",
+            "workflow"
+        ],
+        "Sanrachana": [
+            "technical",
+            "civil",
+            "team",
+            "bridge-building",
+            "structural"
+        ],
+        "Simulation Sprint": [
+            "technical",
+            "matlab",
+            "individual",
+            "simulation",
+            "electronics"
+        ],
+        "Finite Element Analysis": [
+            "technical",
+            "cad",
+            "team",
+            "fea",
+            "mechanical"
+        ],
+        "Business Simulation Challenge": [
+            "management",
+            "strategy",
+            "team",
+            "business-model"
+        ],
+        "Start Up Ideathon": [
+            "management",
+            "entrepreneurship",
+            "team",
+            "pitching",
+            "startup"
+        ],
+        "OJASS Olympiad": [
+            "quiz",
+            "academic",
+            "individual",
+            "stem",
+            "school-students"
+        ],
+        "The Great Indian MELA Quiz": [
+            "quiz",
+            "pop-culture",
+            "team",
+            "entertainment"
+        ],
+        "The Forge: Mock Tata Crucible Quiz": [
+            "quiz",
+            "business",
+            "team",
+            "corporate"
+        ],
+        "Kurukshetra": [
+            "robotics",
+            "combat",
+            "team",
+            "fighting-robot",
+            "flagship"
+        ],
+        "Robo Soccer": [
+            "robotics",
+            "sports",
+            "team",
+            "football",
+            "arena"
+        ],
+        "Robo Rumble": [
+            "robotics",
+            "obstacle-course",
+            "team",
+            "racing"
+        ],
+        "Trace Bot Challenge": [
+            "robotics",
+            "line-follower",
+            "team",
+            "autonomous"
+        ],
+        "Maze Marathon": [
+            "robotics",
+            "maze-solver",
+            "team",
+            "autonomous",
+            "path-planning"
+        ],
+        "Cozmo Clench": [
+            "robotics",
+            "gripper",
+            "team",
+            "manual-control"
+        ],
+        "Aqua Race": [
+            "robotics",
+            "aquatic",
+            "team",
+            "boat",
+            "racing"
+        ],
+        "Underwater Tracing": [
+            "robotics",
+            "underwater",
+            "team",
+            "advanced"
+        ],
+        "No Ground Zone": [
+            "robotics",
+            "aerial",
+            "team",
+            "rc-aircraft",
+            "payload"
+        ],
+        "Drone Race Challenge": [
+            "robotics",
+            "aerial",
+            "team",
+            "drone",
+            "fpv-racing"
+        ]
+    },
+    "prizeRange": {
+        "high": [
+            "Kurukshetra"
+        ],
+        "medium": [
+            "No Ground Zone",
+            "Drone Race Challenge",
+            "Hack De Science",
+            "Robo Soccer",
+            "Cinescript",
+            "Underwater Tracing"
+        ],
+        "standard": [
+            "most other events"
+        ]
+    },
+    "festInfo": {
+        "name": "OJASS 2026",
+        "fullName": "Annual Techno-Management Fest of NIT Jamshedpur",
+        "edition": "22nd",
+        "theme": "NOVUS ORBIS - A New World",
+        "dates": "19-22 February 2026",
+        "organizer": "NIT Jamshedpur",
+        "presenter": "ConfirmTkt",
+        "location": "NIT Jamshedpur Campus",
+        "website": "https://ojass.org",
+        "sponsorPortal": "https://sponsor.ojass.org",
+        "caPortal": "https://ca.ojass.org"
+    },
+    "quickLinks": {
+        "events": "/events",
+        "timeline": "/timeline",
+        "gallery": "/gallery",
+        "team": "/team",
+        "sponsors": "/sponsors"
+    }
+}

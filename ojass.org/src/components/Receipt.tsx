@@ -56,7 +56,7 @@ const Receipt: React.FC<ReceiptProps> = ({ user, onClose }) => {
           <div className="space-y-6">
             {/* Header */}
             <div className="text-center">
-              <h1 className="text-4xl font-bold text-blue-600">OJASS 2025</h1>
+              <h1 className="text-4xl font-bold text-blue-600">OJASS 2026</h1>
               <p className="text-gray-600 mt-1">National Institute of Technology, Jamshedpur</p>
             </div>
 

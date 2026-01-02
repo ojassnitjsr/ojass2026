@@ -13,9 +13,22 @@ export default function Footer() {
 
     useEffect(() => {
         const handleScroll = () => {
-            const scrollPosition = window.innerHeight + window.scrollY;
-            const documentHeight = document.body.offsetHeight;
-            const isNearBottom = scrollPosition >= documentHeight - 10;
+            // Check for scroll containers (snap-scroll divs)
+            const scrollContainer = document.querySelector('.snap-y');
+
+            let scrollPosition, documentHeight, isNearBottom;
+
+            if (scrollContainer) {
+                // For scroll containers
+                scrollPosition = scrollContainer.scrollTop + scrollContainer.clientHeight;
+                documentHeight = scrollContainer.scrollHeight;
+                isNearBottom = scrollPosition >= documentHeight - 100;
+            } else {
+                // Fallback to window scroll
+                scrollPosition = window.innerHeight + window.scrollY;
+                documentHeight = document.body.offsetHeight;
+                isNearBottom = scrollPosition >= documentHeight - 10;
+            }
 
             if (isNearBottom) {
                 gsap.to(footerRef.current, {
@@ -36,8 +49,23 @@ export default function Footer() {
             }
         };
 
+        // Listen to both window scroll and scroll container
+        const scrollContainer = document.querySelector('.snap-y');
+
         window.addEventListener("scroll", handleScroll, { passive: true });
-        return () => window.removeEventListener("scroll", handleScroll);
+        if (scrollContainer) {
+            scrollContainer.addEventListener("scroll", handleScroll, { passive: true });
+        }
+
+        // Initial check
+        handleScroll();
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+            if (scrollContainer) {
+                scrollContainer.removeEventListener("scroll", handleScroll);
+            }
+        };
     }, []);
 
     useEffect(() => {
@@ -51,7 +79,7 @@ export default function Footer() {
     return (
         <div
             ref={footerRef}
-            className="fixed bottom-0 left-0 right-0 flex items-end justify-center z-40 pb-2 sm:pb-0"
+            className="fixed bottom-0 left-0 right-0 flex items-end justify-center z-40 pb-2 sm:pb-0 font-kensmark"
             style={{ opacity: 0, pointerEvents: "none" }}>
             <div
                 className={`relative layout-panel hud-grid px-6 py-3 backdrop-blur-md transition-all duration-700 bg-black/60 ${isDystopia ? "is-dystopia" : ""
@@ -62,7 +90,7 @@ export default function Footer() {
                     transform: isSmallScreen ? "scale(0.85)" : "scale(1)",
                     transformOrigin: "bottom center",
                 }}>
-                <div className="relative z-10 flex flex-col items-center justify-center gap-1 text-xs font-mono tracking-wider layout-text opacity-85 text-center">
+                <div className="relative z-10 flex flex-col items-center justify-center gap-1 text-xs tracking-wider text-center text-white font-bold">
                     {/* Navigation Links */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 place-items-center gap-x-6 gap-y-2">
                         {[

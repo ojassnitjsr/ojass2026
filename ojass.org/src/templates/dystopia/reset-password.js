@@ -124,7 +124,7 @@ const getResetPasswordTemplate = (otp) => {
         <div class='banner'>
             <img src='https://img.freepik.com/premium-photo/futuristic-robots-dystopian-future-city-ar-generative-ai_1198230-6283.jpg' alt='OJASS 2026 Banner' class='banner-img'>
             <div class='logo-banner'>
-                <img src='https://data.digicraft.one/Logo/Main.png' alt='OJASS 2026 Logo' class='logo'>
+                <img src='https://ojass.org/logo.png' alt='OJASS 2026 Logo' class='logo'>
             </div>
         </div>
         <div class='fest-title'>OJASS 2026</div>

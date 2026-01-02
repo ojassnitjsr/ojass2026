@@ -2,6 +2,15 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Custom Font - Kensmark */
+@font-face {
+    font-family: 'Kensmark';
+    src: url('/font/kensmark-03-black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
 @custom-variant dystopia (&:is(.dystopia *));
 
 @theme inline {
@@ -144,16 +153,22 @@ html.lenis body {
     * {
         @apply border-border outline-ring/50;
     }
+
     body {
         @apply bg-background text-foreground;
     }
 }
 
 @layer utilities {
+    .font-kensmark {
+        font-family: 'Kensmark', sans-serif;
+    }
+
     @keyframes horizontal-scroll {
         from {
             transform: translateX(0);
         }
+
         to {
             transform: translateX(-100%);
         }
@@ -163,6 +178,7 @@ html.lenis body {
         from {
             transform: translateX(100%);
         }
+
         to {
             transform: translateX(0);
         }
@@ -179,6 +195,7 @@ html.lenis body {
             opacity: 0;
             transform: translateY(-10px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);

@@ -147,7 +147,7 @@ export const ForgotPasswordForm = ({
                             onClick={handleSendEmail}
                             isLoading={loading}
                             className="w-full">
-                            Initiate Recovery Protocol
+                            Initiate Recovery
                         </Button>
                     </div>
                 )}
@@ -292,7 +292,7 @@ export const ForgotPasswordForm = ({
                                 "text-xs tracking-wider transition-colors hover:text-opacity-100 opacity-70",
                                 theme.accentColor,
                             )}>
-                            Cancel Operation
+                            Back to Login
                         </button>
                     </div>
                 )}
