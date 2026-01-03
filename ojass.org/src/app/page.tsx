@@ -51,7 +51,9 @@ export default function Home() {
                 filter: isDystopia ? "hue-rotate(180deg)" : "",
             }}>
                 <div className="relative flex flex-col items-center justify-center gap-6 h-screen">
-                    <Image src="/text-main-eut.png" alt="Home" width={500} height={500} className="object-contain w-[90vw] md:w-1/2 md:mb-0 mb-32" />
+                    <Image src="/text-main-dys.png" alt="Home" width={500} height={500} className="object-contain w-[90vw] md:w-1/2 md:mb-0 mb-32" style={{
+                        filter: "hue-rotate(180deg)"
+                    }}/>
 
                     {/* Mobile-only CA and Sponsor buttons - Positioned below image */}
                     <div className="absolute flex flex-col md:hidden gap-3 w-[60%] max-w-[250px] md:mt-0 mt-20" style={{

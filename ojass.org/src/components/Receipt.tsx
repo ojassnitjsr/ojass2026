@@ -40,12 +40,17 @@ const Receipt: React.FC<ReceiptProps> = ({ user, onClose }) => {
 
   return (
     <div className="min-h-screen w-full pt-20 pb-10 bg-[url('/bghero.webp')] bg-fixed bg-center bg-cover">
+      <style jsx global>{`
+        * {
+          cursor: auto !important;
+        }
+      `}</style>
       <div className="fixed inset-0 bg-gradient-to-b from-black/30 to-black/90 top-0" />
-      
+
       <div className="relative z-10 max-w-2xl mx-auto px-4">
         <div className="bg-white rounded-lg p-8 print:p-0 print:shadow-none print:bg-white text-gray-900">
           {/* Back Button - Hidden in Print */}
-          <button 
+          <button
             onClick={handleClose}
             className="mb-6 text-gray-600 hover:text-gray-800 flex items-center gap-2 print:hidden"
           >
@@ -95,17 +100,23 @@ const Receipt: React.FC<ReceiptProps> = ({ user, onClose }) => {
               </div>
               <div className="grid grid-cols-2">
                 <p className="text-gray-600">College:</p>
-                <p className="font-medium text-gray-900 text-right">{user.college}</p>
+                <p className="font-medium text-gray-900 text-right">
+                  {user.email?.toLowerCase().endsWith('@nitjsr.ac.in')
+                    ? 'NIT Jamshedpur'
+                    : user.college || user.collegeName || 'N/A'}
+                </p>
               </div>
               <div className="grid grid-cols-2">
                 <p className="text-gray-600">Registration Type:</p>
                 <p className="font-medium text-gray-900 text-right">
-                  {user.isNitJsr ? 'NIT Jamshedpur Student' : 'Other College Student'}
+                  {user.email?.toLowerCase().endsWith('@nitjsr.ac.in')
+                    ? 'NIT JSR'
+                    : user.college || user.collegeName || 'Other College'}
                 </p>
               </div>
               <div className="grid grid-cols-2 pt-4 border-t">
                 <p className="text-gray-600">Registration Phase:</p>
-                <p className="font-medium text-gray-900 text-right">{user.registrationPhase || 'N/A'}</p>
+                <p className="font-medium text-blue-600 text-right">{user.registrationPhase || 'Early Bird Offer'}</p>
               </div>
             </div>
 
@@ -133,13 +144,13 @@ const Receipt: React.FC<ReceiptProps> = ({ user, onClose }) => {
               <div className="text-xs text-gray-400">
                 <p>
                   Payment processing is maintained by{' '}
-                  <a 
-                    href="https://digicraft.one" 
-                    target="_blank" 
+                  <a
+                    href="https://digicraft.one"
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-500 hover:text-blue-600"
                   >
-                    DigiCraft.one
+                    DigiCraft Innovation Pvt. Ltd.
                   </a>
                 </p>
                 <p>For payment related issues, please contact: support@digicraft.one</p>

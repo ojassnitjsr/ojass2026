@@ -1,6 +1,7 @@
 'use client';
 
 import { useTheme } from '@/contexts/ThemeContext';
+import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 interface Particle {
@@ -14,6 +15,7 @@ interface Particle {
 }
 
 export default function CursorEffect() {
+  const pathname = usePathname();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: -1, y: -1 }); // Initialize to -1 to track if mouse has moved
   const particlesRef = useRef<Particle[]>([]);
@@ -206,10 +208,10 @@ export default function CursorEffect() {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [isDystopia, isMobile]);
+  }, [isDystopia, isMobile, pathname]);
 
-  // Don't render canvas on mobile devices
-  if (isMobile) {
+  // Don't render canvas on mobile devices or receipt page
+  if (isMobile || pathname === '/receipt') {
     return null;
   }
 

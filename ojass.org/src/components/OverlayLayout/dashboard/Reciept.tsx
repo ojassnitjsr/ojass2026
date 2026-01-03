@@ -261,11 +261,10 @@ export default function Receipt({ userData, pricing }: { userData?: any, pricing
                     )}
                     {message && (
                         <div
-                            className={`mb-4 p-3 text-xs rounded border ${
-                                message.type === "success"
-                                    ? "bg-green-500/10 text-green-300 border-green-500/30"
-                                    : "bg-red-500/10 text-red-300 border-red-500/30"
-                            }`}>
+                            className={`mb-4 p-3 text-xs rounded border ${message.type === "success"
+                                ? "bg-green-500/10 text-green-300 border-green-500/30"
+                                : "bg-red-500/10 text-red-300 border-red-500/30"
+                                }`}>
                             {message.text}
                         </div>
                     )}
@@ -285,17 +284,17 @@ export default function Receipt({ userData, pricing }: { userData?: any, pricing
 
     const paymentDate = paymentData.paymentDate
         ? new Date(paymentData.paymentDate).toLocaleDateString("en-IN", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-          })
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        })
         : "N/A";
 
     const paymentTime = paymentData.paymentDate
         ? new Date(paymentData.paymentDate).toLocaleTimeString("en-IN", {
-              hour: "2-digit",
-              minute: "2-digit",
-          })
+            hour: "2-digit",
+            minute: "2-digit",
+        })
         : "N/A";
 
     return (
@@ -430,6 +429,34 @@ export default function Receipt({ userData, pricing }: { userData?: any, pricing
                             </span>
                             <span className="text-slate-300">
                                 {userData?.phone || "N/A"}
+                            </span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 border-b border-white/5">
+                            <span className="text-slate-400 font-medium">
+                                College
+                            </span>
+                            <span className="text-slate-300 text-right text-xs">
+                                {userData?.email?.toLowerCase().endsWith('@nitjsr.ac.in')
+                                    ? 'NIT Jamshedpur'
+                                    : userData?.college || userData?.collegeName || "N/A"}
+                            </span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 border-b border-white/5">
+                            <span className="text-slate-400 font-medium">
+                                Registration Type
+                            </span>
+                            <span className={cn("text-right text-xs font-semibold", theme.accentColor)}>
+                                {userData?.email?.toLowerCase().endsWith('@nitjsr.ac.in')
+                                    ? 'NIT JSR'
+                                    : userData?.college || userData?.collegeName || 'Other College'}
+                            </span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 border-t border-white/10 pt-3">
+                            <span className="text-slate-400 font-medium">
+                                Registration Phase
+                            </span>
+                            <span className={cn("text-right text-xs font-bold uppercase tracking-wide", theme.accentColor)}>
+                                {paymentData?.registrationPhase || pricing?.phaseName || 'Early Bird Offer'}
                             </span>
                         </div>
                     </div>

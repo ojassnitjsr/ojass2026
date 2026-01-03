@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
 
         // Find user
         const user = await User.findById(decoded.userId).select(
-            'isPaid paymentAmount paymentDate razorpayPaymentId razorpayOrderId orderId isEmailVerified'
+            'name email phone ojassId college collegeName registrationPhase isPaid paymentAmount paymentDate razorpayPaymentId razorpayOrderId orderId isEmailVerified'
         );
 
         if (!user) {
@@ -58,6 +58,13 @@ export async function GET(request: NextRequest) {
         }
 
         return NextResponse.json({
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            ojassId: user.ojassId,
+            college: user.college,
+            collegeName: user.collegeName,
+            registrationPhase: user.registrationPhase,
             isPaid: user.isPaid,
             isEmailVerified: user.isEmailVerified,
             paymentAmount: user.paymentAmount,

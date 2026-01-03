@@ -39,8 +39,8 @@ export default function OverlayLayout() {
                 </>
             ) : null}
 
-            {path !== "/bot" && <Bot />}
-            <ThemeToggleButton onToggle={handleThemeChange} />
+            {path !== "/bot" && path !== "/receipt" && <Bot />}
+            {path !== "/receipt" && <ThemeToggleButton onToggle={handleThemeChange} />}
 
             {/* <div className={`fixed h-[100vh] w-[100vw] top-0 left-0 bg-[url('/glass-1.png')] bg-contain bg-center bg-no-repeat z-[10000] pointer-events-none ${isDystopia ? "visible" : "invisible"}`}> */}
 
