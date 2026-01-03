@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
-import { Mail, Lock, AlertCircle, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, AlertCircle, Eye, EyeOff, Info } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -85,7 +85,13 @@ export default function LoginPage() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100"
         >
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Login</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Login</h2>
+          <div className="bg-orange-50 border border-orange-100 rounded-lg p-3 mb-6 flex gap-2 items-start">
+            <Info className="w-5 h-5 text-[#FF8C00] mt-0.5 shrink-0" />
+            <p className="text-sm text-gray-700">
+              Please use the same Email ID and Password as your main <strong>ojass.org</strong> account.
+            </p>
+          </div>
 
           {/* General Error */}
           {errors.general && (
@@ -113,11 +119,10 @@ export default function LoginPage() {
                   type="text"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-[#FF8C00] focus:border-[#FF8C00] transition-colors ${
-                    errors.email
+                  className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:ring-2 focus:ring-[#FF8C00] focus:border-[#FF8C00] transition-colors ${errors.email
                       ? "border-red-300 bg-red-50"
                       : "border-gray-300 bg-white"
-                  }`}
+                    }`}
                   placeholder="Enter your email or phone"
                 />
               </div>
@@ -146,11 +151,10 @@ export default function LoginPage() {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className={`block w-full pl-10 pr-10 py-3 border rounded-lg focus:ring-2 focus:ring-[#FF8C00] focus:border-[#FF8C00] transition-colors ${
-                    errors.password
+                  className={`block w-full pl-10 pr-10 py-3 border rounded-lg focus:ring-2 focus:ring-[#FF8C00] focus:border-[#FF8C00] transition-colors ${errors.password
                       ? "border-red-300 bg-red-50"
                       : "border-gray-300 bg-white"
-                  }`}
+                    }`}
                   placeholder="Enter your password"
                 />
                 <button

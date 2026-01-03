@@ -6,27 +6,27 @@ import { Quote, Star } from "lucide-react";
 const Testimonials = () => {
   const testimonials = [
     {
-      company: "Microsoft India",
-      logo: "https://img.logos-world.net/wp-content/uploads/2020/09/Microsoft-Logo.png",
-      quote: "Partnering with OJASS gave us unparalleled access to India's brightest tech talent. The student engagement and brand recall we achieved was exceptional.",
-      author: "Rajesh Kumar",
-      position: "Head of Campus Relations",
+      company: "Coca-Cola India",
+      logo: "/Sponser/cocaCola.webp",
+      quote: "OJASS provided an incredible platform to connect with young, dynamic students. The energy and enthusiasm of the participants perfectly aligned with our brand values. The event's scale and organization were truly impressive.",
+      author: "Aanchal Chauhan",
+      position: "Brand Marketing Manager",
       rating: 5,
     },
     {
-      company: "Google",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg",
-      quote: "OJASS provided the perfect platform to showcase our products and connect with passionate students. The ROI exceeded our expectations significantly.",
-      author: "Priya Sharma",
-      position: "Marketing Lead - Education",
+      company: "Tata Steel",
+      logo: "/Sponser/tataSteel.webp",
+      quote: "As a Jharkhand-based company, partnering with NIT Jamshedpur's OJASS was a natural fit. The quality of talent and innovation showcased at the fest reinforced our commitment to nurturing the region's brightest minds. Outstanding collaboration.",
+      author: "Vibhore Goel",
+      position: "Head of Campus Engagement",
       rating: 5,
     },
     {
-      company: "Amazon",
-      logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
-      quote: "The recruitment opportunities through OJASS were outstanding. We identified and hired top talent from the event, making it one of our most successful campus initiatives.",
-      author: "Amit Patel",
-      position: "Talent Acquisition Manager",
+      company: "GeeksforGeeks",
+      logo: "/Sponser/gfg.webp",
+      quote: "OJASS delivered exceptional ROI for our brand. We engaged with thousands of passionate coders and tech enthusiasts, resulting in significant growth in course enrollments and platform engagement. The event's tech-focused audience was exactly our target demographic.",
+      author: "Anshika Gupta",
+      position: "Growth & Partnerships Lead",
       rating: 5,
     },
   ];
@@ -47,7 +47,7 @@ const Testimonials = () => {
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-blue-700 mx-auto mb-4"></div>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Hear from brands who've experienced the OJASS impact firsthand
+            Hear from brands who&apos;ve experienced the OJASS impact firsthand
           </p>
         </motion.div>
 
@@ -76,7 +76,7 @@ const Testimonials = () => {
 
               {/* Quote */}
               <p className="text-gray-700 leading-relaxed mb-6 italic">
-                "{testimonial.quote}"
+                &quot;{testimonial.quote}&quot;
               </p>
 
               {/* Company Logo */}

@@ -28,7 +28,7 @@ const FAQ = () => {
     },
     {
       question: "How do we get the sponsorship deck and pricing?",
-      answer: "Email sponsorship@ojass.org to receive the deck, rate card, and available opportunities. We typically respond within 24 hours.",
+      answer: "Email corporate.ojass@nitjar.ac.in to receive the deck, rate card, and available opportunities. We typically respond within 24 hours.",
     },
     {
       question: "Do you support recruitment or hiring use-cases?",
@@ -56,7 +56,7 @@ const FAQ = () => {
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-blue-600 to-blue-700 mx-auto mb-4"></div>
           <p className="text-lg text-gray-600">
-            Got questions? We've got answers
+            Got questions? We&apos;ve got answers
           </p>
         </motion.div>
 

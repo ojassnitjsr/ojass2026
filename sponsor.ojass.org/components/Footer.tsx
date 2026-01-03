@@ -6,6 +6,29 @@ import Image from "next/image";
 import Link from "next/link";
 
 const Footer = () => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (!href.startsWith("#")) return; // Only handle hash links
+    e.preventDefault();
+    
+    const scrollDelay = window.innerWidth < 768 ? 300 : 50;
+    
+    setTimeout(() => {
+      const targetId = href.replace("#", "");
+      const element = document.getElementById(targetId);
+      
+      if (element) {
+        const navbarHeight = 80;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = window.scrollY + elementPosition - navbarHeight;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+      }
+    }, scrollDelay);
+  };
+
   const socialLinks = [
     { icon: Instagram, href: "https://www.instagram.com/ojass.nitjsr/", label: "Instagram" },
     { icon: Facebook, href: "https://www.facebook.com/Ojassnitjamshedpur/", label: "Facebook" },
@@ -42,22 +65,22 @@ const Footer = () => {
             <h4 className="font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#about" className="text-gray-400 hover:text-blue-400 transition-colors">
+                <a href="#about" onClick={(e) => handleNavClick(e, "#about")} className="text-gray-400 hover:text-blue-400 transition-colors cursor-pointer">
                   About
                 </a>
               </li>
               <li>
-                <a href="#why-sponsor" className="text-gray-400 hover:text-blue-400 transition-colors">
+                <a href="#why-sponsor" onClick={(e) => handleNavClick(e, "#why-sponsor")} className="text-gray-400 hover:text-blue-400 transition-colors cursor-pointer">
                   Why Sponsor
                 </a>
               </li>
               <li>
-                <a href="#packages" className="text-gray-400 hover:text-blue-400 transition-colors">
+                <a href="#packages" onClick={(e) => handleNavClick(e, "#packages")} className="text-gray-400 hover:text-blue-400 transition-colors cursor-pointer">
                   Packages
                 </a>
               </li>
               <li>
-                <a href="#past-sponsors" className="text-gray-400 hover:text-blue-400 transition-colors">
+                <a href="#past-sponsors" onClick={(e) => handleNavClick(e, "#past-sponsors")} className="text-gray-400 hover:text-blue-400 transition-colors cursor-pointer">
                   Past Sponsors
                 </a>
               </li>
@@ -80,7 +103,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link 
-                  href="https://ojass.org/campus-ambassador" 
+                  href="https://ca.ojass.org" 
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-blue-400 transition-colors"
@@ -90,7 +113,7 @@ const Footer = () => {
               </li>
               <li>
                 <a 
-                  href="mailto:sponsorship@ojass.org"
+                  href="mailto:corporate.ojass@nitjar.ac.in"
                   className="text-gray-400 hover:text-blue-400 transition-colors"
                 >
                   Sponsorship Inquiry

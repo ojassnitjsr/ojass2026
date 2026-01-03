@@ -43,7 +43,7 @@ const About = () => {
           className="max-w-4xl mx-auto mb-16"
         >
           <p className="text-lg text-gray-700 leading-relaxed text-center mb-6">
-            OJASS is NIT JAMSHEDPUR’s annual national level Technomanagement Festival and it is 2<sup>nd</sup> largest techno- management fest
+            OJASS is NIT JAMSHEDPUR&apos;s Annual National Level Technomanagement Festival and it is 2<sup>nd</sup> largest Techno-management fest
             in Eastern India. Every year, thousands of students gather to
             showcase talent, spark innovation, and celebrate creativity.
           </p>

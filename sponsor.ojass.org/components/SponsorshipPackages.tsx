@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check, Crown, Award, Star, Zap, Diamond, Sparkles } from "lucide-react";
+import { Check, Crown, Award, Star, Zap, Sparkles, Gem } from "lucide-react";
 
 const SponsorshipPackages = () => {
   const titleSponsor = {
@@ -26,7 +26,7 @@ const SponsorshipPackages = () => {
   const packages = [
     {
       name: "Diamond Sponsor",
-      icon: Diamond,
+      icon: Gem,
       price: "₹4L",
       color: "from-cyan-500 to-cyan-600",
       borderColor: "border-cyan-500",
@@ -180,7 +180,7 @@ const SponsorshipPackages = () => {
               {/* CTA Button */}
               <div className="mt-8 text-center">
                 <motion.a
-                  href="mailto:sponsorship@ojass.org?subject=Title%20Sponsorship%20Inquiry"
+                  href="mailto:corporate.ojass@nitjar.ac.in?subject=Title%20Sponsorship%20Inquiry"
                   className="inline-flex items-center justify-center gap-2 bg-white text-purple-600 px-8 py-4 rounded-full font-bold text-lg hover:shadow-2xl transition-all duration-300"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -231,7 +231,7 @@ const SponsorshipPackages = () => {
                   </div>
                   <div className={`inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-gradient-to-r ${pkg.color} bg-opacity-10 border-2 ${pkg.borderColor} border-opacity-30`}>
                     <Crown className="w-4 h-4 text-yellow-500" />
-                    <span className={`text-xs font-semibold bg-gradient-to-r ${pkg.color} bg-clip-text text-transparent`}>
+                    <span className={`text-xs font-semibold bg-gradient-to-r ${pkg.color} bg-clip-text text-white`}>
                       Exclusive Access
                     </span>
                   </div>
@@ -254,7 +254,7 @@ const SponsorshipPackages = () => {
 
                 {/* CTA Button */}
                 <motion.a
-                  href="mailto:sponsorship@ojass.org"
+                  href="mailto:corporate.ojass@nitjar.ac.in"
                   className={`block w-full text-center bg-gradient-to-r ${pkg.color} text-white px-4 py-2.5 rounded-lg font-semibold text-sm hover:shadow-lg transition-all duration-300 mt-auto`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -282,7 +282,7 @@ const SponsorshipPackages = () => {
           perfectly!
           </p>
           <motion.a
-            href="mailto:sponsorship@ojass.org?subject=Custom%20Sponsorship%20Package%20Inquiry"
+            href="mailto:corporate.ojass@nitjar.ac.in?subject=Custom%20Sponsorship%20Package%20Inquiry"
             className="inline-block bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-3 rounded-full font-semibold hover:shadow-lg transition-all duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

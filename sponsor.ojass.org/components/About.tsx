@@ -46,7 +46,7 @@ const About = () => {
           className="max-w-4xl mx-auto mb-8 md:mb-16"
         >
           <p className="text-base md:text-lg text-gray-700 leading-relaxed text-center mb-4 md:mb-6">
-          OJASS — India's premier techno-management festival, where
+          OJASS — India&apos;s Premier Techno-Management Festival, where
 innovation meets celebration — unites brilliant minds, creators, and
 innovators through electrifying competitions, immersive workshops,
 vibrant exhibitions, and spectacular pro-shows.

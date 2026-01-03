@@ -28,7 +28,7 @@ const RegisterSection = () => {
             Partner with OJASS 2026. Get the sponsorship deck, packages, and available integrations.
           </p>
           <motion.a
-            href="mailto:sponsorship@ojass.org"
+            href="mailto:corporate.ojass@nitjar.ac.in"
             className="inline-flex items-center gap-2 bg-white text-blue-700 px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl transition-all duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

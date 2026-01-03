@@ -6,6 +6,10 @@ import Image from "next/image";
 const PastSponsors = () => {
   // Actual OJASS sponsor logos
   const sponsors = [
+    { name: "Confirmtkt", logo: "/Sponser/confirmtkt.png" },
+    { name: "PowerGrid", logo: "/Sponser/powergrid.png" },
+    { name: "TechnoSport", logo: "/Sponser/technosport.png" },
+    { name: "Edvenswa", logo: "/Sponser/edvenswa.png" },
     { name: "Zoutons", logo: "/Sponser/zoutons.webp" },
     { name: "Yamaha", logo: "/Sponser/yamaha.webp" },
     { name: "Zebronics", logo: "/Sponser/zebronics.webp" },

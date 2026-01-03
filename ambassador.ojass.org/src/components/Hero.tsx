@@ -32,7 +32,7 @@ const Hero = () => {
             >
               <Award className="w-4 h-4 text-[#FF8C00]" />
               <span className="text-sm font-semibold text-[#FF8C00]">
-                For 8 Registrations: Enjoy Complimentary Registration for free!
+                8 Referrals? Get Fee Reimbursement & VIP Front Seat Access!
               </span>
             </motion.div>
 

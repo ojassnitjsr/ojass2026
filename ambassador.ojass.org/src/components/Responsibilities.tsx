@@ -1,29 +1,29 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Megaphone, Users, Building2, Database } from "lucide-react";
+import { UserPlus, Share2, ClipboardCheck, Trophy } from "lucide-react";
 
 const Responsibilities = () => {
   const responsibilities = [
     {
-      icon: Megaphone,
-      title: "Promote OJASS in your Campus",
-      description: "Spread awareness about OJASS events, competitions, and opportunities.",
+      icon: UserPlus,
+      title: "1. Register Yourself",
+      description: "First, register on ojass.org to generate your unique OJASS ID. This will be your Referral Code.",
     },
     {
-      icon: Users,
-      title: "Be Our Campus Extension",
-      description: "Act as the official OJASS representative at your college.",
+      icon: Share2,
+      title: "2. Share Your ID",
+      description: "Promote OJASS among your network. Share your unique OJASS ID with friends and classmates.",
     },
     {
-      icon: Building2,
-      title: "Coordinate with Administration",
-      description: "Work with your college authorities and student bodies to facilitate events.",
+      icon: ClipboardCheck,
+      title: "3. Ensure Correct Entry",
+      description: "Make sure they enter YOUR OJASS ID in the 'Referral ID' field when they register on the portal.",
     },
     {
-      icon: Database,
-      title: "Provide Data & Feedback",
-      description: "Share insights and feedback to help us reach more students effectively.",
+      icon: Trophy,
+      title: "4. Unlock & Earn",
+      description: "Hit 8 referrals to unlock 100% fee reimbursement and VIP access. Keep tracking your progress!",
     },
   ];
 
@@ -39,12 +39,11 @@ const Responsibilities = () => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
-            Your <span className="text-[#FF8C00]">Responsibilities</span>
+            How It <span className="text-[#FF8C00]">Works</span>
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-[#FF8C00] to-[#FF6B00] mx-auto mb-4"></div>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Be the link between our college and OJASS — driving innovation
-            and engagement!
+            A simple 4-step process to become a Campus Ambassador and claim your rewards.
           </p>
         </motion.div>
 

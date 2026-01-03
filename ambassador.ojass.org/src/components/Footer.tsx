@@ -1,14 +1,37 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Linkedin, Instagram, Twitter, Youtube } from "lucide-react";
+import { Linkedin, Instagram, Youtube, Facebook } from "lucide-react";
 
 const Footer = () => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (!href.startsWith("#")) return; // Only handle hash links
+    e.preventDefault();
+    
+    const scrollDelay = window.innerWidth < 768 ? 300 : 50;
+    
+    setTimeout(() => {
+      const targetId = href.replace("#", "");
+      const element = document.getElementById(targetId);
+      
+      if (element) {
+        const navbarHeight = 80;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = window.scrollY + elementPosition - navbarHeight;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+      }
+    }, scrollDelay);
+  };
+
   const socialLinks = [
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
-    { icon: Instagram, href: "#", label: "Instagram" },
-    { icon: Twitter, href: "#", label: "Twitter/X" },
-    { icon: Youtube, href: "#", label: "YouTube" },
+    { icon: Instagram, href: "https://www.instagram.com/ojass.nitjsr", label: "Instagram" },
+    { icon: Youtube, href: "https://youtube.com/@ojass.nitjsr", label: "YouTube" },
+    { icon: Linkedin, href: "https://www.linkedin.com/company/ojassnitjsr/", label: "LinkedIn" },
+    { icon: Facebook, href: "https://www.facebook.com/share/1CfzSfszvm/", label: "Facebook" },
   ];
 
   return (
@@ -33,22 +56,22 @@ const Footer = () => {
             <h4 className="font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#about" className="text-gray-400 hover:text-[#FF8C00] transition-colors">
+                <a href="#about" onClick={(e) => handleNavClick(e, "#about")} className="text-gray-400 hover:text-[#FF8C00] transition-colors cursor-pointer">
                   About
                 </a>
               </li>
               <li>
-                <a href="#perks" className="text-gray-400 hover:text-[#FF8C00] transition-colors">
+                <a href="#perks" onClick={(e) => handleNavClick(e, "#perks")} className="text-gray-400 hover:text-[#FF8C00] transition-colors cursor-pointer">
                   Perks
                 </a>
               </li>
               <li>
-                <a href="#faq" className="text-gray-400 hover:text-[#FF8C00] transition-colors">
+                <a href="#faq" onClick={(e) => handleNavClick(e, "#faq")} className="text-gray-400 hover:text-[#FF8C00] transition-colors cursor-pointer">
                   FAQ
                 </a>
               </li>
               <li>
-                <a href="#register" className="text-gray-400 hover:text-[#FF8C00] transition-colors">
+                <a href="#register" onClick={(e) => handleNavClick(e, "#register")} className="text-gray-400 hover:text-[#FF8C00] transition-colors cursor-pointer">
                   Register
                 </a>
               </li>
@@ -85,8 +108,8 @@ const Footer = () => {
                   <a href="mailto:ojass@nitjsr.ac.in" className="text-gray-400 hover:text-[#FF8C00] transition-colors">
                     ojass@nitjsr.ac.in
                   </a>, 
-                  <a href="tel:+911234567890" className="text-gray-400 hover:text-[#FF8C00] transition-colors">
-                    +91 12345 67890
+                  <a href="tel:+918340671871" className="text-gray-400 hover:text-[#FF8C00] transition-colors">
+                    +918340671871
                   </a>
               </ul>
             </div>

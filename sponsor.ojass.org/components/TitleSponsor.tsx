@@ -143,7 +143,7 @@ const TitleSponsor = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <motion.a
-              href="mailto:sponsorship@ojass.org?subject=Title%20Sponsorship%20Inquiry"
+              href="mailto:corporate.ojass@nitjar.ac.in?subject=Title%20Sponsorship%20Inquiry"
               className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-400 to-blue-500 text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-2xl transition-all duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

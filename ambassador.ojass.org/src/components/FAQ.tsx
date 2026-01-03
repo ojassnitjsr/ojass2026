@@ -15,27 +15,27 @@ const FAQ = () => {
   const faqs: FAQItem[] = [
     {
       question: "Is there any interview/selection process?",
-      answer: "Yes, there is a simple selection process that includes a brief application review. We look for students who are enthusiastic, have good communication skills, and are active in their college community.",
+      answer: "No, there is no interview or complex selection process. We believe in your passion! Just register, start referring, and you're in.",
     },
     {
-      question: "When does the program start?",
-      answer: "The Campus Ambassador Program typically starts a few months before OJASS. Exact dates will be communicated to selected ambassadors via email and official communication channels.",
+      question: "How do I claim my referrals?",
+      answer: "The process is simple: 1. Register yourself as a CA first to generate your unique OJASS ID. 2. Ask your friends to register for OJASS. 3. While registering, they must enter YOUR OJASS ID in the 'Referral ID' field. The referral will be automatically mapped to you.",
+    },
+    {
+      question: "What do I get for 8 referrals?",
+      answer: "If you successfully bring 8 confirmed referrals, you will receive a complete reimbursement of your registration fee and get exclusive Front Row seats in all major segments/events!",
     },
     {
       question: "Can there be multiple CAs per college?",
-      answer: "Yes, depending on the size and reach of your college, we may have multiple Campus Ambassadors. Each CA will work collaboratively to maximize the impact in their institution.",
+      answer: "Yes! There is no limit. Multiple students from the same college can become CAs and work together (or compete!) to bring in referrals.",
     },
     {
       question: "Is it a certified internship?",
-      answer: "Yes! Upon successful completion of the program and meeting all requirements, you'll receive a certified internship certificate from OJASS, which can be valuable for your resume and career.",
-    },
-    {
-      question: "How much time and effort is required?",
-      answer: "The time commitment is flexible and can be managed alongside your studies. We expect active engagement during key promotional periods and regular communication. The program is designed to be rewarding, not overwhelming.",
+      answer: "Yes! Upon successful completion of the program and meeting minimum criteria, you will receive a certified internship certificate from OJASS.",
     },
     {
       question: "Who can apply?",
-      answer: "Any currently enrolled student from any college/university in India can apply. We welcome students from all disciplines and backgrounds who are passionate about technology, innovation, and community building.",
+      answer: "Any currently enrolled student from any college/university in India can apply. No specific branch or year restrictions.",
     },
   ];
 

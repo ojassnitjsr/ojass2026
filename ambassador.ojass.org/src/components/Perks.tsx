@@ -14,8 +14,8 @@ const Perks = () => {
   const perks = [
     {
       icon: Gift,
-      title: "Free Workshops & Merchandise",
-      description: "Access exclusive workshops and grab official OJASS goodies.",
+      title: "Referral Champion Rewards",
+      description: "Bring 8 Referrals to get 100% Registration Fee Reimbursement & Front Row Seats in all segments!",
       className: "md:col-span-2",
       gradient: "from-orange-500/10 to-amber-500/10",
       iconColor: "text-orange-600",
@@ -84,7 +84,7 @@ const Perks = () => {
           </h2>
           <div className="w-24 h-1.5 bg-gradient-to-r from-[#FF8C00] to-[#FF6B00] mx-auto mb-6 rounded-full"></div>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto font-light">
-            Become a PART OJASS Campus Ambassador Program — unlock
+            Become a Part of OJASS Campus Ambassador Program — unlock
             perks, opportunities, and growth!
           </p>
         </motion.div>

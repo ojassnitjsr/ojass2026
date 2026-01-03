@@ -26,6 +26,35 @@ const Navbar = () => {
     { name: "Contact", href: "#contact" },
   ];
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    setIsMobileMenuOpen(false);
+    
+    if (href === "#") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    
+    // Longer timeout on mobile to ensure menu animation completes
+    const scrollDelay = window.innerWidth < 768 ? 300 : 100;
+    
+    setTimeout(() => {
+      const targetId = href.replace("#", "");
+      const element = document.getElementById(targetId);
+      
+      if (element) {
+        const navbarHeight = 80;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = window.scrollY + elementPosition - navbarHeight;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+      }
+    }, scrollDelay);
+  };
+
   return (
     <motion.nav
       initial={{ y: -100 }}
@@ -45,6 +74,7 @@ const Navbar = () => {
             className="flex items-center space-x-3"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={(e) => handleNavClick(e, "#")}
           >
             <Image 
               src="/logo.webp" 
@@ -62,6 +92,7 @@ const Navbar = () => {
                 key={link.name}
                 href={link.href}
                 className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-200"
+                onClick={(e) => handleNavClick(e, link.href)}
               >
                 {link.name}
               </a>
@@ -107,7 +138,7 @@ const Navbar = () => {
                   key={link.name}
                   href={link.href}
                   className="block py-2 text-gray-700 hover:text-blue-600 font-medium"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={(e) => handleNavClick(e, link.href)}
                 >
                   {link.name}
                 </a>

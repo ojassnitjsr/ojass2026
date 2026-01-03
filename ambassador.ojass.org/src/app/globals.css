@@ -5,6 +5,11 @@
     --accent-orange: #FF8C00;
   }
 
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+  }
+
   body {
     font-family: var(--font-inter), sans-serif;
   }
