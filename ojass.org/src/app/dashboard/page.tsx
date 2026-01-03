@@ -403,7 +403,7 @@ export default function OjassDashboard() {
                                                     </div>
 
                                                     <a
-                                                        href="https://chat.whatsapp.com/YOUR_WHATSAPP_GROUP_LINK"
+                                                        href="https://chat.whatsapp.com/IsVScjl2SUs0y5Q8cF6qPt"
                                                         target="_blank"
                                                         rel="noopener noreferrer"
                                                         className={cn(
@@ -439,7 +439,7 @@ export default function OjassDashboard() {
 
                                                     {/* General Enquiry Contact */}
                                                     <div className={cn(
-                                                        "group relative overflow-hidden rounded-lg border transition-all duration-300",
+                                                        "group relative overflow-hidden rounded-lg border transition-all duration-300 pb-0",
                                                         theme.borderColor,
                                                         "bg-white/5 hover:bg-white/10"
                                                     )}>

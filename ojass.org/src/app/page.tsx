@@ -135,7 +135,7 @@ export default function Home() {
                                 transition={{ duration: 0.7, delay: 0.4 }}
                             >
                                 <p className={`text-white text-xs md:text-sm lg:text-base leading-relaxed ${isDystopia ? "is-dystopia" : ""}`}>
-                                    <span className="text-sm md:text-lg lg:text-xl">OJASS 2026</span> - The Annual Techno-Management Fest of NIT Jamshedpur, presented by ConfirmTkt, is back with its 22nd edition!
+                                    <span className="text-sm md:text-lg lg:text-xl">OJASS 2026</span> - The Annual Techno-Management Fest of NIT Jamshedpur, presented by ConfirmTkt, is back with its 23rd edition!
                                     <br /><br />
                                     Scheduled for <span className="font-semibold">19-22 February 2026</span>, OJASS brings together the brightest minds from across the nation for an electrifying celebration of innovation, technology, and management.
                                     <br className="hidden md:block" /><br className="hidden md:block" />
