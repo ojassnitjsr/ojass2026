@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import Event from '@/models/Event'; // Import to register schema with Mongoose
 import Team from '@/models/Team';
 import { requireAuthAndPayment } from '@/lib/auth';
 

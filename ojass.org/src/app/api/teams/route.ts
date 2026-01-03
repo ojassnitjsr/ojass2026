@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
-import Team from '@/models/Team';
 import Event from '@/models/Event';
+import Team from '@/models/Team';
 import { requireAuthAndPayment } from '@/lib/auth';
 import crypto from 'crypto';
 
