@@ -37,102 +37,39 @@ export interface GalleryImage {
 }
 
 export const galleryImages: GalleryImage[] = [
+    { src: "_DSC1744(1).jpg", caption: "OJASS 2025 Glimpse" },
+    // { src: "ASH04128(1).jpg", caption: "OJASS 2025 Glimpse" },
+    { src: "compressed-_DSC1322.jpg", caption: "OJASS 2025 Glimpse" },
+    { src: "compressed-_DSC1327.jpg", caption: "OJASS 2025 Glimpse" },
+    { src: "compressed-_DSC1490.jpg", caption: "OJASS 2025 Glimpse" },
+    { src: "compressed-_DSC1652.jpg", caption: "OJASS 2025 Glimpse" },
+    { src: "compressed-_DSC1653.jpg", caption: "OJASS 2025 Glimpse" },
+    { src: "compressed-_DSC1900 - Copy.jpg", caption: "OJASS 2025 Glimpse" },
+    { src: "compressed-_DSC1900.jpg", caption: "OJASS 2025 Glimpse" },
+    { src: "compressed-_DSC2002.jpg", caption: "OJASS 2025 Glimpse" },
     {
-        src: "/compressed-20241117_192238 - Copy.jpg",
-        caption: "OJASS 2025 glimps",
+        src: "compressed-20241117_192238 - Copy.jpg",
+        caption: "OJASS 2025 Glimpse",
     },
-    {
-        src: "/compressed-ASH04152 - Copy.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-DSC02484 - Copy.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-DSC02962.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-DSC02980.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-DSC03223.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-DSC03232.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-DSC03282.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-DSC_0663.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-IMG_0009.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-IMG_0042 - Copy.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-IMG_0047 - Copy.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-IMG_0250 - Copy.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-IMG_0252 - Copy.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-IMG_0319.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-_DSC1322.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-_DSC1327.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-_DSC1490.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-_DSC1652.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-_DSC1653.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-_DSC1900 - Copy.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-_DSC1900.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-_DSC1964.jpg",
-        caption: "OJASS 2025 glimps",
-    },
-    {
-        src: "/compressed-_DSC2002.jpg",
-        caption: "OJASS 2025 glimps",
-    },
+    { src: "compressed-ASH04152 - Copy.jpg", caption: "OJASS 2025 Glimpse" },
+    { src: "compressed-DSC_0663.jpg", caption: "OJASS 2025 Glimpse" },
+    { src: "compressed-DSC02484 - Copy.jpg", caption: "OJASS 2025 Glimpse" },
+    { src: "compressed-DSC02980.jpg", caption: "OJASS 2025 Glimpse" },
+    { src: "compressed-DSC03232.jpg", caption: "OJASS 2025 Glimpse" },
+    { src: "compressed-DSC03282.jpg", caption: "OJASS 2025 Glimpse" },
+    { src: "compressed-IMG_0042 - Copy.jpg", caption: "OJASS 2025 Glimpse" },
+    { src: "compressed-IMG_0250 - Copy.jpg", caption: "OJASS 2025 Glimpse" },
+    { src: "compressed-IMG_0252 - Copy.jpg", caption: "OJASS 2025 Glimpse" },
+    { src: "compressed-IMG_0319.jpg", caption: "OJASS 2025 Glimpse" },
+    // { src: "DSC_1834.JPG", caption: "OJASS 2025 Glimpse" },
+    // { src: "DSC02477(1).jpg", caption: "OJASS 2025 Glimpse" },
+    // { src: "DSC02515.JPG", caption: "OJASS 2025 Glimpse" },
+    { src: "DSC05026(1).jpg", caption: "OJASS 2025 Glimpse" },
+    { src: "DSC05141(1).jpg", caption: "OJASS 2025 Glimpse" },
+    { src: "DSC05195(1).jpg", caption: "OJASS 2025 Glimpse" },
+    // { src: "IMG_0215(1).jpg", caption: "OJASS 2025 Glimpse" },
+    // { src: "IMG_9939(1).jpg", caption: "OJASS 2025 Glimpse" },
+    // { src: "IMG_9968(1).jpg  ", caption: "OJASS 2025 Glimpse" },
 ];
 
 export interface GalleryCell {
@@ -152,6 +89,27 @@ export const galleryLayout: GalleryCell[] = [
     { x: 911, y: 540, w: 260, h: 350 },
     { x: 1051, y: 803, w: 400, h: 300 },
     { x: 71, y: 922, w: 350, h: 260 },
+    { x: 1400, y: 120, w: 520, h: 380 },
+    { x: 1850, y: 280, w: 300, h: 450 },
+    { x: 2200, y: 100, w: 600, h: 400 },
+    { x: 1480, y: 600, w: 450, h: 320 },
+    { x: 1900, y: 750, w: 380, h: 520 },
+    { x: 2400, y: 650, w: 550, h: 380 },
+    { x: 2800, y: 300, w: 320, h: 600 },
+    { x: 200, y: 1300, w: 600, h: 420 },
+    { x: 750, y: 1200, w: 480, h: 350 },
+    { x: 1200, y: 1450, w: 420, h: 420 },
+    { x: 1700, y: 1300, w: 550, h: 400 },
+    { x: 2300, y: 1200, w: 400, h: 580 },
+    { x: 2750, y: 1100, w: 350, h: 350 },
+    { x: 500, y: 1650, w: 300, h: 250 },
+    { x: 2100, y: 1700, w: 700, h: 240 },
+    { x: 1500, y: 1000, w: 250, h: 200 },
+    { x: 2700, y: 50, w: 400, h: 220 },
+    { x: 2900, y: 1550, w: 240, h: 380 },
+    { x: 100, y: 1750, w: 350, h: 200 },
+    { x: 1000, y: 100, w: 180, h: 400 },
+    { x: 1800, y: 50, w: 350, h: 180 },
 ];
 
 type EventLocations =

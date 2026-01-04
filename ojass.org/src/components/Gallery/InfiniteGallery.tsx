@@ -180,7 +180,7 @@ export class InfiniteGrid {
 
         // Mobile optimization: make images larger on small screens
         const isMobile = this.winW <= 768;
-        const mobileMultiplier = isMobile ? 2.5 : 1; // 2.5x larger on mobile
+        const mobileMultiplier = isMobile ? 4.5 : 1.8; // 2.5x larger on mobile
 
         this.tileSize = {
             w: this.winW * mobileMultiplier,

@@ -51,7 +51,7 @@ const Gallery = () => {
             el,
             images: galleryImages,
             layout: galleryLayout,
-            baseSize: { w: 1522, h: 1238 },
+            baseSize: { w: 3200, h: 2000 },
         });
 
         const updateViewportWidthVar = () => {
@@ -74,10 +74,11 @@ const Gallery = () => {
         <div className="w-full h-dvh relative">
             <Link
                 href="/"
-                className={`clip-left absolute top-6 left-6 z-50 flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 ${isDystopia
+                className={`clip-left absolute top-6 left-6 z-50 flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 ${
+                    isDystopia
                         ? "bg-[#ee8f59]/20 hover:bg-[#ee8f59]/40 text-white"
                         : "bg-cyan-500/20 hover:bg-cyan-500/40 text-white"
-                    }`}>
+                }`}>
                 <IoExitOutline size={20} />
                 <span className="font-semibold tracking-wider">EXIT</span>
             </Link>
