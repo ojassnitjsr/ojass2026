@@ -205,5 +205,14 @@
         "githubUrl": "https://github.com/aditraj24",
         "linkedinUrl": "http://www.linkedin.com/in/aditraj24",
         "category": "Web"
+    },
+    {
+        "id": 23,
+        "name": "Ashutosh Kr Rawat",
+        "imageUrl": "/team/web/ashutosh.jpeg",
+        "designation": "Web Team",
+        "githubUrl": "https://github.com/ashutoshkrrawat",
+        "linkedinUrl": "https://www.linkedin.com/in/ashutosh-kumar-rawat-138a88345",
+        "category": "Web"
     }
 ]
