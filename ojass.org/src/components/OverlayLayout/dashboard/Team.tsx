@@ -11,6 +11,7 @@ import {
     FaTrash,
     FaSave,
     FaLink,
+    FaSignOutAlt,
 } from "react-icons/fa";
 import { cn } from "@/lib/utils";
 
@@ -167,10 +168,10 @@ export default function Team({ teamData, currentUserId }: TeamProps) {
                     teamLeader:
                         typeof team.teamLeader === "object"
                             ? {
-                                  _id: team.teamLeader._id,
-                                  name: team.teamLeader.name || "Unknown",
-                                  ojassId: team.teamLeader.ojassId,
-                              }
+                                _id: team.teamLeader._id,
+                                name: team.teamLeader.name || "Unknown",
+                                ojassId: team.teamLeader.ojassId,
+                            }
                             : team.teamLeader,
                     teamMembers: team.teamMembers
                         .filter((member: any) => {
@@ -260,11 +261,11 @@ export default function Team({ teamData, currentUserId }: TeamProps) {
                 prev.map((team) =>
                     team._id === teamId
                         ? {
-                              ...team,
-                              teamMembers: team.teamMembers.filter(
-                                  (m) => m._id !== memberId,
-                              ),
-                          }
+                            ...team,
+                            teamMembers: team.teamMembers.filter(
+                                (m) => m._id !== memberId,
+                            ),
+                        }
                         : team,
                 ),
             );
@@ -310,10 +311,44 @@ export default function Team({ teamData, currentUserId }: TeamProps) {
 
             alert(
                 data.message ||
-                    "Team deleted successfully! All members have been unregistered from the event.",
+                "Team deleted successfully! All members have been unregistered from the event.",
             );
         } catch (error: any) {
             alert(error.message || "Failed to delete team");
+        }
+    };
+
+    const handleLeaveTeam = async (teamId: string) => {
+        if (!confirm("Are you sure you want to leave this team?")) {
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("Please login to leave team");
+                return;
+            }
+
+            const response = await fetch(`/api/teams/${teamId}/leave`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || "Failed to leave team");
+            }
+
+            // Remove team from local state
+            setTeams((prev) => prev.filter((team) => team._id !== teamId));
+
+            alert(data.message || "Successfully left the team");
+        } catch (error: any) {
+            alert(error.message || "Failed to leave team");
         }
     };
 
@@ -436,8 +471,8 @@ export default function Team({ teamData, currentUserId }: TeamProps) {
                                     <span>
                                         {typeof team.teamLeader === "object"
                                             ? team.teamLeader.name ||
-                                              team.teamLeader.ojassId ||
-                                              team.teamLeader._id
+                                            team.teamLeader.ojassId ||
+                                            team.teamLeader._id
                                             : team.teamLeader}
                                     </span>
                                     {typeof team.teamLeader === "object" &&
@@ -453,13 +488,21 @@ export default function Team({ teamData, currentUserId }: TeamProps) {
                                 <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20 uppercase tracking-wider">
                                     {team.status}
                                 </span>
-                                {isLeader && (
+                                {isLeader ? (
                                     <button
                                         onClick={() =>
                                             handleDeleteTeam(team._id)
                                         }
                                         className="text-[10px] px-2 py-1 bg-red-500/10 border border-red-500/20 rounded text-red-400 hover:bg-red-500/20 flex items-center gap-1 transition-all">
                                         <FaTrash size={10} /> DELETE TEAM
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={() =>
+                                            handleLeaveTeam(team._id)
+                                        }
+                                        className="text-[10px] px-2 py-1 bg-amber-500/10 border border-amber-500/20 rounded text-amber-400 hover:bg-amber-500/20 flex items-center gap-1 transition-all">
+                                        <FaSignOutAlt size={10} /> LEAVE TEAM
                                     </button>
                                 )}
                             </div>
@@ -483,7 +526,7 @@ export default function Team({ teamData, currentUserId }: TeamProps) {
                                     </>
                                 )}
                             </button>
-                            {isLeader && team.joinToken && (
+                            {team.joinToken && (
                                 <button
                                     onClick={() =>
                                         handleCopyInviteLink(team.joinToken)
@@ -540,7 +583,7 @@ export default function Team({ teamData, currentUserId }: TeamProps) {
                                                     className="text-red-400 hover:text-red-300 disabled:opacity-50 p-1.5 hover:bg-red-500/10 rounded"
                                                     title="Remove member">
                                                     {isRemovingMember ===
-                                                    member._id ? (
+                                                        member._id ? (
                                                         <span className="text-[10px]">
                                                             ..
                                                         </span>

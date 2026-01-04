@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
 // Import Event before Team to ensure schema is registered first
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import Event from '@/models/Event';
 import Team from '@/models/Team';
 import { requireAuthAndPayment } from '@/lib/auth';
@@ -18,6 +17,10 @@ export async function POST(
   try {
     await connectToDatabase();
     const { token } = await params;
+
+    // Ensure Event model is registered (prevent tree-shaking)
+    // eslint-disable-next-line no-console
+    console.log(`Checking Event model registration: ${Event.modelName}`);
 
     // Verify authentication and payment
     const authResult = await requireAuthAndPayment(request);

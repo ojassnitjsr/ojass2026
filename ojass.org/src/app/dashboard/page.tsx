@@ -405,7 +405,6 @@ export default function OjassDashboard() {
                                                     <a
                                                         href="https://chat.whatsapp.com/IsVScjl2SUs0y5Q8cF6qPt"
                                                         target="_blank"
-                                                        rel="noopener noreferrer"
                                                         className={cn(
                                                             "inline-flex items-center gap-3 px-6 py-3 rounded-md font-mono text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95",
                                                             "border-2",
