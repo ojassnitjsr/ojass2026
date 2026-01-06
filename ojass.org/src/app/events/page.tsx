@@ -11,7 +11,6 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { motion, AnimatePresence } from "framer-motion";
 import EventLoader from "@/components/EventLoader";
 
 interface CardData {
@@ -46,14 +45,6 @@ export default function Page() {
         return 0;
     });
     const [swiperInstance, setSwiperInstance] = useState<any>(null);
-    const [selectedEvent, setSelectedEvent] = useState<CardData | null>(null);
-    const [user, setUser] = useState<any>(null);
-    const [cardPosition, setCardPosition] = useState<
-        { x: number; y: number; width: number; height: number } | undefined
-    >();
-    const [animationType, setAnimationType] = useState<
-        "fade" | "slide" | "flip"
-    >("fade");
     const [isLoading, setIsLoading] = useState(true);
     const [isMobile, setIsMobile] = useState(false);
     const [hasRestoredSwiperState, setHasRestoredSwiperState] = useState(false);
@@ -317,18 +308,14 @@ export default function Page() {
 
     return (
         <div className="w-full h-screen relative overflow-hidden">
-            <AnimatePresence>
-                {isLoading && (
-                    <motion.div
-                        key="loader"
-                        className="fixed inset-0 z-[100]"
-                        initial={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.5 }}>
-                        <EventLoader theme={theme} />
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            {/* Loader with CSS transition */}
+            <div
+                className={`fixed inset-0 z-[100] transition-opacity duration-500 ease-in-out pointer-events-none ${
+                    isLoading ? "opacity-100 pointer-events-auto" : "opacity-0"
+                }`}>
+                <EventLoader theme={theme} />
+            </div>
+
             <Link
                 href="/"
                 className={`clip-left absolute top-6 left-6 z-50 flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 ${isDystopia
@@ -356,36 +343,36 @@ export default function Page() {
                     />
                 </button>
 
-                <AnimatePresence>
-                    {isDropdownOpen && (
-                        <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
-                            className={`clip-right absolute top-full right-0 mt-2 w-48 backdrop-blur-md overflow-hidden shadow-xl max-h-60 overflow-y-auto ${isDystopia ? "bg-black/90" : "bg-black/80"
-                                }`}>
-                            {categories.map((category) => (
-                                <button
-                                    key={category}
-                                    onClick={() => {
-                                        setSelectedCategory(category);
-                                        setSelectedEventIndex(0); // Reset to first event when changing category
-                                        setIsDropdownOpen(false);
-                                    }}
-                                    className={`w-full text-left px-4 py-3 transition-colors duration-200 text-sm ${selectedCategory === category
-                                        ? isDystopia
-                                            ? "bg-[#ee8f59]/30 text-white"
-                                            : "bg-cyan-500/40 text-white"
-                                        : isDystopia
-                                            ? "text-gray-300 hover:bg-[#ee8f59]/20"
-                                            : "text-gray-300 hover:bg-cyan-500/20"
-                                        }`}>
-                                    {category}
-                                </button>
-                            ))}
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                {/* Dropdown Menu with CSS transition */}
+                <div
+                    className={`clip-right absolute top-full right-0 mt-2 w-48 backdrop-blur-md overflow-hidden shadow-xl max-h-60 overflow-y-auto transition-all duration-300 ease-out origin-top ${
+                        isDystopia ? "bg-black/90" : "bg-black/80"
+                    } ${
+                        isDropdownOpen
+                            ? "opacity-100 translate-y-0 pointer-events-auto"
+                            : "opacity-0 -translate-y-2 pointer-events-none"
+                    }`}>
+                    {categories.map((category) => (
+                        <button
+                            key={category}
+                            onClick={() => {
+                                setSelectedCategory(category);
+                                setSelectedEventIndex(0); // Reset to first event when changing category
+                                setIsDropdownOpen(false);
+                            }}
+                            className={`w-full text-left px-4 py-3 transition-colors duration-200 text-sm ${
+                                selectedCategory === category
+                                    ? isDystopia
+                                        ? "bg-[#ee8f59]/30 text-white"
+                                        : "bg-cyan-500/40 text-white"
+                                    : isDystopia
+                                    ? "text-gray-300 hover:bg-[#ee8f59]/20"
+                                    : "text-gray-300 hover:bg-cyan-500/20"
+                            }`}>
+                            {category}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             <div
