@@ -140,11 +140,6 @@ body {
     cursor: none !important;
 }
 
-html.lenis,
-html.lenis body {
-    height: auto;
-}
-
 ::-webkit-scrollbar {
     display: none;
 }
