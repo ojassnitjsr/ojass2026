@@ -79,7 +79,7 @@ export default function Footer() {
     return (
         <div
             ref={footerRef}
-            className="fixed bottom-0 left-0 right-0 flex items-end justify-center z-40 pb-2 sm:pb-0 font-kensmark"
+            className="fixed bottom-0 left-0 right-0 flex items-end justify-center z-40 sm:pb-0 font-kensmark"
             style={{ opacity: 0, pointerEvents: "none" }}>
             <div
                 className={`relative layout-panel hud-grid px-6 py-3 backdrop-blur-md transition-all duration-700 bg-black/60 ${isDystopia ? "is-dystopia" : ""
