@@ -1,3 +1,4 @@
+"use client";
 import { useTheme } from "@/contexts/ThemeContext";
 import { DayKey } from "@/lib/constants";
 import { AnimatePresence, motion } from "framer-motion";
@@ -8,7 +9,7 @@ import TimelineCard from "./TimelineCard";
 import TimelineDial from "./TimelineDial";
 import SpaceTunnel from "@/components/login/SpaceTunnel";
 
-const TimelinePage = () => {
+const TimelinePage = ({ isMobile }: { isMobile: boolean }) => {
     const getInitialDay = (): DayKey => {
         const today = new Date();
         const currentYear = today.getFullYear();
@@ -229,7 +230,7 @@ const TimelinePage = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
-            <TimelineCard selectedDay={selectedDay} direction={direction} />
+            <TimelineCard selectedDay={selectedDay} direction={direction} isMobile={isMobile} />
             {/* Fixed Dial at Bottom */}
             <div className="fixed bottom-0 left-0 right-0 z-50 pb-6">
                 <TimelineDial

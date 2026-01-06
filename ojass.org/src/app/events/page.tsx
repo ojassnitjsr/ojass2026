@@ -1,7 +1,6 @@
 "use client";
 import EventCard from "@/components/OverlayLayout/EventCard";
 import { useTheme } from "@/contexts/ThemeContext";
-import { gsap } from "gsap";
 import Image from "next/image";
 import { IoExitOutline, IoChevronDown } from "react-icons/io5";
 import Link from "next/link";
@@ -29,7 +28,6 @@ export default function Page() {
     const { theme } = useTheme();
 
     const isDystopia = theme === "dystopia";
-    const containerRef = useRef<HTMLDivElement>(null);
     const [allEvents, setAllEvents] = useState<CardData[]>([]);
     const [rawEvents, setRawEvents] = useState<CardData[]>([]);
     const [categories, setCategories] = useState<string[]>(["All"]);
@@ -317,96 +315,8 @@ export default function Page() {
         }
     }, [selectedCategory, selectedEventIndex, isLoading]);
 
-    useEffect(() => {
-        const container = containerRef.current;
-        if (!container || isMobile) return; // Skip on mobile
-
-        let rafId: number;
-        let lastTime = 0;
-        const throttleMs = 16; // ~60fps
-
-        const handleMouseMove = (e: MouseEvent) => {
-            const now = performance.now();
-            if (now - lastTime < throttleMs) return;
-            lastTime = now;
-
-            if (rafId) cancelAnimationFrame(rafId);
-
-            rafId = requestAnimationFrame(() => {
-                const rect = container.getBoundingClientRect();
-                const x = (e.clientX - rect.left) / rect.width;
-                const y = (e.clientY - rect.top) / rect.height;
-                const normalizedX = (x - 0.5) * 2;
-                const normalizedY = (y - 0.5) * 2;
-
-                const maxX = 40;
-                const maxY = 20;
-                const targetX = -normalizedX * maxX;
-                const targetY = -normalizedY * maxY;
-
-                gsap.to("#events-bg", {
-                    x: targetX,
-                    y: targetY,
-                    duration: 0.3,
-                    ease: "power2.out",
-                    force3D: true,
-                });
-
-                const fgMaxX = 10;
-                const fgMaxY = 5;
-                const fgX = -normalizedX * fgMaxX;
-                const fgY = -normalizedY * fgMaxY;
-                gsap.to("#events-fg", {
-                    x: fgX,
-                    y: fgY,
-                    duration: 0.3,
-                    ease: "power2.out",
-                    force3D: true,
-                });
-            });
-        };
-
-        const handleMouseLeave = () => {
-            gsap.to("#events-bg", {
-                x: 0,
-                y: 0,
-                duration: 0.4,
-                ease: "power2.out",
-                force3D: true,
-            });
-            gsap.to("#events-fg", {
-                x: 0,
-                y: 0,
-                duration: 0.4,
-                ease: "power2.out",
-                force3D: true,
-            });
-        };
-
-        container.addEventListener("mousemove", handleMouseMove, {
-            passive: true,
-        });
-        container.addEventListener("mouseleave", handleMouseLeave, {
-            passive: true,
-        });
-
-        return () => {
-            container.removeEventListener("mousemove", handleMouseMove);
-            container.removeEventListener("mouseleave", handleMouseLeave);
-            if (rafId) cancelAnimationFrame(rafId);
-        };
-    }, [isMobile]);
-
-    // All events are now shown in a single carousel, no pagination needed
-
-    const handleDropdownChange = (newValue: string | number) => {
-        setSelectedEventIndex(Number(newValue));
-    };
-
     return (
-        <div
-            ref={containerRef}
-            className="w-full h-screen relative overflow-hidden">
+        <div className="w-full h-screen relative overflow-hidden">
             <AnimatePresence>
                 {isLoading && (
                     <motion.div

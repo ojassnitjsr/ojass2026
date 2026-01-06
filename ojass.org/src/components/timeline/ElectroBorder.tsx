@@ -1,3 +1,4 @@
+"use client";
 import React, {
     useRef,
     useLayoutEffect,
@@ -39,6 +40,7 @@ export interface ElectroBorderProps extends PropsWithChildren {
     glowBlur?: number;
     className?: string;
     style?: CSSProperties;
+    isMobile?: boolean;
 }
 
 export const ElectroBorder: React.FC<ElectroBorderProps> = ({

@@ -1,11 +1,7 @@
 
 "use client";
-import React, { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import React, { useRef } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
-
-gsap.registerPlugin(ScrollTrigger);
 
 // Interface (Aapka code sahi tha, JSON se match karta hai)
 interface EventCardProps {
@@ -20,61 +16,6 @@ export default function EventCard({ name, img }: EventCardProps) {
     const { theme } = useTheme();
     const svgContainerRef = useRef<SVGSVGElement | null>(null);
     const textContainerRef = useRef<HTMLDivElement | null>(null); // Text ke liye ref
-
-    // SVG animation ke liye useEffect
-    useEffect(() => {
-        const svgEl = svgContainerRef.current;
-        if (!svgEl) return;
-
-        // Kill any existing animations
-        gsap.killTweensOf(svgEl);
-
-        // Animate visible SVG paths (stroke-based)
-        const allPaths = svgEl.querySelectorAll("path");
-
-        // Fade in and scale animation on scroll
-        gsap.fromTo(
-            allPaths,
-            { opacity: 0, scale: 0.95 },
-            {
-                opacity: 1,
-                scale: 1,
-                duration: 1.2,
-                ease: "power3.out",
-                stagger: 0.05,
-                scrollTrigger: {
-                    trigger: svgEl,
-                    start: "top 85%",
-                    toggleActions: "play none none reverse",
-                },
-            }
-        );
-
-        // Subtle pulse animation
-        gsap.to(allPaths, {
-            scale: 1.02,
-            duration: 1.5,
-            repeat: 0,
-            yoyo: false,
-            ease: "sine.inOut",
-            stagger: 0.1,
-        });
-    }, [theme]);
-
-
-    // Text animation ke liye alag useEffect (Aapka code - NO CHANGES)
-    useEffect(() => {
-        const textEl = textContainerRef.current; // Text div ka ref
-        const svgEl = svgContainerRef.current; // SVG ka ref (trigger ke liye)
-
-        if (!textEl || !svgEl) return;
-
-        if (theme == "utopia") {
-            gsap.fromTo(textEl, { opacity: 0, y: -20 }, { color: "#00ffff", opacity: 1, y: 0, duration: 1.5, ease: "power3.out", scrollTrigger: { trigger: svgEl, start: "top 80%", toggleActions: "play none none reverse" } });
-        } else if (theme == "dystopia") {
-            gsap.fromTo(textEl, { opacity: 0, y: -20 }, { color: "#cc7722", opacity: 1, y: 0, duration: 1.5, ease: "power3.out", scrollTrigger: { trigger: svgEl, start: "top 80%", toggleActions: "play none none reverse" } });
-        }
-    }, [theme]);
 
     return (
         <div className="relative w-68 h-[32rem] mt-[50px] overflow-hidden rounded-lg mx-auto">
@@ -95,7 +36,7 @@ export default function EventCard({ name, img }: EventCardProps) {
 
 
             {/* Image with clipPath - positioned to match SVG frame */}
-            <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg" className="w-full h-full absolute -top-[5px] left-0 z-0">
+            <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg" className="w-full h-full absolute left-0 z-0">
                 <image
                     href={img}
                     x="0"

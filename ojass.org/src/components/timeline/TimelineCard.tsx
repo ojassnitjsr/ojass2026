@@ -5,9 +5,11 @@ import EventMap from "./Map";
 function TimelineCard({
     selectedDay,
     direction,
+    isMobile
 }: {
     selectedDay: DayKey;
     direction: "left" | "right";
+    isMobile: boolean;
 }) {
     const pageVariants: Variants = {
         initial: (custom: { direction: "left" | "right" }) => ({
@@ -43,7 +45,7 @@ function TimelineCard({
                 animate="animate"
                 exit="exit"
                 className="min-h-screen absolute inset-0">
-                <EventMap selectedDay={selectedDay} />
+                <EventMap selectedDay={selectedDay} isMobile={isMobile} />
             </motion.div>
         </AnimatePresence>
     );
