@@ -22,20 +22,8 @@ export default function CursorEffect() {
   const animationFrameRef = useRef<number | undefined>(undefined);
   const { theme } = useTheme();
   const isDystopia = theme === 'dystopia';
-  const [isMobile, setIsMobile] = useState(false);
-
-  // Detect mobile on mount
-  useEffect(() => {
-    const checkMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    setIsMobile(checkMobile);
-  }, []);
 
   useEffect(() => {
-    // Skip entire effect on mobile
-    if (isMobile) {
-      return;
-    }
-
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -208,12 +196,10 @@ export default function CursorEffect() {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [isDystopia, isMobile, pathname]);
+  }, [isDystopia, pathname]);
 
-  // Don't render canvas on mobile devices or receipt page
-  if (isMobile || pathname === '/receipt') {
-    return null;
-  }
+  // Don't render canvas on receipt page
+  if (pathname === '/receipt') return null;
 
   return (
     <canvas
