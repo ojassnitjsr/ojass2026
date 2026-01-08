@@ -261,7 +261,10 @@ const EventMap = ({ selectedDay, isMobile }: { selectedDay: DayKey; isMobile: bo
         [selectedDay],
     );
 
-    const getEventStatus = (start: Date, end: Date) => {
+    const getEventStatus = (start: Date, end: Date, index: number) => {
+        const festStart = new Date("2026-02-19T08:55:00");
+        if (now < festStart && selectedDay === 1 && index === 0) return "LIVE NOW";
+
         if (now > end) return "COMPLETED";
         if (now >= start && now <= end) return "LIVE NOW";
         return "SCHEDULED";
@@ -373,11 +376,11 @@ const EventMap = ({ selectedDay, isMobile }: { selectedDay: DayKey; isMobile: bo
                             </svg>
 
                             {/* Nodes */}
-                            {events.map((evt) => (
+                            {events.map((evt, index) => (
                                 <MapNode
                                     key={evt.id}
                                     event={evt}
-                                    status={getEventStatus(evt.start, evt.end)}
+                                    status={getEventStatus(evt.start, evt.end, index)}
                                     isSelected={selectedEventId === evt.id}
                                     onClick={() =>
                                         setSelectedEventId(
@@ -426,6 +429,7 @@ const EventMap = ({ selectedDay, isMobile }: { selectedDay: DayKey; isMobile: bo
                                 status={getEventStatus(
                                     activeEvent.start,
                                     activeEvent.end,
+                                    events.findIndex((e) => e.id === activeEvent.id),
                                 )}
                                 isDystopian={isDystopian}
                                 onClose={() => setSelectedEventId(null)}
