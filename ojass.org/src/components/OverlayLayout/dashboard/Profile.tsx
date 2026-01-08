@@ -61,9 +61,9 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
             return;
         }
 
-        // Validate file size (10MB)
-        if (file.size > 10 * 1024 * 1024) {
-            setUploadError("File size must be less than 10MB");
+        // Validate file size (2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            setUploadError("File size must be less than 2MB");
             return;
         }
 
@@ -376,7 +376,7 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
                                         Drop your ID card here
                                     </p>
                                     <p className="text-[10px] text-slate-500">
-                                        (College/University ID) • Max 10MB
+                                        (College/University ID) • Max 2MB
                                     </p>
                                 </>
                             )}

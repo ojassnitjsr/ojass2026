@@ -49,6 +49,7 @@ const OJASS_CONTEXT = `
 - **Location:** ${eventsMetadata.festInfo.location}
 - **Organized by:** ${eventsMetadata.festInfo.organizer}
 - **Presented by:** ${eventsMetadata.festInfo.presenter}
+- **Core Team:** ${eventsMetadata.festInfo.coreTeamMembers.join('\n')}
 
 **Event Categories:**
 ${Object.entries(eventsMetadata.eventCategories).map(([key, cat]: [string, any]) => `- **${cat.name}**: ${cat.description}`).join('\n')}

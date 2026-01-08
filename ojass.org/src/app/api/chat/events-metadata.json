@@ -3,12 +3,7 @@
         "gaming": {
             "name": "Gaming & E-Sports",
             "description": "Competitive gaming events including BGMI, Valorant, FC-24, and Chess",
-            "events": [
-                "BGMI",
-                "Valorant",
-                "FC-24",
-                "Chess"
-            ]
+            "events": ["BGMI", "Valorant", "FC-24", "Chess"]
         },
         "management": {
             "name": "Management & Business",
@@ -80,33 +75,10 @@
         }
     },
     "eventTags": {
-        "BGMI": [
-            "gaming",
-            "esports",
-            "team",
-            "strategy",
-            "battle-royale"
-        ],
-        "Valorant": [
-            "gaming",
-            "esports",
-            "team",
-            "fps",
-            "tactical-shooter"
-        ],
-        "FC-24": [
-            "gaming",
-            "esports",
-            "individual",
-            "sports",
-            "football"
-        ],
-        "Chess": [
-            "strategy",
-            "board-game",
-            "individual",
-            "mental-sport"
-        ],
+        "BGMI": ["gaming", "esports", "team", "strategy", "battle-royale"],
+        "Valorant": ["gaming", "esports", "team", "fps", "tactical-shooter"],
+        "FC-24": ["gaming", "esports", "individual", "sports", "football"],
+        "Chess": ["strategy", "board-game", "individual", "mental-sport"],
         "Fix-It Fiesta": [
             "management",
             "quality",
@@ -121,13 +93,7 @@
             "business",
             "data-driven"
         ],
-        "Ulysses": [
-            "creative",
-            "storytelling",
-            "team",
-            "narrative",
-            "writing"
-        ],
+        "Ulysses": ["creative", "storytelling", "team", "narrative", "writing"],
         "Mock IPL Auction": [
             "management",
             "strategy",
@@ -182,20 +148,8 @@
             "machine-learning",
             "python"
         ],
-        "Pixel Sync": [
-            "coding",
-            "ui-ux",
-            "team",
-            "frontend",
-            "design"
-        ],
-        "Flow Forge": [
-            "coding",
-            "automation",
-            "team",
-            "no-code",
-            "workflow"
-        ],
+        "Pixel Sync": ["coding", "ui-ux", "team", "frontend", "design"],
+        "Flow Forge": ["coding", "automation", "team", "no-code", "workflow"],
         "Sanrachana": [
             "technical",
             "civil",
@@ -256,19 +210,8 @@
             "fighting-robot",
             "flagship"
         ],
-        "Robo Soccer": [
-            "robotics",
-            "sports",
-            "team",
-            "football",
-            "arena"
-        ],
-        "Robo Rumble": [
-            "robotics",
-            "obstacle-course",
-            "team",
-            "racing"
-        ],
+        "Robo Soccer": ["robotics", "sports", "team", "football", "arena"],
+        "Robo Rumble": ["robotics", "obstacle-course", "team", "racing"],
         "Trace Bot Challenge": [
             "robotics",
             "line-follower",
@@ -282,25 +225,9 @@
             "autonomous",
             "path-planning"
         ],
-        "Cozmo Clench": [
-            "robotics",
-            "gripper",
-            "team",
-            "manual-control"
-        ],
-        "Aqua Race": [
-            "robotics",
-            "aquatic",
-            "team",
-            "boat",
-            "racing"
-        ],
-        "Underwater Tracing": [
-            "robotics",
-            "underwater",
-            "team",
-            "advanced"
-        ],
+        "Cozmo Clench": ["robotics", "gripper", "team", "manual-control"],
+        "Aqua Race": ["robotics", "aquatic", "team", "boat", "racing"],
+        "Underwater Tracing": ["robotics", "underwater", "team", "advanced"],
         "No Ground Zone": [
             "robotics",
             "aerial",
@@ -317,9 +244,7 @@
         ]
     },
     "prizeRange": {
-        "high": [
-            "Kurukshetra"
-        ],
+        "high": ["Kurukshetra"],
         "medium": [
             "No Ground Zone",
             "Drone Race Challenge",
@@ -328,14 +253,12 @@
             "Cinescript",
             "Underwater Tracing"
         ],
-        "standard": [
-            "most other events"
-        ]
+        "standard": ["most other events"]
     },
     "festInfo": {
         "name": "OJASS 2026",
         "fullName": "Annual Techno-Management Fest of NIT Jamshedpur",
-        "edition": "22nd",
+        "edition": "23rd",
         "theme": "NOVUS ORBIS - A New World",
         "dates": "19-22 February 2026",
         "organizer": "NIT Jamshedpur",
@@ -343,7 +266,18 @@
         "location": "NIT Jamshedpur Campus",
         "website": "https://ojass.org",
         "sponsorPortal": "https://sponsor.ojass.org",
-        "caPortal": "https://ca.ojass.org"
+        "caPortal": "https://ca.ojass.org",
+        "coreTeamMembers": [
+            "Anurag Das | Convenor | +918340671871",
+            "Kushal Srivastava | Joint Technical Secretary | +918423046011",
+            "Navya Mishra | Joint Technical Secretary | +918528693206",
+            "Sritam Mohanty | General Secretary | +918984099823",
+            "Hari Kumar | General Secretary | +917643864011",
+            "Mithilesh Kumar | Joint Secretary | +917631568586",
+            "Ayush Kumar | Web Head | +918299797516",
+            "Harshit Singh | Events Head | +919792696393",
+            "Basundhara Singh | Events Head | +917004632130"
+        ]
     },
     "quickLinks": {
         "events": "/events",

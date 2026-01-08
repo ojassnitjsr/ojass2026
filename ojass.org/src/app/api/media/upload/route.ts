@@ -3,8 +3,8 @@ import Media from '@/models/Media';
 import { uploadFilesToCloudinary } from '@/utils/cloudinary.util';
 import { NextRequest, NextResponse } from 'next/server';
 
-// Configure max file size (10MB)
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
+// Configure max file size (2MB)
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
 
 export async function POST(request: NextRequest) {
     try {
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
             // Check file size
             if (file.size > MAX_FILE_SIZE) {
                 return NextResponse.json(
-                    { error: `File ${file.name} exceeds maximum size of 10MB` },
+                    { error: `File ${file.name} exceeds maximum size of 2MB` },
                     { status: 400 }
                 );
             }

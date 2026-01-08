@@ -9,16 +9,45 @@ import Profile from "@/components/OverlayLayout/dashboard/Profile";
 import Receipt from "@/components/OverlayLayout/dashboard/Reciept";
 import RegisteredEvent from "@/components/OverlayLayout/dashboard/RegisteredEvent";
 import Team from "@/components/OverlayLayout/dashboard/Team";
+import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaArrowLeft } from "react-icons/fa";
+import { IoExitOutline } from "react-icons/io5";
 
 export default function OjassDashboard() {
     const router = useRouter();
     const theme = useLoginTheme();
+
+    const { theme : Theme } = useTheme();
+    const isDystopia = Theme === "dystopia";
+    useEffect(() => {
+        let styleElement = document.getElementById("gallery-clip-styles") as HTMLStyleElement;
+
+        if (!styleElement) {
+            styleElement = document.createElement("style");
+            styleElement.id = "gallery-clip-styles";
+            document.head.appendChild(styleElement);
+        }
+
+        styleElement.textContent = `
+        .clip-left {
+          clip-path: polygon(
+            20px 0, 
+            100% 0, 
+            100% calc(100% - 20px), 
+            calc(100% - 20px) 100%, 
+            0 100%, 
+            0 20px
+          );
+        }
+      `;
+
+        return () => styleElement?.remove();
+    }, []);
+
     const [activeTab, setActiveTab] = useState("receipt");
     const [profileData, setProfileData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
@@ -259,16 +288,12 @@ export default function OjassDashboard() {
             {/* Back to Home Button */}
             <Link
                 href="/"
-                className={cn(
-                    "absolute top-4 left-4 md:top-8 md:left-8 z-50 flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 transition-all duration-300 hover:scale-105 active:scale-95 group",
-                    "bg-black/50 border border-white/10 hover:border-white/30 backdrop-blur-md",
-                    "text-white font-mono text-sm tracking-wider uppercase"
-                )}
-                style={{
-                    clipPath: "polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)"
-                }}>
-                <FaArrowLeft className="group-hover:-translate-x-1 transition-transform duration-300" />
-                <span>Home</span>
+                className={`clip-left absolute top-6 left-6 z-50 flex items-center gap-2 px-6 py-3 backdrop-blur-sm transition-all duration-300 hover:scale-105 active:scale-95 ${isDystopia
+                    ? "bg-[#ee8f59]/20 hover:bg-[#ee8f59]/40 text-white"
+                    : "bg-cyan-500/20 hover:bg-cyan-500/40 text-white"
+                    }`}>
+                <IoExitOutline size={20} />
+                <span className="font-semibold tracking-wider">EXIT</span>
             </Link>
 
             {/* 🪩 Dashboard Layout */}
