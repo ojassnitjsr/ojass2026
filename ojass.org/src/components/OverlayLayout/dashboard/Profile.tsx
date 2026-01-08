@@ -61,9 +61,9 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
             return;
         }
 
-        // Validate file size (2MB)
-        if (file.size > 2 * 1024 * 1024) {
-            setUploadError("File size must be less than 2MB");
+        // Validate file size (1MB)
+        if (file.size > 1 * 1024 * 1024) {
+            setUploadError("File size must be less than 1MB");
             return;
         }
 
@@ -87,6 +87,7 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
 
             const uploadRes = await fetch("/api/media/upload", {
                 method: "POST",
+                headers: { Authorization: `Bearer ${token}` },
                 body: formData,
             });
 
@@ -154,7 +155,18 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
         setUploading(true);
         try {
             const token = localStorage.getItem("token");
-            if (!token) throw new Error("Authentication required");
+            const userId = profileData?._id;
+            if (!token || !userId) throw new Error("Authentication required");
+
+            const deleteRes = await fetch("/api/media/upload", {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({idCardCloudinaryId: profileData?.idCardCloudinaryId}),
+            });
+            if (!deleteRes.ok) throw new Error("Failed to delete ID card");
 
             const res = await fetch("/api/user/id-card", {
                 method: "PUT",
@@ -376,7 +388,7 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
                                         Drop your ID card here
                                     </p>
                                     <p className="text-[10px] text-slate-500">
-                                        (College/University ID) • Max 2MB
+                                        (College/University ID) • Max 1MB
                                     </p>
                                 </>
                             )}
