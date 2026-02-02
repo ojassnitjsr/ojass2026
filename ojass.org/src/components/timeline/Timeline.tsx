@@ -16,11 +16,13 @@ const TimelinePage = ({ isMobile }: { isMobile: boolean }) => {
         const currentMonth = today.getMonth();
         const currentDate = today.getDate();
 
-        if (currentYear === 2026 && currentMonth === 1) {
-            if (currentDate === 19) return 1;
-            if (currentDate === 20) return 2;
-            if (currentDate === 21) return 3;
-            if (currentDate === 22) return 4;
+        if (currentYear === 2026) {
+            if (currentMonth === 1) {
+                if (currentDate === 26) return 1;
+                if (currentDate === 27) return 2;
+                if (currentDate === 28) return 3;
+            }
+            if (currentMonth === 2) if (currentDate === 1) return 4;
         }
         return 1;
     };
@@ -230,7 +232,11 @@ const TimelinePage = ({ isMobile }: { isMobile: boolean }) => {
                     </motion.div>
                 )}
             </AnimatePresence>
-            <TimelineCard selectedDay={selectedDay} direction={direction} isMobile={isMobile} />
+            <TimelineCard
+                selectedDay={selectedDay}
+                direction={direction}
+                isMobile={isMobile}
+            />
             {/* Fixed Dial at Bottom */}
             <div className="fixed bottom-0 left-0 right-0 z-50 pb-6">
                 <TimelineDial

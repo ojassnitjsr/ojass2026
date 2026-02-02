@@ -58,7 +58,7 @@ export default function Home() {
                 />
                 <div className="relative w-full h-full">
                     <div className="relative flex flex-col items-center justify-center gap-6 h-screen">
-                        <Image src={isDystopia ? `/text-main-dys.png` : "/text-main-dys-1.png"} alt="Home" width={500} height={500} className="object-contain w-[90vw] md:w-1/2 md:mb-0 mb-32" style={{
+                        <Image src={isDystopia ? `/text-main-dys.png` : "/text-main-eut.png"} alt="Home" width={500} height={500} className="object-contain w-[90vw] md:w-1/2 md:mb-0 mb-32" style={{
                             // filter: "hue-rotate(180deg)"
                         }} />
 
@@ -166,7 +166,7 @@ export default function Home() {
                                             <br />
                                             Scheduled for{" "}
                                             <span className="font-semibold">
-                                                19-22 February 2026
+                                                26 February - 01 March 2026
                                             </span>
                                             , OJASS brings together the
                                             brightest minds from across the
