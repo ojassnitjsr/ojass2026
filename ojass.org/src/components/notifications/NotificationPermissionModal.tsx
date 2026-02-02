@@ -133,7 +133,7 @@ export default function NotificationPermissionModal() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
             {/* Modal Container */}
             <div
-                className="relative max-w-sm w-full"
+                className="relative max-w-sm w-full scale-80 md:scale-100"
                 style={{ filter: `drop-shadow(0 0 20px ${accentColorDim})` }}>
                 {/* Main panel */}
                 <div
