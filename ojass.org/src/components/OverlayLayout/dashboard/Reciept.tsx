@@ -300,6 +300,7 @@ export default function Receipt({ userData, pricing }: { userData?: any, pricing
                         </div>
                     )}
                     <button
+                        id="pay-now-button"
                         onClick={handlePayNow}
                         disabled={paymentLoading}
                         className={cn(

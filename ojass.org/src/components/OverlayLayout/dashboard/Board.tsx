@@ -144,8 +144,19 @@ export default function Board({
                     !isPaid &&
                     onPaymentClick && (
                         <div className="mt-6 space-y-3">
-                            <button
-                                onClick={onPaymentClick}
+                            <button 
+                                onClick={() => {
+                                    onPaymentClick?.();
+                                    // Scroll to Pay Now button after tab change
+                                    setTimeout(() => {
+                                        const payNowButton = document.getElementById("pay-now-button");
+                                        if (payNowButton) 
+                                            payNowButton.scrollIntoView({
+                                                behavior: "smooth",
+                                                block: "center",
+                                            });
+                                    }, 150);
+                                }}
                                 className={cn(
                                     "w-full py-4 px-6 rounded relative overflow-hidden group transition-all duration-300 cursor-pointer border",
                                     theme.buttonPrimary,
