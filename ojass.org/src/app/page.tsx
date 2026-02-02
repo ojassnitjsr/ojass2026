@@ -4,10 +4,38 @@ import Image from "next/image";
 import { useTheme } from "@/contexts/ThemeContext";
 import Link from "next/link";
 import { Reveal } from "@/components/ui/Reveal";
+import { Button } from "@/components/login/UI";
+import { useEffect, useState } from "react";
 
 export default function Home() {
     const { theme } = useTheme();
     const isDystopia = theme === "dystopia";
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        // Check initial login state
+        const checkLoginState = () => {
+            const user = localStorage.getItem("user");
+            setIsLoggedIn(!!user);
+        };
+        checkLoginState();
+
+        // Listen for storage changes (works across tabs)
+        const handleStorageChange = (e: StorageEvent) => {
+            if (e.key === "user" || e.key === "token") checkLoginState();
+        };
+
+        // Listen for custom storage events (works in same tab)
+        const handleCustomStorageChange = () => checkLoginState();
+
+        window.addEventListener("storage", handleStorageChange);
+        window.addEventListener("localStorageChange", handleCustomStorageChange);
+
+        return () => {
+            window.removeEventListener("storage", handleStorageChange);
+            window.removeEventListener("localStorageChange", handleCustomStorageChange);
+        };
+    }, []);
 
     return (
         <div className="h-screen overflow-y-scroll snap-y snap-mandatory" style={{ scrollBehavior: 'smooth' }}>
@@ -32,12 +60,32 @@ export default function Home() {
                             // filter: "hue-rotate(180deg)"
                         }} />
 
+                        {!isLoggedIn ? (
+                            <Link href="/login?mode=register">
+                                <Button
+                                    className="absolute hidden md:block top-3/5 lg:top-2/3 right-1/4 text-lg lg:text-xl xl:text-2xl"
+                                    type="button">
+                                    Register Now
+                                </Button>
+                            </Link>
+                        ) : null}
+
                         {/* Mobile-only CA and Sponsor buttons - Positioned below image */}
                         <div className="absolute flex flex-col md:hidden gap-3 w-[60%] max-w-[250px] md:mt-0 mt-20" style={{
-                            top: '62%',
+                            top: '57%',
                             left: '50%',
                             transform: 'translateX(-50%)',
                         }}>
+                            <Link
+                                href="/login?mode=register"
+                                className={`layout-panel layout-text font-bold text-center px-4 py-2.5 text-xs hover:scale-105 active:scale-95 transition-all duration-300 ${isDystopia ? "is-dystopia" : ""}`}
+                                style={{
+                                    clipPath:
+                                        "polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)",
+                                }}
+                            >
+                                REGISTER NOW
+                            </Link>
                             <Link
                                 href="https://sponsor.ojass.org"
                                 target="_blank"
