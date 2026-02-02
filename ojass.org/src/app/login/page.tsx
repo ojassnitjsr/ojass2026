@@ -19,6 +19,15 @@ export default function LoginPage() {
     const [mode, setMode] = useState<"login" | "register" | "forgot">("login");
 
     useEffect(() => {
+        // Pass Register or Forgot as SearchParams
+        const params = new URLSearchParams(window.location.search);
+        const initialMode = params.get("mode");
+
+        if (initialMode === "register" || initialMode === "forgot") {
+            setMode(initialMode);
+            window.history.replaceState({}, "", window.location.pathname);
+        }
+
         // Start fading out the tunnel and fading in the background
         const t1 = setTimeout(() => setFadeOut(true), 1000);
         // Remove the tunnel component after the fade transition completes

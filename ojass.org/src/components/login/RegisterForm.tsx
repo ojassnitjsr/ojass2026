@@ -10,6 +10,7 @@ import {
     FaExclamationTriangle,
     FaEye,
     FaEyeSlash,
+    FaInfoCircle,
     FaLock,
     FaMapMarkerAlt,
     FaPhone,
@@ -45,6 +46,7 @@ export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [hasPendingTeamJoin, setHasPendingTeamJoin] = useState(false);
+    const [showEmailTooltip, setShowEmailTooltip] = useState(false);
 
     useEffect(() => {
         if (localStorage.getItem("pendingTeamJoin"))
@@ -93,7 +95,7 @@ export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
             if (res.ok) {
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("user", JSON.stringify(data.user));
-                setSuccess("Identity Verified. Redirecting...");
+                setSuccess("Registered Successfully. Redirecting...");
 
                 const pendingTeamJoin = localStorage.getItem("pendingTeamJoin");
                 if (pendingTeamJoin) {
@@ -158,16 +160,36 @@ export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
                     required
                 />
 
-                <Input
-                    name="email"
-                    type="email"
-                    label="Email"
-                    placeholder="Enter Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    icon={<FaEnvelope />}
-                    required
-                />
+                <div className="relative">
+                    <div className="absolute right-0 top-0 z-5">
+                        <button
+                            type="button"
+                            onMouseEnter={() => setShowEmailTooltip(true)}
+                            onMouseLeave={() => setShowEmailTooltip(false)}
+                            onClick={() =>
+                                setShowEmailTooltip(!showEmailTooltip)
+                            }
+                            className="p-1">
+                            <FaInfoCircle className="text-xs text-slate-400 hover:text-cyan-400 cursor-pointer transition-colors" />
+                        </button>
+                        {showEmailTooltip && (
+                            <div className="absolute right-0 top-6 w-48 p-2 bg-slate-800 border border-slate-600 rounded text-xs text-slate-300 shadow-lg z-20">
+                                If you are from NIT Jamshedpur, use your college
+                                email id.
+                            </div>
+                        )}
+                    </div>
+                    <Input
+                        name="email"
+                        type="email"
+                        label="Email"
+                        placeholder="Enter Email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        icon={<FaEnvelope />}
+                        required
+                    />
+                </div>
 
                 <Input
                     name="phone"
@@ -274,7 +296,7 @@ export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
                     <Input
                         name="referralCode"
                         label="Referral Code (Optional)"
-                        placeholder="PROMO-CODE"
+                        placeholder="OJASSXXXXXX"
                         value={formData.referralCode}
                         onChange={(e) =>
                             setFormData((prev) => ({
@@ -350,21 +372,16 @@ export const RegisterForm = ({ onSwitchToLogin }: RegisterFormProps) => {
                         type="submit"
                         isLoading={loading}
                         className="w-full text-lg">
-                        Create Identity
+                        Register
                     </Button>
-
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-4 justify-center items-center">
                         <div className="h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent w-full" />
-                        <button
+                        <Button
                             type="button"
-                            onClick={onSwitchToLogin}
-                            className={cn(
-                                "text-xs hover:text-opacity-100 transition-colors",
-                                theme.textColorSlate,
-                                `hover:${theme.textColor}`,
-                            )}>
-                            Return to Login Interface
-                        </button>
+                            className="text-xs"
+                            onClick={onSwitchToLogin}>
+                            Back to Login
+                        </Button>
                     </div>
                 </div>
             </form>

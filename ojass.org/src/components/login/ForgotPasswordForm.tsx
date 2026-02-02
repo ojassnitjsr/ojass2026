@@ -50,14 +50,14 @@ export const ForgotPasswordForm = ({
             });
             const data = await res.json();
             if (res.ok) {
-                setSuccess("Transmission Successful. Check comms (email).");
+                setSuccess("Email Sent. Check your inbox.");
                 setTimeout(() => {
                     setSuccess("");
                     setStep(2);
                 }, 1500);
-            } else setError(data.error || "Transmission failed");
+            } else setError(data.error || "Failed to send email");
         } catch (err) {
-            setError("Network communication failure.");
+            setError("Failed to send email");
         } finally {
             setLoading(false);
         }
@@ -65,7 +65,7 @@ export const ForgotPasswordForm = ({
 
     const handleSetPassword = async () => {
         if (otp.trim().length !== 6) {
-            setError("Invalid OTP sequence length.");
+            setError("Invalid OTP length.");
             return;
         }
 
@@ -89,7 +89,7 @@ export const ForgotPasswordForm = ({
             });
             const data = await res.json();
             if (res.ok) {
-                setSuccess("Security Protocols Updated.");
+                setSuccess("Password Updated");
                 setStep(3);
                 setTimeout(() => {
                     onSwitchToLogin();
@@ -98,7 +98,7 @@ export const ForgotPasswordForm = ({
                 setError(data.error || "Update failed");
             }
         } catch (err) {
-            setError("Network communication failure.");
+            setError("Failed to update password");
         } finally {
             setLoading(false);
         }
@@ -124,13 +124,8 @@ export const ForgotPasswordForm = ({
                         theme.textColor,
                         theme.textGlow,
                     )}>
-                    ACCOUNT RECOVERY
+                    FORGOT PASSWORD
                 </h2>
-                <p className="text-slate-400 text-xs mt-2 uppercase tracking-wide">
-                    {step === 1 && "Phase 1: Identification"}
-                    {step === 2 && "Phase 2: Reconfiguration"}
-                    {step === 3 && "Phase 3: Completion"}
-                </p>
             </div>
 
             <div className="space-y-6">
@@ -147,7 +142,7 @@ export const ForgotPasswordForm = ({
                             onClick={handleSendEmail}
                             isLoading={loading}
                             className="w-full">
-                            Initiate Recovery
+                            Send Email
                         </Button>
                     </div>
                 )}
@@ -192,7 +187,7 @@ export const ForgotPasswordForm = ({
                                         }`,
                                         theme.borderColorDim,
                                     )}>
-                                    Enter the 6-digit code transmitted to{" "}
+                                    Enter the 6-digit code sent to{" "}
                                     <span className={cn(theme.textColor)}>
                                         {email}
                                     </span>
@@ -202,7 +197,7 @@ export const ForgotPasswordForm = ({
 
                         <div className="relative">
                             <Input
-                                label="New Security Code"
+                                label="New Password"
                                 type={showNewPassword ? "text" : "password"}
                                 placeholder="New Password"
                                 value={newPassword}
@@ -224,7 +219,7 @@ export const ForgotPasswordForm = ({
 
                         <div className="relative">
                             <Input
-                                label="Confirm Security Code"
+                                label="Confirm Password"
                                 type={showConfirmPassword ? "text" : "password"}
                                 placeholder="Confirm Password"
                                 value={confirmPassword}
@@ -254,7 +249,7 @@ export const ForgotPasswordForm = ({
                             onClick={handleSetPassword}
                             isLoading={loading}
                             className="w-full">
-                            Update Credentials
+                            Update Password
                         </Button>
                     </div>
                 )}
@@ -264,7 +259,9 @@ export const ForgotPasswordForm = ({
                         <div className={cn("text-4xl", theme.textColor)}>
                             <FaCheck />
                         </div>
-                        <p className="text-slate-300">Access Restored.</p>
+                        <p className="text-slate-300">
+                            Password updated successfully.
+                        </p>
                     </div>
                 )}
 
@@ -283,17 +280,14 @@ export const ForgotPasswordForm = ({
                 )}
 
                 {step !== 3 && (
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-4 justify-center items-center">
                         <div className="h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent w-full" />
-                        <button
+                        <Button
                             type="button"
-                            onClick={onSwitchToLogin}
-                            className={cn(
-                                "text-xs tracking-wider transition-colors hover:text-opacity-100 opacity-70",
-                                theme.accentColor,
-                            )}>
+                            className="text-xs"
+                            onClick={onSwitchToLogin}>
                             Back to Login
-                        </button>
+                        </Button>
                     </div>
                 )}
             </div>

@@ -313,6 +313,11 @@ export default function OjassDashboard() {
                                 onEmailVerificationClick={() => {
                                     if (!profileData?.idCardImageUrl) {
                                         alert("Please upload your ID card image first before verifying your email.");
+                                        // Scroll to ID card verification section
+                                        setTimeout(() => {
+                                            const idCardSection = document.getElementById("id-card-verification");
+                                            if (idCardSection) idCardSection.scrollIntoView({ behavior: "smooth", block: "center" });
+                                        }, 100);
                                         return;
                                     }
                                     setShowEmailVerificationModal(true);
@@ -463,7 +468,7 @@ export default function OjassDashboard() {
 
                                                     {/* General Enquiry Contact */}
                                                     <div className={cn(
-                                                        "group relative overflow-hidden rounded-lg border transition-all duration-300 pb-0",
+                                                        "group relative overflow-hidden rounded-lg border transition-all duration-300  mb-10",
                                                         theme.borderColor,
                                                         "bg-white/5 hover:bg-white/10"
                                                     )}>

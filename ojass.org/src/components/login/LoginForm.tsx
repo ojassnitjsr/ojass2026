@@ -150,26 +150,18 @@ export const LoginForm = ({
                 <div className="flex flex-col gap-4">
                     <div className="h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent w-full" />
                     <div className="flex justify-between items-center">
-                        <button
+                        <Button
                             type="button"
-                            onClick={onSwitchToRegister}
-                            className={cn(
-                                "text-xs hover:text-opacity-100 transition-colors",
-                                theme.textColorSlate,
-                                `hover:${theme.textColor}`,
-                            )}>
+                            className="text-xs px-3 sm:px-6 py-2"
+                            onClick={onSwitchToRegister}>
                             Register Now
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                             type="button"
-                            onClick={onSwitchToForgot}
-                            className={cn(
-                                "text-xs hover:text-opacity-100 transition-colors",
-                                theme.textColorSlate,
-                                `hover:${theme.textColor}`,
-                            )}>
+                            className="text-xs px-3 sm:px-6 py-2"
+                            onClick={onSwitchToForgot}>
                             Reset Password
-                        </button>
+                        </Button>
                     </div>
                 </div>
             </form>
