@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/login/UI";
 import { useEffect, useState } from "react";
+import NotificationPermissionModal from "@/components/notifications/NotificationPermissionModal";
 
 export default function Home() {
     const { theme } = useTheme();
@@ -39,6 +40,7 @@ export default function Home() {
 
     return (
         <div className="h-screen overflow-y-scroll snap-y snap-mandatory" style={{ scrollBehavior: 'smooth' }}>
+            <NotificationPermissionModal />
             <div className="snap-start relative" style={{
                 width: "100%",
                 height: "200vh",

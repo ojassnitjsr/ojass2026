@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { Bell, CheckCircle, AlertTriangle, Star } from "lucide-react";
 import { useLoginTheme } from "@/components/login/theme";
 import { cn } from "@/lib/utils";
-import { FaTimes } from "react-icons/fa";
 
 interface NotificationItem {
     id: string;
@@ -19,19 +18,6 @@ export default function Notification() {
     const theme = useLoginTheme();
     const [notifications, setNotifications] = useState<NotificationItem[]>([]);
     const [loading, setLoading] = useState(true);
-    const [permissionStatus, setPermissionStatus] =
-        useState<NotificationPermission>("default");
-    const [showPermissionModal, setShowPermissionModal] = useState(false);
-
-    // Check notification permission and subscription status
-    useEffect(() => {
-        if (typeof window !== "undefined" && "Notification" in window) {
-            const status = window.Notification.permission;
-            setPermissionStatus(status);
-            // Show modal automatically if permission not granted
-            if (status !== "granted") setShowPermissionModal(true);
-        }
-    }, []);
 
     // Fetch notifications
     useEffect(() => {
@@ -63,91 +49,6 @@ export default function Notification() {
         fetchNotifications();
     }, []);
 
-    // Request notification permission and subscribe
-    const requestPermissionAndSubscribe = async () => {
-        setShowPermissionModal(false); 
-
-        if (
-            typeof window === "undefined" ||
-            !("Notification" in window) ||
-            !("serviceWorker" in navigator)
-        ) {
-            alert("Your browser doesn't support push notifications");
-            return;
-        }
-
-        try {
-            // Request permission
-            const permission = await window.Notification.requestPermission();
-            setPermissionStatus(permission);
-
-            if (permission !== "granted") {
-                alert("Notification permission denied");
-                return;
-            }
-
-            // Register service worker
-            const registration = await navigator.serviceWorker.register(
-                "/sw.js",
-                {
-                    scope: "/",
-                },
-            );
-
-            // Wait for service worker to be ready
-            await navigator.serviceWorker.ready;
-
-            // Subscribe to push notifications
-            const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
-            if (!vapidKey) {
-                alert(
-                    "VAPID public key not configured. Please contact support.",
-                );
-                return;
-            }
-
-            const subscription = await registration.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: urlBase64ToUint8Array(
-                    vapidKey,
-                ) as BufferSource,
-            });
-
-            // Save subscription to backend
-            const token = localStorage.getItem("token");
-            if (!token) {
-                alert("Please login to enable notifications");
-                return;
-            }
-
-            const res = await fetch("/api/notifications/subscribe", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    endpoint: subscription.endpoint,
-                    keys: {
-                        p256dh: arrayBufferToBase64(
-                            subscription.getKey("p256dh")!,
-                        ),
-                        auth: arrayBufferToBase64(subscription.getKey("auth")!),
-                    },
-                }),
-            });
-
-            if (res.ok) {
-                alert("Notifications enabled successfully!");
-            } else {
-                alert("Failed to enable notifications");
-            }
-        } catch (error) {
-            console.error("Error subscribing to notifications:", error);
-            alert("Failed to enable notifications");
-        }
-    };
-
     // Mark notification as read
     const markAsRead = async (id: string) => {
         try {
@@ -173,30 +74,6 @@ export default function Notification() {
         }
     };
 
-    // Helper functions
-    function urlBase64ToUint8Array(base64String: string): Uint8Array {
-        const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-        const base64 = (base64String + padding)
-            .replace(/-/g, "+")
-            .replace(/_/g, "/");
-        const rawData = window.atob(base64);
-        const buffer = new ArrayBuffer(rawData.length);
-        const outputArray = new Uint8Array(buffer);
-        for (let i = 0; i < rawData.length; ++i) {
-            outputArray[i] = rawData.charCodeAt(i);
-        }
-        return outputArray;
-    }
-
-    function arrayBufferToBase64(buffer: ArrayBuffer): string {
-        const bytes = new Uint8Array(buffer);
-        let binary = "";
-        for (let i = 0; i < bytes.byteLength; i++) {
-            binary += String.fromCharCode(bytes[i]);
-        }
-        return window.btoa(binary);
-    }
-
     // Get icon based on notification type (simple heuristic)
     const getIcon = (title: string) => {
         const lowerTitle = title.toLowerCase();
@@ -221,60 +98,6 @@ export default function Notification() {
 
     return (
         <div className="space-y-3">
-            {/* Permission Modal */}
-            {showPermissionModal && permissionStatus !== "granted" && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-                    <div
-                        className={cn(
-                            "relative max-w-sm w-full p-6 rounded-xl border shadow-2xl",
-                            theme.borderColor,
-                            "bg-gradient-to-br from-slate-900 to-slate-800",
-                        )}>
-                        {/* Close button */}
-                        <button
-                            onClick={() => setShowPermissionModal(false)}
-                            className="absolute top-3 right-3 text-slate-400 hover:text-white transition-colors">
-                            <FaTimes />
-                        </button>
-
-                        <div
-                            className={cn(
-                                "w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center",
-                                theme.accentBg,
-                            )}>
-                            <Bell className="text-black" size={32} />
-                        </div>
-
-                        <h3 className={cn("text-lg font-bold text-center mb-2", theme.textColor)}>
-                            Stay Updated!
-                        </h3>
-
-                        <p className="text-sm text-slate-400 text-center mb-6">
-                            Enable push notifications to get instant updates
-                            about events, announcements, and important
-                            information.
-                        </p>
-
-                        <div className="flex gap-3">
-                            <button
-                                onClick={() => setShowPermissionModal(false)}
-                                className="flex-1 py-2.5 px-4 rounded-lg border border-white/20 text-sm font-medium text-slate-300 hover:bg-white/5 transition-all">
-                                Not Now
-                            </button>
-                            <button
-                                onClick={requestPermissionAndSubscribe}
-                                className={cn(
-                                    "flex-1 py-2.5 px-4 rounded-lg text-sm font-bold transition-all",
-                                    theme.accentBg,
-                                    "text-black hover:opacity-90",
-                                )}>
-                                Enable
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
             {/* Notifications List */}
             <div className="space-y-3 overflow-y-auto">
                 {notifications.length === 0 ? (
