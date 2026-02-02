@@ -1253,7 +1253,7 @@ function RegisterButton({
         return (
             <TechButton
                 onClick={() => {
-                    alert("Please complete payment to register for events");
+                    alert("One step left!\nComplete your payment now to finalize your registration.");
                     router.push("/dashboard");
                 }}
                 accentColor={accentColor}
