@@ -468,7 +468,7 @@ export default function OjassDashboard() {
 
                                                     {/* General Enquiry Contact */}
                                                     <div className={cn(
-                                                        "group relative overflow-hidden rounded-lg border transition-all duration-300 pb-0",
+                                                        "group relative overflow-hidden rounded-lg border transition-all duration-300  mb-10",
                                                         theme.borderColor,
                                                         "bg-white/5 hover:bg-white/10"
                                                     )}>
