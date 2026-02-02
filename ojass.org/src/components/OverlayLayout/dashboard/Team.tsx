@@ -374,244 +374,272 @@ export default function Team({ teamData, currentUserId }: TeamProps) {
 
     return (
         <div className="space-y-4">
-            {teams.map((team) => {
-                const teamLeaderId =
-                    typeof team.teamLeader === "object"
-                        ? team.teamLeader._id
-                        : team.teamLeader;
-                const isLeader = teamLeaderId === currentUserId;
-                const isOpen = openTeams[team._id];
-                const isEditing = editingTeam === team._id;
-
-                return (
-                    <div
-                        key={team._id}
+            {teams.length === 0 ? (
+                <div
+                    className={cn(
+                        "p-8 border rounded-lg backdrop-blur-md text-center",
+                        theme.borderColorDim,
+                        theme.bgGlass,
+                    )}>
+                    <FaUsers
+                        size={32}
                         className={cn(
-                            "p-6 border rounded-xl backdrop-blur-md transition-all relative overflow-hidden",
-                            theme.borderColorDim,
-                            theme.bgGlass,
+                            "mx-auto mb-3 opacity-50",
+                            theme.textColor,
+                        )}
+                    />
+                    <div
+                        className={cn(
+                            "text-base font-bold mb-2 uppercase tracking-wide",
+                            theme.textColor,
                         )}>
-                        <div className="flex items-start justify-between gap-3 mb-2">
-                            <div className="flex-1">
-                                {isEditing ? (
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <input
-                                            type="text"
-                                            value={editedTeamName}
-                                            onChange={(e) =>
-                                                setEditedTeamName(
-                                                    e.target.value,
-                                                )
-                                            }
-                                            className={cn(
-                                                "text-sm font-semibold rounded px-2 py-1 bg-black/50 border border-white/20 focus:outline-none",
-                                                theme.textColor,
-                                            )}
-                                            autoFocus
-                                        />
-                                        <button
-                                            onClick={() =>
-                                                handleSaveTeamName(team._id)
-                                            }
-                                            disabled={isSavingTeamName}
-                                            className="text-green-400 hover:text-green-300 disabled:opacity-50">
-                                            {isSavingTeamName ? (
-                                                <span className="text-xs">
-                                                    Saving...
-                                                </span>
-                                            ) : (
-                                                <FaSave size={14} />
-                                            )}
-                                        </button>
-                                        <button
-                                            onClick={() => setEditingTeam(null)}
-                                            className="text-red-400 hover:text-red-300">
-                                            <FaTimes size={14} />
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <div
-                                            className={cn(
-                                                "text-lg font-bold tracking-wide",
-                                                theme.textColor,
-                                            )}>
-                                            {team.teamName}
-                                        </div>
-                                        {isLeader && (
-                                            <button
-                                                onClick={() =>
-                                                    handleEditTeam(
-                                                        team._id,
-                                                        team.teamName,
+                        No Teams Yet
+                    </div>
+                    <div className="text-sm text-slate-500">
+                        Create a team when registering for team events, or join
+                        an existing team via invite link.
+                    </div>
+                </div>
+            ) : (
+                teams.map((team) => {
+                    const teamLeaderId =
+                        typeof team.teamLeader === "object"
+                            ? team.teamLeader._id
+                            : team.teamLeader;
+                    const isLeader = teamLeaderId === currentUserId;
+                    const isOpen = openTeams[team._id];
+                    const isEditing = editingTeam === team._id;
+
+                    return (
+                        <div
+                            key={team._id}
+                            className={cn(
+                                "p-6 border rounded-xl backdrop-blur-md transition-all relative overflow-hidden",
+                                theme.borderColorDim,
+                                theme.bgGlass,
+                            )}>
+                            <div className="flex items-start justify-between gap-3 mb-2">
+                                <div className="flex-1">
+                                    {isEditing ? (
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <input
+                                                type="text"
+                                                value={editedTeamName}
+                                                onChange={(e) =>
+                                                    setEditedTeamName(
+                                                        e.target.value,
                                                     )
                                                 }
                                                 className={cn(
-                                                    "opacity-70 hover:opacity-100",
+                                                    "text-sm font-semibold rounded px-2 py-1 bg-black/50 border border-white/20 focus:outline-none",
+                                                    theme.textColor,
+                                                )}
+                                                autoFocus
+                                            />
+                                            <button
+                                                onClick={() =>
+                                                    handleSaveTeamName(team._id)
+                                                }
+                                                disabled={isSavingTeamName}
+                                                className="text-green-400 hover:text-green-300 disabled:opacity-50">
+                                                {isSavingTeamName ? (
+                                                    <span className="text-xs">
+                                                        Saving...
+                                                    </span>
+                                                ) : (
+                                                    <FaSave size={14} />
+                                                )}
+                                            </button>
+                                            <button
+                                            onClick={() => setEditingTeam(null)}
+                                                className="text-red-400 hover:text-red-300">
+                                                <FaTimes size={14} />
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <div
+                                                className={cn(
+                                                    "text-lg font-bold tracking-wide",
                                                     theme.textColor,
                                                 )}>
-                                                <FaEdit size={12} />
-                                            </button>
-                                        )}
-                                    </div>
-                                )}
-
-                                <div
-                                    className={cn(
-                                        "text-xs uppercase tracking-wider mb-2",
-                                        theme.textColorDim,
-                                    )}>
-                                    {team.eventName}
-                                </div>
-
-                                <div className="flex items-center gap-2 text-sm text-slate-400">
-                                    <span className="opacity-50 text-xs uppercase tracking-wide">
-                                        Leader:
-                                    </span>
-                                    <span>
-                                        {typeof team.teamLeader === "object"
-                                            ? team.teamLeader.name ||
-                                            team.teamLeader.ojassId ||
-                                            team.teamLeader._id
-                                            : team.teamLeader}
-                                    </span>
-                                    {typeof team.teamLeader === "object" &&
-                                        team.teamLeader.ojassId && (
-                                            <span className="text-slate-500 text-xs bg-white/5 px-1.5 py-0.5 rounded ml-1">
-                                                {team.teamLeader.ojassId}
-                                            </span>
-                                        )}
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col gap-2 items-end">
-                                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20 uppercase tracking-wider">
-                                    {team.status}
-                                </span>
-                                {isLeader ? (
-                                    <button
-                                        onClick={() =>
-                                            handleDeleteTeam(team._id)
-                                        }
-                                        className="text-[10px] px-2 py-1 bg-red-500/10 border border-red-500/20 rounded text-red-400 hover:bg-red-500/20 flex items-center gap-1 transition-all">
-                                        <FaTrash size={10} /> DELETE TEAM
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={() =>
-                                            handleLeaveTeam(team._id)
-                                        }
-                                        className="text-[10px] px-2 py-1 bg-amber-500/10 border border-amber-500/20 rounded text-amber-400 hover:bg-amber-500/20 flex items-center gap-1 transition-all">
-                                        <FaSignOutAlt size={10} /> LEAVE TEAM
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="flex gap-2 mt-4 pt-4 border-t border-white/5">
-                            <button
-                                onClick={() => toggleMembers(team._id)}
-                                className={cn(
-                                    "text-xs px-3 py-1.5 border rounded flex items-center gap-2 transition-all",
-                                    theme.buttonOutline,
-                                )}>
-                                {isOpen ? (
-                                    <>
-                                        <FaTimes size={12} /> Hide Members
-                                    </>
-                                ) : (
-                                    <>
-                                        <FaUsers size={12} />{" "}
-                                        {team.teamMembers.length} Members
-                                    </>
-                                )}
-                            </button>
-                            {team.joinToken && (
-                                <button
-                                    onClick={() =>
-                                        handleCopyInviteLink(team.joinToken)
-                                    }
-                                    className={cn(
-                                        "text-xs px-3 py-1.5 border rounded flex items-center gap-2 transition-all",
-                                        theme.buttonOutline,
-                                    )}
-                                    title="Copy invitation link">
-                                    <FaLink size={12} /> Invite Link
-                                </button>
-                            )}
-                        </div>
-
-                        {isOpen && (
-                            <div className="mt-4 space-y-2 pl-2 border-l-2 border-white/5 ml-1">
-                                {/* Filter out leader from members list */}
-                                {team.teamMembers
-                                    .filter((member) => {
-                                        const memberId = member._id;
-                                        const leaderId =
-                                            typeof team.teamLeader === "object"
-                                                ? team.teamLeader._id
-                                                : team.teamLeader;
-                                        return memberId !== leaderId;
-                                    })
-                                    .map((member) => (
-                                        <div
-                                            key={member._id}
-                                            className="px-3 py-2 rounded bg-white/5 flex items-center justify-between gap-2 border border-white/5">
-                                            <div className="flex flex-col">
-                                                <span className="text-sm text-slate-200 font-medium">
-                                                    {member.name}
-                                                </span>
-                                                {member.ojassId && (
-                                                    <span className="text-xs text-slate-500 font-mono">
-                                                        {member.ojassId}
-                                                    </span>
-                                                )}
+                                                {team.teamName}
                                             </div>
-
                                             {isLeader && (
                                                 <button
                                                     onClick={() =>
-                                                        handleRemoveMember(
+                                                        handleEditTeam(
                                                             team._id,
-                                                            member._id,
+                                                            team.teamName,
                                                         )
                                                     }
-                                                    disabled={
-                                                        isRemovingMember ===
-                                                        member._id
-                                                    }
-                                                    className="text-red-400 hover:text-red-300 disabled:opacity-50 p-1.5 hover:bg-red-500/10 rounded"
-                                                    title="Remove member">
-                                                    {isRemovingMember ===
-                                                        member._id ? (
-                                                        <span className="text-[10px]">
-                                                            ..
-                                                        </span>
-                                                    ) : (
-                                                        <FaTimes size={10} />
-                                                    )}
+                                                    className={cn(
+                                                        "opacity-70 hover:opacity-100",
+                                                        theme.textColor,
+                                                    )}>
+                                                    <FaEdit size={12} />
                                                 </button>
                                             )}
                                         </div>
-                                    ))}
-                                {isLeader && (
-                                    <button
-                                        onClick={() =>
-                                            handleAddMember(team._id)
-                                        }
+                                    )}
+
+                                    <div
                                         className={cn(
-                                            "w-full flex items-center justify-center gap-2 px-3 py-2 border border-dashed rounded hover:bg-white/5 mt-2 transition-all text-sm",
-                                            theme.borderColorDim,
+                                            "text-xs uppercase tracking-wider mb-2",
                                             theme.textColorDim,
                                         )}>
-                                        <FaPlus size={10} /> Add Member
+                                        {team.eventName}
+                                    </div>
+
+                                    <div className="flex items-center gap-2 text-sm text-slate-400">
+                                        <span className="opacity-50 text-xs uppercase tracking-wide">
+                                            Leader:
+                                        </span>
+                                        <span>
+                                            {typeof team.teamLeader === "object"
+                                                ? team.teamLeader.name ||
+                                                  team.teamLeader.ojassId ||
+                                                  team.teamLeader._id
+                                                : team.teamLeader}
+                                        </span>
+                                        {typeof team.teamLeader === "object" &&
+                                            team.teamLeader.ojassId && (
+                                                <span className="text-slate-500 text-xs bg-white/5 px-1.5 py-0.5 rounded ml-1">
+                                                    {team.teamLeader.ojassId}
+                                                </span>
+                                            )}
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col gap-2 items-end">
+                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20 uppercase tracking-wider">
+                                        {team.status}
+                                    </span>
+                                    {isLeader ? (
+                                        <button
+                                            onClick={() =>
+                                                handleDeleteTeam(team._id)
+                                            }
+                                            className="text-[10px] px-2 py-1 bg-red-500/10 border border-red-500/20 rounded text-red-400 hover:bg-red-500/20 flex items-center gap-1 transition-all">
+                                            <FaTrash size={10} /> DELETE TEAM
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={() =>
+                                                handleLeaveTeam(team._id)
+                                            }
+                                            className="text-[10px] px-2 py-1 bg-amber-500/10 border border-amber-500/20 rounded text-amber-400 hover:bg-amber-500/20 flex items-center gap-1 transition-all">
+                                        <FaSignOutAlt size={10} /> LEAVE TEAM
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="flex gap-2 mt-4 pt-4 border-t border-white/5">
+                                <button
+                                    onClick={() => toggleMembers(team._id)}
+                                    className={cn(
+                                        "text-xs px-3 py-1.5 border rounded flex items-center gap-2 transition-all",
+                                        theme.buttonOutline,
+                                    )}>
+                                    {isOpen ? (
+                                        <>
+                                            <FaTimes size={12} /> Hide Members
+                                        </>
+                                    ) : (
+                                        <>
+                                            <FaUsers size={12} />{" "}
+                                            {team.teamMembers.length} Members
+                                        </>
+                                    )}
+                                </button>
+                                {team.joinToken && (
+                                    <button
+                                        onClick={() =>
+                                            handleCopyInviteLink(team.joinToken)
+                                        }
+                                        className={cn(
+                                            "text-xs px-3 py-1.5 border rounded flex items-center gap-2 transition-all",
+                                            theme.buttonOutline,
+                                        )}
+                                        title="Copy invitation link">
+                                        <FaLink size={12} /> Invite Link
                                     </button>
                                 )}
                             </div>
-                        )}
-                    </div>
-                );
-            })}
+
+                            {isOpen && (
+                                <div className="mt-4 space-y-2 pl-2 border-l-2 border-white/5 ml-1">
+                                    {/* Filter out leader from members list */}
+                                    {team.teamMembers
+                                        .filter((member) => {
+                                            const memberId = member._id;
+                                            const leaderId =
+                                            typeof team.teamLeader === "object"
+                                                    ? team.teamLeader._id
+                                                    : team.teamLeader;
+                                            return memberId !== leaderId;
+                                        })
+                                        .map((member) => (
+                                            <div
+                                                key={member._id}
+                                                className="px-3 py-2 rounded bg-white/5 flex items-center justify-between gap-2 border border-white/5">
+                                                <div className="flex flex-col">
+                                                    <span className="text-sm text-slate-200 font-medium">
+                                                        {member.name}
+                                                    </span>
+                                                    {member.ojassId && (
+                                                        <span className="text-xs text-slate-500 font-mono">
+                                                            {member.ojassId}
+                                                        </span>
+                                                    )}
+                                                </div>
+
+                                                {isLeader && (
+                                                    <button
+                                                        onClick={() =>
+                                                            handleRemoveMember(
+                                                                team._id,
+                                                                member._id,
+                                                            )
+                                                        }
+                                                        disabled={
+                                                            isRemovingMember ===
+                                                            member._id
+                                                        }
+                                                        className="text-red-400 hover:text-red-300 disabled:opacity-50 p-1.5 hover:bg-red-500/10 rounded"
+                                                        title="Remove member">
+                                                        {isRemovingMember ===
+                                                        member._id ? (
+                                                            <span className="text-[10px]">
+                                                                ..
+                                                            </span>
+                                                        ) : (
+                                                        <FaTimes size={10} />
+                                                        )}
+                                                    </button>
+                                                )}
+                                            </div>
+                                        ))}
+                                    {isLeader && (
+                                        <button
+                                            onClick={() =>
+                                                handleAddMember(team._id)
+                                            }
+                                            className={cn(
+                                                "w-full flex items-center justify-center gap-2 px-3 py-2 border border-dashed rounded hover:bg-white/5 mt-2 transition-all text-sm",
+                                                theme.borderColorDim,
+                                                theme.textColorDim,
+                                            )}>
+                                            <FaPlus size={10} /> Add Member
+                                        </button>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    );
+                })
+            )}
 
             {/* Add Member Modal */}
             {showAddMemberModal && (

@@ -112,14 +112,18 @@ export default function Notification() {
                                 "mx-auto mb-3 opacity-50",
                                 theme.textColor,
                             )}
-                            size={24}
+                            size={32}
                         />
                         <div
                             className={cn(
-                                "text-sm font-medium opacity-70",
+                                "text-base font-bold mb-2 uppercase tracking-wide",
                                 theme.textColor,
                             )}>
-                            No notifications yet
+                            No Notifications Yet
+                        </div>
+                        <div className="text-sm text-slate-500">
+                            You&apos;ll receive updates about events,
+                            announcements, and important information here.
                         </div>
                     </div>
                 ) : (
