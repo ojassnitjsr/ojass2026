@@ -285,7 +285,7 @@ export default function Receipt({ userData, pricing }: { userData?: any, pricing
                                 : "max-h-0 opacity-0",
                         )}>
                         <RegistrationBenefits
-                            tier={!pricing.isNitJsrStudent ? "NIT_JSR" : "OTHER_COLLEGE"} 
+                            tier={pricing.isNitJsrStudent ? "NIT_JSR" : "OTHER_COLLEGE"} 
                             theme={theme}
                         />
                     </div>

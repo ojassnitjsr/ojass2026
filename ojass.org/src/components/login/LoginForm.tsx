@@ -152,13 +152,13 @@ export const LoginForm = ({
                     <div className="flex justify-between items-center">
                         <Button
                             type="button"
-                            className="text-xs"
+                            className="text-xs px-3 sm:px-6 py-2"
                             onClick={onSwitchToRegister}>
                             Register Now
                         </Button>
                         <Button
                             type="button"
-                            className="text-xs"
+                            className="text-xs px-3 sm:px-6 py-2"
                             onClick={onSwitchToForgot}>
                             Reset Password
                         </Button>
