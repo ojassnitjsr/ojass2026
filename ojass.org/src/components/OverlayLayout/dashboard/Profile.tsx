@@ -4,18 +4,19 @@ import React, { useState, useRef, useEffect } from "react";
 import { useLoginTheme } from "@/components/login/theme";
 import {
     User,
-    Code,
     Users,
-    Zap,
     Mail,
     Phone,
-    Shield,
     Upload,
     X,
     Image as ImageIcon,
     Check,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BiSolidInstitution } from "react-icons/bi";
+import { FaCity } from "react-icons/fa";
+import { LiaUserTagSolid } from "react-icons/lia";
+import { LuMap } from "react-icons/lu";
 
 export default function Profile({ profileData, onProfileUpdate }: { profileData: any; onProfileUpdate?: (data: any) => void }) {
     const theme = useLoginTheme();
@@ -252,10 +253,10 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
                 {[
                     { icon: Mail, label: "Email", value: profileData.email },
                     { icon: Phone, label: "Phone", value: profileData.phone },
-                    { icon: Zap, label: "College", value: profileData.college },
-                    { icon: Code, label: "Gender", value: profileData.gender },
-                    { icon: Users, label: "City", value: profileData.city },
-                    { icon: Shield, label: "State", value: profileData.state },
+                    { icon: BiSolidInstitution, label: "College", value: profileData.college },
+                    { icon: LiaUserTagSolid , label: "Gender", value: profileData.gender },
+                    { icon: FaCity, label: "City", value: profileData.city },
+                    { icon: LuMap, label: "State", value: profileData.state },
                     {
                         icon: Users,
                         label: "Referrals",
@@ -294,6 +295,7 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
 
             {/* ID Card Upload Section */}
             <div
+                id="id-card-verification"
                 className={cn(
                     "p-6 rounded-xl border relative overflow-hidden mt-6",
                     theme.borderColorDim,

@@ -313,6 +313,11 @@ export default function OjassDashboard() {
                                 onEmailVerificationClick={() => {
                                     if (!profileData?.idCardImageUrl) {
                                         alert("Please upload your ID card image first before verifying your email.");
+                                        // Scroll to ID card verification section
+                                        setTimeout(() => {
+                                            const idCardSection = document.getElementById("id-card-verification");
+                                            if (idCardSection) idCardSection.scrollIntoView({ behavior: "smooth", block: "center" });
+                                        }, 100);
                                         return;
                                     }
                                     setShowEmailVerificationModal(true);
