@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Bell, CheckCircle, AlertTriangle, Star } from "lucide-react";
 import { useLoginTheme } from "@/components/login/theme";
 import { cn } from "@/lib/utils";
+import { FaTimes } from "react-icons/fa";
 
 interface NotificationItem {
     id: string;
@@ -20,11 +21,15 @@ export default function Notification() {
     const [loading, setLoading] = useState(true);
     const [permissionStatus, setPermissionStatus] =
         useState<NotificationPermission>("default");
+    const [showPermissionModal, setShowPermissionModal] = useState(false);
 
     // Check notification permission and subscription status
     useEffect(() => {
         if (typeof window !== "undefined" && "Notification" in window) {
-            setPermissionStatus(window.Notification.permission);
+            const status = window.Notification.permission;
+            setPermissionStatus(status);
+            // Show modal automatically if permission not granted
+            if (status !== "granted") setShowPermissionModal(true);
         }
     }, []);
 
@@ -60,6 +65,8 @@ export default function Notification() {
 
     // Request notification permission and subscribe
     const requestPermissionAndSubscribe = async () => {
+        setShowPermissionModal(false); 
+
         if (
             typeof window === "undefined" ||
             !("Notification" in window) ||
@@ -214,39 +221,57 @@ export default function Notification() {
 
     return (
         <div className="space-y-3">
-            {/* Permission Request Button */}
-            {permissionStatus !== "granted" && (
-                <div
-                    className={cn(
-                        "p-4 border rounded-lg backdrop-blur-md text-center",
-                        theme.borderColorDim,
-                        theme.bgGlass,
-                    )}>
-                    <Bell
-                        className={cn(
-                            "mx-auto mb-2 opacity-80",
-                            theme.textColor,
-                        )}
-                        size={24}
-                    />
+            {/* Permission Modal */}
+            {showPermissionModal && permissionStatus !== "granted" && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
                     <div
                         className={cn(
-                            "text-sm font-bold mb-2 uppercase tracking-wide",
-                            theme.textColor,
+                            "relative max-w-sm w-full p-6 rounded-xl border shadow-2xl",
+                            theme.borderColor,
+                            "bg-gradient-to-br from-slate-900 to-slate-800",
                         )}>
-                        Enable Push Notifications
+                        {/* Close button */}
+                        <button
+                            onClick={() => setShowPermissionModal(false)}
+                            className="absolute top-3 right-3 text-slate-400 hover:text-white transition-colors">
+                            <FaTimes />
+                        </button>
+
+                        <div
+                            className={cn(
+                                "w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center",
+                                theme.accentBg,
+                            )}>
+                            <Bell className="text-black" size={32} />
+                        </div>
+
+                        <h3 className={cn("text-lg font-bold text-center mb-2", theme.textColor)}>
+                            Stay Updated!
+                        </h3>
+
+                        <p className="text-sm text-slate-400 text-center mb-6">
+                            Enable push notifications to get instant updates
+                            about events, announcements, and important
+                            information.
+                        </p>
+
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setShowPermissionModal(false)}
+                                className="flex-1 py-2.5 px-4 rounded-lg border border-white/20 text-sm font-medium text-slate-300 hover:bg-white/5 transition-all">
+                                Not Now
+                            </button>
+                            <button
+                                onClick={requestPermissionAndSubscribe}
+                                className={cn(
+                                    "flex-1 py-2.5 px-4 rounded-lg text-sm font-bold transition-all",
+                                    theme.accentBg,
+                                    "text-black hover:opacity-90",
+                                )}>
+                                Enable
+                            </button>
+                        </div>
                     </div>
-                    <div className="text-xs text-slate-400 mb-4">
-                        Get notified about important updates and announcements
-                    </div>
-                    <button
-                        onClick={requestPermissionAndSubscribe}
-                        className={cn(
-                            "px-6 py-2 border rounded font-bold uppercase tracking-wider text-xs transition-all",
-                            theme.buttonOutline,
-                        )}>
-                        Enable Notifications
-                    </button>
                 </div>
             )}
 
