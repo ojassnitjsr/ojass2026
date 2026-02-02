@@ -482,3 +482,36 @@ export const timelineData: TimelineData = {
         ],
     },
 };
+
+interface EventPerk {
+    prefix?: string;
+    bold?: string;
+    suffix?: string;
+}
+export type RegistrationTier = "NIT_JSR" | "OTHER_COLLEGE";
+
+const INTERNAL_STUDENT_PERKS: EventPerk[] = [
+    { prefix: "Free registration to all ", bold: "Individual Events" },
+    { prefix: "Free registration to all ", bold: "Team Events" },
+    { prefix: "Exclusive ", bold: "OJASS Goodies" },
+];
+
+const EXTERNAL_STUDENT_PERKS: EventPerk[] = [
+    { bold: "4-day Accommodation", suffix: " at NIT Jamshedpur campus" },
+    {
+        prefix: "Registration to all ",
+        bold: "40+ Events",
+        suffix: " (Individual & Team)",
+    },
+    { prefix: "Access to all", bold: " Cultural Nights & Talk Shows" },
+    { bold: "3-time Meals", suffix: " (Breakfast, Lunch & Dinner)" },
+    { bold: "Free Food Coupons", suffix: " for snacks & refreshments" },
+    { prefix: "Exclusive ", bold: "OJASS Goodies" },
+];
+
+export const REGISTRATION_TIER_CONFIG: {
+    [K in RegistrationTier]: EventPerk[];
+} = {
+    NIT_JSR: INTERNAL_STUDENT_PERKS,
+    OTHER_COLLEGE: EXTERNAL_STUDENT_PERKS,
+};
