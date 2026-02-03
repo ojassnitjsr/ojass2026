@@ -78,6 +78,7 @@ export default function Home() {
                             left: '50%',
                             transform: 'translateX(-50%)',
                         }}>
+                            {!isLoggedIn ? (
                             <Link
                                 href="/login?mode=register"
                                 className={`layout-panel layout-text font-bold text-center px-4 py-2.5 text-xs hover:scale-105 active:scale-95 transition-all duration-300 ${isDystopia ? "is-dystopia" : ""}`}
@@ -88,6 +89,7 @@ export default function Home() {
                             >
                                 REGISTER NOW
                             </Link>
+                            ) : null}
                             <Link
                                 href="https://sponsor.ojass.org"
                                 target="_blank"
