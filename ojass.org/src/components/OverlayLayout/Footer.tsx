@@ -3,6 +3,8 @@
 import { useTheme } from "@/contexts/ThemeContext";
 import gsap from "gsap";
 import { useEffect, useRef, useState } from "react";
+import { Mail, Phone } from "lucide-react";
+import Link from "next/link";
 
 export default function Footer() {
     const { theme } = useTheme();
@@ -82,8 +84,9 @@ export default function Footer() {
             className="fixed bottom-0 left-0 right-0 flex items-end justify-center z-40 sm:pb-0 font-kensmark"
             style={{ opacity: 0, pointerEvents: "none" }}>
             <div
-                className={`relative layout-panel hud-grid px-6 py-3 backdrop-blur-md transition-all duration-700 bg-black/60 ${isDystopia ? "is-dystopia" : ""
-                    }`}
+                className={`relative layout-panel hud-grid px-6 py-3 pb-1 backdrop-blur-md transition-all duration-700 bg-black/60 ${
+                    isDystopia ? "is-dystopia" : ""
+                }`}
                 style={{
                     width: "fit-content",
                     clipPath: clipPath,
@@ -92,7 +95,7 @@ export default function Footer() {
                 }}>
                 <div className="relative z-10 flex flex-col items-center justify-center gap-1 text-xs tracking-wider text-center text-white font-bold">
                     {/* Navigation Links */}
-                    <div className="grid grid-cols-2 sm:grid-cols-4 place-items-center gap-x-6 gap-y-2">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 place-items-center gap-x-6">
                         {[
                             { name: "TERMS", href: "/policy" },
                             { name: "PRIVACY", href: "/policy" },
@@ -103,10 +106,26 @@ export default function Footer() {
                                 key={link.name}
                                 href={link.href}
                                 className={`flex items-center gap-1 cursor-pointer hover:scale-105 hover:border-b-2 transition-transform hover:opacity-100 ${isDystopia ? "is-dystopia" : ""
-                                    } opacity-80`}>
+                                } opacity-80`}>
                                 {link.name}
                             </a>
                         ))}
+                    </div>
+
+                    <div className="flex items-center gap-1 text-[10px] lowercase">
+                        <Link
+                            href="mailto:ojass@nitjsr.ac.in"
+                            className="flex items-center gap-1">
+                            <Mail className="w-3 h-3" />
+                            ojass@nitjsr.ac.in
+                        </Link>{" "}
+                        |
+                        <Link
+                            href="tel:+918340671871"
+                            className="flex items-center gap-1">
+                            <Phone className="w-3 h-3" />
+                            +918340671871
+                        </Link>
                     </div>
 
                     {/* Design Credit Line */}

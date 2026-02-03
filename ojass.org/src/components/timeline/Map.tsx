@@ -262,7 +262,7 @@ const EventMap = ({ selectedDay, isMobile }: { selectedDay: DayKey; isMobile: bo
     );
 
     const getEventStatus = (start: Date, end: Date, index: number) => {
-        const festStart = new Date("2026-02-19T08:55:00");
+        const festStart = new Date("2026-02-26T08:55:00");
         if (now < festStart && selectedDay === 1 && index === 0) return "LIVE NOW";
 
         if (now > end) return "COMPLETED";

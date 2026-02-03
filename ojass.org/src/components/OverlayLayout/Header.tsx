@@ -4,6 +4,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import gsap from "gsap";
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Header() {
   const { theme } = useTheme();
@@ -72,22 +73,28 @@ export default function Header() {
       </div>
 
       {/* Extreme Left - Sponsors */}
-      <div className="absolute top-6 left-6 h-full hidden md:flex items-start overflow-hidden">
+      <div className="absolute top-6 left-1 h-full flex items-start overflow-hidden">
+        <Link href="/" className="flex items-center justify-center h-full pointer-events-auto">
+          <Image src={"/logo.png"} alt="Home" width={100} height={100} className="object-contain invert h-full" />
+        </Link>
         <Link
           href="https://sponsor.ojass.org" target="_blank"
-          className={`clip-left layout-panel layout-text !border-0 pointer-events-auto px-6 py-3 font-bold text-sm md:text-lg hover:scale-105 active:scale-95 transition-all duration-300 ${isDystopia ? "is-dystopia" : ""}`}
+          className={`hidden md:block clip-left layout-panel layout-text !border-0 pointer-events-auto px-6 py-3 font-bold text-sm md:text-lg hover:scale-105 active:scale-95 transition-all duration-300 ${isDystopia ? "is-dystopia" : ""}`}
         >
           SPONSOR US
         </Link>
       </div>
 
       {/* Extreme Right - Ambassadors */}
-      <div className="absolute top-6 right-6 h-full hidden md:flex items-start overflow-hidden">
+      <div className="absolute top-6 right-1 h-full flex items-start overflow-hidden">
         <Link
           href="https://ca.ojass.org" target="_blank"
-          className={`clip-right layout-panel layout-text !border-0 pointer-events-auto px-6 py-3 font-bold text-sm md:text-lg hover:scale-105 active:scale-95 transition-all duration-300 ${isDystopia ? "is-dystopia" : ""}`}
+          className={`hidden md:block clip-right layout-panel layout-text !border-0 pointer-events-auto px-6 py-3 font-bold text-sm md:text-lg hover:scale-105 active:scale-95 transition-all duration-300 ${isDystopia ? "is-dystopia" : ""}`}
         >
           CA PROGRAM
+        </Link>
+        <Link href="https://nitjsr.ac.in" target="_blank" className="flex h-full pointer-events-auto">
+          <Image src={"/nitjsrlogo.png"} alt="NIT Jamshedpur" width={100} height={100} className="object-contain h-full" />
         </Link>
       </div>
     </div>

@@ -11,6 +11,7 @@ import {
     X,
     Image as ImageIcon,
     Check,
+    Copy,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BiSolidInstitution } from "react-icons/bi";
@@ -28,8 +29,21 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
     const [showProgress, setShowProgress] = useState(false);
     const [uploadError, setUploadError] = useState<string | null>(null);
     const [uploadSuccess, setUploadSuccess] = useState(false);
+    const [copied, setCopied] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+    const handleCopyId = async () => {
+        if (profileData.ojassId) {
+            try {
+                await navigator.clipboard.writeText(profileData.ojassId);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            } catch (err) {
+                console.error("Failed to copy ID:", err);
+            }
+        }
+    };
 
     // Fetch ID card on mount
     useEffect(() => {
@@ -286,13 +300,24 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
                     )}>
                     {profileData.name}
                 </h2>
-                <p
-                    className={cn(
-                        "font-mono text-xs opacity-60 tracking-wider",
-                        theme.textColorDim,
-                    )}>
-                    ID: {profileData.ojassId}
-                </p>
+                <div className="flex items-center justify-center gap-2">
+                    <p
+                        className={cn(
+                            "font-mono text-xs opacity-60 tracking-wider",
+                            theme.textColorDim,
+                        )}>
+                        ID: {profileData.ojassId}
+                    </p>
+                    <button
+                        onClick={handleCopyId}
+                        className={cn(
+                            "rounded transition-all hover:bg-white/10",
+                            copied ? "text-green-400" : theme.textColorDim,
+                        )}
+                        title={copied ? "Copied!" : "Copy ID"}>
+                        {copied ? <Check size={12} /> : <Copy size={12} />}
+                    </button>
+                </div>
             </div>
 
             {/* Info Grid */}

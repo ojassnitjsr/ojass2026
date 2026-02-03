@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/login/UI";
 import { useEffect, useState } from "react";
+import NotificationPermissionModal from "@/components/notifications/NotificationPermissionModal";
 
 export default function Home() {
     const { theme } = useTheme();
@@ -39,6 +40,7 @@ export default function Home() {
 
     return (
         <div className="h-screen overflow-y-scroll snap-y snap-mandatory" style={{ scrollBehavior: 'smooth' }}>
+            <NotificationPermissionModal />
             <div className="snap-start relative" style={{
                 width: "100%",
                 height: "200vh",
@@ -56,7 +58,7 @@ export default function Home() {
                 />
                 <div className="relative w-full h-full">
                     <div className="relative flex flex-col items-center justify-center gap-6 h-screen">
-                        <Image src={isDystopia ? `/text-main-dys.png` : "/text-main-dys-1.png"} alt="Home" width={500} height={500} className="object-contain w-[90vw] md:w-1/2 md:mb-0 mb-32" style={{
+                        <Image src={isDystopia ? `/text-main-dys.png` : "/text-main-eut.png"} alt="Home" width={500} height={500} className="object-contain w-[90vw] md:w-1/2 md:mb-0 mb-32" style={{
                             // filter: "hue-rotate(180deg)"
                         }} />
 
@@ -76,6 +78,7 @@ export default function Home() {
                             left: '50%',
                             transform: 'translateX(-50%)',
                         }}>
+                            {!isLoggedIn ? (
                             <Link
                                 href="/login?mode=register"
                                 className={`layout-panel layout-text font-bold text-center px-4 py-2.5 text-xs hover:scale-105 active:scale-95 transition-all duration-300 ${isDystopia ? "is-dystopia" : ""}`}
@@ -86,6 +89,7 @@ export default function Home() {
                             >
                                 REGISTER NOW
                             </Link>
+                            ) : null}
                             <Link
                                 href="https://sponsor.ojass.org"
                                 target="_blank"
@@ -164,7 +168,7 @@ export default function Home() {
                                             <br />
                                             Scheduled for{" "}
                                             <span className="font-semibold">
-                                                19-22 February 2026
+                                                26 February - 01 March 2026
                                             </span>
                                             , OJASS brings together the
                                             brightest minds from across the
