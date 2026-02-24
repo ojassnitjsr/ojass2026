@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import { useLoginTheme } from "@/components/login/theme";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { REGISTRATION_TIER_CONFIG, RegistrationTier } from "@/lib/constants";
+import { FaChevronDown } from "react-icons/fa";
 
 declare global {
     interface Window {
@@ -17,6 +19,7 @@ export default function Receipt({ userData, pricing }: { userData?: any, pricing
     const [paymentData, setPaymentData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [paymentLoading, setPaymentLoading] = useState(false);
+    const [showPerks, setShowPerks] = useState(false);
     const [message, setMessage] = useState<{
         type: "success" | "error";
         text: string;
@@ -257,8 +260,36 @@ export default function Receipt({ userData, pricing }: { userData?: any, pricing
                                     Special Offer Active
                                 </p>
                             )}
+                            <p className={cn("text-xs mt-2 opacity-60 font-medium", theme.accentColor)}> One-time fee • No hidden charges </p>
                         </div>
                     )}
+
+                    <button
+                        onClick={() => setShowPerks(!showPerks)}
+                        className={cn(
+                            "w-full flex items-center justify-center gap-2 py-2 px-4 rounded-lg border text-xs font-medium transition-all duration-200 mb-4",
+                            theme.borderColorDim,
+                            "hover:bg-white/5",
+                            theme.textColor,
+                        )}>
+                        <span>{showPerks ? "Hide Perks" : "View Perks"}</span>
+                        <FaChevronDown/>
+                    </button>
+
+                    {/* Perks Section */}
+                    <div
+                        className={cn(
+                            "overflow-hidden transition-all duration-300 ease-in-out",
+                            showPerks
+                                ? "max-h-96 opacity-100 mb-6"
+                                : "max-h-0 opacity-0",
+                        )}>
+                        <RegistrationBenefits
+                            tier={pricing.isNitJsrStudent ? "NIT_JSR" : "OTHER_COLLEGE"} 
+                            theme={theme}
+                        />
+                    </div>
+
                     {message && (
                         <div
                             className={`mb-4 p-3 text-xs rounded border ${message.type === "success"
@@ -269,6 +300,7 @@ export default function Receipt({ userData, pricing }: { userData?: any, pricing
                         </div>
                     )}
                     <button
+                        id="pay-now-button"
                         onClick={handlePayNow}
                         disabled={paymentLoading}
                         className={cn(
@@ -533,3 +565,41 @@ export default function Receipt({ userData, pricing }: { userData?: any, pricing
         </div>
     );
 }
+
+interface RegistrationBenefitsProps {
+    tier: RegistrationTier;
+    theme: {
+        borderColorDim: string;
+        textColor: string;
+    };
+}
+
+const RegistrationBenefits = ({ tier, theme }: RegistrationBenefitsProps) => {
+    const perks = REGISTRATION_TIER_CONFIG[tier];
+
+    return (
+        <div
+            className={cn(
+                "p-4 rounded-lg border transition-all duration-300",
+                theme.borderColorDim,
+                `bg-gradient-to-br from-purple-500/10 to-transparent`,
+            )}>
+            <ul className="space-y-2 text-xs text-slate-300">
+                {perks.map((perk, index) => (
+                    <li key={index} className="flex items-center gap-2">
+                        <span className="mt-0.5 text-purple-400">✓</span>
+                        <span>
+                            {perk.prefix}
+                            {perk.bold && (
+                                <strong className="text-white">
+                                    {perk.bold}
+                                </strong>
+                            )}
+                            {perk.suffix}
+                        </span>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+};

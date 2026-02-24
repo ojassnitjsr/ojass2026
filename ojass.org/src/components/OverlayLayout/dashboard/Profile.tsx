@@ -4,18 +4,20 @@ import React, { useState, useRef, useEffect } from "react";
 import { useLoginTheme } from "@/components/login/theme";
 import {
     User,
-    Code,
     Users,
-    Zap,
     Mail,
     Phone,
-    Shield,
     Upload,
     X,
     Image as ImageIcon,
     Check,
+    Copy,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BiSolidInstitution } from "react-icons/bi";
+import { FaCity } from "react-icons/fa";
+import { LiaUserTagSolid } from "react-icons/lia";
+import { LuMap } from "react-icons/lu";
 
 export default function Profile({ profileData, onProfileUpdate }: { profileData: any; onProfileUpdate?: (data: any) => void }) {
     const theme = useLoginTheme();
@@ -23,9 +25,25 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
         profileData?.idCardImageUrl || null,
     );
     const [uploading, setUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [showProgress, setShowProgress] = useState(false);
     const [uploadError, setUploadError] = useState<string | null>(null);
     const [uploadSuccess, setUploadSuccess] = useState(false);
+    const [copied, setCopied] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+    const handleCopyId = async () => {
+        if (profileData.ojassId) {
+            try {
+                await navigator.clipboard.writeText(profileData.ojassId);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            } catch (err) {
+                console.error("Failed to copy ID:", err);
+            }
+        }
+    };
 
     // Fetch ID card on mount
     useEffect(() => {
@@ -61,15 +79,27 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
             return;
         }
 
-        // Validate file size (10MB)
-        if (file.size > 10 * 1024 * 1024) {
-            setUploadError("File size must be less than 10MB");
+        // Validate file size (1MB)
+        if (file.size > 1 * 1024 * 1024) {
+            setUploadError("File size must be less than 1MB");
             return;
         }
 
         setUploading(true);
+        setShowProgress(true);
+        setUploadProgress(0);
         setUploadError(null);
         setUploadSuccess(false);
+
+        progressIntervalRef.current = setInterval(() => {
+            setUploadProgress((prev) => {
+                if (prev < 60)
+                    return Math.min(60, prev + Math.random() * 4 + 8);
+                else if (prev < 95)
+                    return Math.min(95, prev + Math.random() + 1);
+                return prev;
+            });
+        }, 1000);
 
         try {
             const token = localStorage.getItem("token");
@@ -87,6 +117,7 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
 
             const uploadRes = await fetch("/api/media/upload", {
                 method: "POST",
+                headers: { Authorization: `Bearer ${token}` },
                 body: formData,
             });
 
@@ -116,8 +147,33 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
                 throw new Error(errorData.error || "Failed to update ID card");
             }
 
-            // Update local state
-            setIdCardImageUrl(uploadedFile.url);
+            // Upload complete - jump to 100%
+            if (progressIntervalRef.current) {
+                clearInterval(progressIntervalRef.current);
+                progressIntervalRef.current = null;
+            }
+            setUploadProgress(100);
+
+            // Update local state with the new URL
+            const newImageUrl = uploadedFile.url;
+
+            // Wait for image to load before hiding progress
+            const img = new Image();
+            img.onload = () => {
+                setIdCardImageUrl(newImageUrl);
+                setShowProgress(false);
+                setUploadProgress(0);
+                setUploading(false);
+            };
+            img.onerror = () => {
+                // Even if image fails to preload, still update the state
+                setIdCardImageUrl(newImageUrl);
+                setShowProgress(false);
+                setUploadProgress(0);
+                setUploading(false);
+            };
+            img.src = newImageUrl;
+
             setUploadSuccess(true);
 
             // Update localStorage user data
@@ -137,8 +193,15 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
         } catch (err: any) {
             console.error("ID card upload error:", err);
             setUploadError(err.message || "Failed to upload ID card");
-        } finally {
+            // Clear progress on error
+            if (progressIntervalRef.current) {
+                clearInterval(progressIntervalRef.current);
+                progressIntervalRef.current = null;
+            }
+            setShowProgress(false);
+            setUploadProgress(0);
             setUploading(false);
+        } finally {
             // Reset file input
             if (fileInputRef.current) {
                 fileInputRef.current.value = "";
@@ -154,7 +217,18 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
         setUploading(true);
         try {
             const token = localStorage.getItem("token");
-            if (!token) throw new Error("Authentication required");
+            const userId = profileData?._id;
+            if (!token || !userId) throw new Error("Authentication required");
+
+            const deleteRes = await fetch("/api/media/upload", {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({idCardCloudinaryId: profileData?.idCardCloudinaryId}),
+            });
+            if (!deleteRes.ok) throw new Error("Failed to delete ID card");
 
             const res = await fetch("/api/user/id-card", {
                 method: "PUT",
@@ -226,13 +300,24 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
                     )}>
                     {profileData.name}
                 </h2>
-                <p
-                    className={cn(
-                        "font-mono text-xs opacity-60 tracking-wider",
-                        theme.textColorDim,
-                    )}>
-                    ID: {profileData.ojassId}
-                </p>
+                <div className="flex items-center justify-center gap-2">
+                    <p
+                        className={cn(
+                            "font-mono text-xs opacity-60 tracking-wider",
+                            theme.textColorDim,
+                        )}>
+                        ID: {profileData.ojassId}
+                    </p>
+                    <button
+                        onClick={handleCopyId}
+                        className={cn(
+                            "rounded transition-all hover:bg-white/10",
+                            copied ? "text-green-400" : theme.textColorDim,
+                        )}
+                        title={copied ? "Copied!" : "Copy ID"}>
+                        {copied ? <Check size={12} /> : <Copy size={12} />}
+                    </button>
+                </div>
             </div>
 
             {/* Info Grid */}
@@ -240,10 +325,10 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
                 {[
                     { icon: Mail, label: "Email", value: profileData.email },
                     { icon: Phone, label: "Phone", value: profileData.phone },
-                    { icon: Zap, label: "College", value: profileData.college },
-                    { icon: Code, label: "Gender", value: profileData.gender },
-                    { icon: Users, label: "City", value: profileData.city },
-                    { icon: Shield, label: "State", value: profileData.state },
+                    { icon: BiSolidInstitution, label: "College", value: profileData.college },
+                    { icon: LiaUserTagSolid , label: "Gender", value: profileData.gender },
+                    { icon: FaCity, label: "City", value: profileData.city },
+                    { icon: LuMap, label: "State", value: profileData.state },
                     {
                         icon: Users,
                         label: "Referrals",
@@ -282,6 +367,7 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
 
             {/* ID Card Upload Section */}
             <div
+                id="id-card-verification"
                 className={cn(
                     "p-6 rounded-xl border relative overflow-hidden mt-6",
                     theme.borderColorDim,
@@ -348,15 +434,32 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
                                 theme.borderColorDim,
                                 uploading && "opacity-50 cursor-not-allowed"
                             )}>
-                            {uploading ? (
-                                <div className="flex flex-col items-center animate-pulse">
-                                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white mb-4"></div>
+                            {showProgress ? (
+                                <div className="flex flex-col items-center w-full px-4">
                                     <p
                                         className={cn(
-                                            "text-xs font-medium mb-1",
+                                            "text-xs font-medium mb-3",
                                             theme.textColor,
                                         )}>
-                                        Uploading to Server...
+                                        {uploadProgress < 100
+                                            ? `Uploading... ${Math.round(uploadProgress)}%`
+                                            : "Processing..."}
+                                    </p>
+                                    <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden mb-2">
+                                        <div
+                                            className={cn(
+                                                "h-full transition-all duration-300 ease-out rounded-full",
+                                                theme.accentBg,
+                                            )}
+                                            style={{
+                                                width: `${uploadProgress}%`,
+                                            }}
+                                        />
+                                    </div>
+                                    <p className="text-[10px] text-slate-500">
+                                        {uploadProgress < 100
+                                            ? "Please wait..."
+                                            : "Almost done..."}
                                     </p>
                                 </div>
                             ) : (
@@ -376,7 +479,7 @@ export default function Profile({ profileData, onProfileUpdate }: { profileData:
                                         Drop your ID card here
                                     </p>
                                     <p className="text-[10px] text-slate-500">
-                                        (College/University ID) • Max 10MB
+                                        (College/University ID) • Max 1MB
                                     </p>
                                 </>
                             )}

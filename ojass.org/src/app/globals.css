@@ -1,11 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Oxanium:wght@200..800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Oxanium:wght@200..800&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
 /* Custom Font - Kensmark */
 @font-face {
-    font-family: 'Kensmark';
-    src: url('/font/kensmark-03-black.ttf') format('truetype');
+    font-family: "Kensmark";
+    src: url("/font/kensmark-03-black.ttf") format("truetype");
     font-weight: 900;
     font-style: normal;
     font-display: swap;
@@ -140,11 +140,6 @@ body {
     cursor: none !important;
 }
 
-html.lenis,
-html.lenis body {
-    height: auto;
-}
-
 ::-webkit-scrollbar {
     display: none;
 }
@@ -161,17 +156,7 @@ html.lenis body {
 
 @layer utilities {
     .font-kensmark {
-        font-family: 'Kensmark', sans-serif;
-    }
-
-    @keyframes horizontal-scroll {
-        from {
-            transform: translateX(0);
-        }
-
-        to {
-            transform: translateX(-100%);
-        }
+        font-family: "Kensmark", sans-serif;
     }
 
     @keyframes horizontal-scroll-2 {
@@ -202,23 +187,56 @@ html.lenis body {
         }
     }
 
-    .animate-horizontal-scroll {
-        animation: horizontal-scroll linear 16s infinite;
+    @keyframes float {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-15px);
+        }
+    }
+
+    @keyframes scale-pulse {
+        0%,
+        100% {
+            transform: scale(0.8);
+            opacity: 0.3;
+        }
+        50% {
+            transform: scale(1.2);
+            opacity: 0.7;
+        }
+    }
+
+    @keyframes fade-in-up {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     .animate-horizontal-scroll-2 {
         animation: horizontal-scroll-2 linear 16s infinite;
     }
 
-    .animate-pulse-slow {
-        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-
-    .animate-dash-move {
-        animation: dashMove 20s linear infinite;
-    }
-
     .animate-slide-in {
-        animation: slideIn 0.3s easeforwards;
+        animation: slideIn 0.3s ease forwards;
+    }
+
+    .animate-float {
+        animation: float 4s ease-in-out infinite;
+    }
+
+    .animate-scale-pulse {
+        animation: scale-pulse 2s ease-in-out infinite;
+    }
+
+    .animate-fade-in-up {
+        animation: fade-in-up 0.5s ease-out forwards;
     }
 }

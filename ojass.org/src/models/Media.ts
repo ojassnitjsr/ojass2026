@@ -21,7 +21,6 @@ const mediaSchema = new Schema<IMedia>(
             ref: 'User',
             required: false,
             default: null,
-            index: true
         },
         publicId: {
             type: String,
@@ -64,8 +63,6 @@ const mediaSchema = new Schema<IMedia>(
 
 // Index for faster queries
 mediaSchema.index({ userId: 1, createdAt: -1 });
-mediaSchema.index({ publicId: 1 });
-
 const Media = mongoose.models.Media || mongoose.model<IMedia>('Media', mediaSchema);
 
 export default Media;

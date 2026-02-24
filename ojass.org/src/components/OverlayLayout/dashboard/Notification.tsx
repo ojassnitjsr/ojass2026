@@ -18,15 +18,6 @@ export default function Notification() {
     const theme = useLoginTheme();
     const [notifications, setNotifications] = useState<NotificationItem[]>([]);
     const [loading, setLoading] = useState(true);
-    const [permissionStatus, setPermissionStatus] =
-        useState<NotificationPermission>("default");
-
-    // Check notification permission and subscription status
-    useEffect(() => {
-        if (typeof window !== "undefined" && "Notification" in window) {
-            setPermissionStatus(window.Notification.permission);
-        }
-    }, []);
 
     // Fetch notifications
     useEffect(() => {
@@ -58,89 +49,6 @@ export default function Notification() {
         fetchNotifications();
     }, []);
 
-    // Request notification permission and subscribe
-    const requestPermissionAndSubscribe = async () => {
-        if (
-            typeof window === "undefined" ||
-            !("Notification" in window) ||
-            !("serviceWorker" in navigator)
-        ) {
-            alert("Your browser doesn't support push notifications");
-            return;
-        }
-
-        try {
-            // Request permission
-            const permission = await window.Notification.requestPermission();
-            setPermissionStatus(permission);
-
-            if (permission !== "granted") {
-                alert("Notification permission denied");
-                return;
-            }
-
-            // Register service worker
-            const registration = await navigator.serviceWorker.register(
-                "/sw.js",
-                {
-                    scope: "/",
-                },
-            );
-
-            // Wait for service worker to be ready
-            await navigator.serviceWorker.ready;
-
-            // Subscribe to push notifications
-            const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
-            if (!vapidKey) {
-                alert(
-                    "VAPID public key not configured. Please contact support.",
-                );
-                return;
-            }
-
-            const subscription = await registration.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: urlBase64ToUint8Array(
-                    vapidKey,
-                ) as BufferSource,
-            });
-
-            // Save subscription to backend
-            const token = localStorage.getItem("token");
-            if (!token) {
-                alert("Please login to enable notifications");
-                return;
-            }
-
-            const res = await fetch("/api/notifications/subscribe", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    endpoint: subscription.endpoint,
-                    keys: {
-                        p256dh: arrayBufferToBase64(
-                            subscription.getKey("p256dh")!,
-                        ),
-                        auth: arrayBufferToBase64(subscription.getKey("auth")!),
-                    },
-                }),
-            });
-
-            if (res.ok) {
-                alert("Notifications enabled successfully!");
-            } else {
-                alert("Failed to enable notifications");
-            }
-        } catch (error) {
-            console.error("Error subscribing to notifications:", error);
-            alert("Failed to enable notifications");
-        }
-    };
-
     // Mark notification as read
     const markAsRead = async (id: string) => {
         try {
@@ -166,30 +74,6 @@ export default function Notification() {
         }
     };
 
-    // Helper functions
-    function urlBase64ToUint8Array(base64String: string): Uint8Array {
-        const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-        const base64 = (base64String + padding)
-            .replace(/-/g, "+")
-            .replace(/_/g, "/");
-        const rawData = window.atob(base64);
-        const buffer = new ArrayBuffer(rawData.length);
-        const outputArray = new Uint8Array(buffer);
-        for (let i = 0; i < rawData.length; ++i) {
-            outputArray[i] = rawData.charCodeAt(i);
-        }
-        return outputArray;
-    }
-
-    function arrayBufferToBase64(buffer: ArrayBuffer): string {
-        const bytes = new Uint8Array(buffer);
-        let binary = "";
-        for (let i = 0; i < bytes.byteLength; i++) {
-            binary += String.fromCharCode(bytes[i]);
-        }
-        return window.btoa(binary);
-    }
-
     // Get icon based on notification type (simple heuristic)
     const getIcon = (title: string) => {
         const lowerTitle = title.toLowerCase();
@@ -214,42 +98,6 @@ export default function Notification() {
 
     return (
         <div className="space-y-3">
-            {/* Permission Request Button */}
-            {permissionStatus !== "granted" && (
-                <div
-                    className={cn(
-                        "p-4 border rounded-lg backdrop-blur-md text-center",
-                        theme.borderColorDim,
-                        theme.bgGlass,
-                    )}>
-                    <Bell
-                        className={cn(
-                            "mx-auto mb-2 opacity-80",
-                            theme.textColor,
-                        )}
-                        size={24}
-                    />
-                    <div
-                        className={cn(
-                            "text-sm font-bold mb-2 uppercase tracking-wide",
-                            theme.textColor,
-                        )}>
-                        Enable Push Notifications
-                    </div>
-                    <div className="text-xs text-slate-400 mb-4">
-                        Get notified about important updates and announcements
-                    </div>
-                    <button
-                        onClick={requestPermissionAndSubscribe}
-                        className={cn(
-                            "px-6 py-2 border rounded font-bold uppercase tracking-wider text-xs transition-all",
-                            theme.buttonOutline,
-                        )}>
-                        Enable Notifications
-                    </button>
-                </div>
-            )}
-
             {/* Notifications List */}
             <div className="space-y-3 overflow-y-auto">
                 {notifications.length === 0 ? (
@@ -264,14 +112,18 @@ export default function Notification() {
                                 "mx-auto mb-3 opacity-50",
                                 theme.textColor,
                             )}
-                            size={24}
+                            size={32}
                         />
                         <div
                             className={cn(
-                                "text-sm font-medium opacity-70",
+                                "text-base font-bold mb-2 uppercase tracking-wide",
                                 theme.textColor,
                             )}>
-                            No notifications yet
+                            No Notifications Yet
+                        </div>
+                        <div className="text-sm text-slate-500">
+                            You&apos;ll receive updates about events,
+                            announcements, and important information here.
                         </div>
                     </div>
                 ) : (

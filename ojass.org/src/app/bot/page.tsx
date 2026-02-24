@@ -3,7 +3,6 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useTheme } from "@/contexts/ThemeContext";
@@ -249,7 +248,7 @@ export default function FuturisticHUD() {
                         SCAN PROGRESS
                       </div>
                       <div className={`w-full h-2 ${colors.bg} rounded-full mt-1 overflow-hidden border ${colors.borderMedium}`}>
-                        <motion.div
+                        <div
                           className={`h-full bg-gradient-to-r ${colors.gradient}`}
                           style={{ width: `${scanProgress}%` }}
                         />
@@ -275,16 +274,8 @@ export default function FuturisticHUD() {
                 <div className="absolute inset-0 flex flex-col items-center justify-center pt-20 pb-24 px-4">
                   {/* Scanner */}
                   <div className="relative w-[420px] h-[420px] sm:w-[520px] sm:h-[520px] md:w-[580px] md:h-[600px] opacity-30">
-                    <motion.div
-                      className={`absolute inset-0 rounded-full border-2 ${colors.border}/50`}
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                    />
-                    <motion.div
-                      className={`absolute inset-8 rounded-full border ${colors.border}/30`}
-                      animate={{ rotate: -360 }}
-                      transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
-                    />
+                    <div className={`absolute inset-0 rounded-full border-2 ${colors.border}/50 animate-spin [animation-duration:_20s]`}/>
+                    <div className={`absolute inset-8 rounded-full border ${colors.border}/30 animate-spin direction-reverse [animation-duration:_15s]`}/>
                     <div className={`absolute inset-0 flex flex-col items-center justify-center ${colors.text300} font-mono text-base sm:text-lg tracking-widest`}>
                       {chatState === 'typing' && <span>USER TYPING...</span>}
                       {chatState === 'generating' && <span>GENERATING...</span>}

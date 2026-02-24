@@ -2,6 +2,7 @@ import CursorEffect from "@/components/cursor/CursorEffect";
 import OverlayLayout from "@/components/OverlayLayout/Layout";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Script from "next/script";
 import { ReactNode } from "react";
 import "./globals.css";
@@ -67,11 +68,19 @@ export const metadata: Metadata = {
     },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: ReactNode;
 }>) {
+    const headersList = await headers();
+    const userAgent = headersList.get("user-agent") || "";
+    const isMobile = Boolean(
+        userAgent.match(
+            /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i,
+        ),
+    );
+
     return (
         <html lang="en" className="overflow-x-hidden">
             <body>
@@ -91,7 +100,7 @@ export default function RootLayout({
                 <ThemeProvider>
                     {children}
                     <OverlayLayout />
-                    <CursorEffect />
+                    {!isMobile && <CursorEffect />}
                 </ThemeProvider>
             </body>
         </html>

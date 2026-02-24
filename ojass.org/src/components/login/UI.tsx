@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { HTMLMotionProps, motion } from "framer-motion";
 import React, {
     ButtonHTMLAttributes,
     InputHTMLAttributes,
@@ -11,7 +10,7 @@ import { FaChevronDown, FaSpinner } from "react-icons/fa";
 import { useLoginTheme } from "./theme";
 
 // ---  Card ---
-interface CardProps extends HTMLMotionProps<"div"> {
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
     children: ReactNode;
     active?: boolean;
 }
@@ -24,12 +23,9 @@ export const Card = ({
 }: CardProps) => {
     const theme = useLoginTheme();
     return (
-        <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
+        <div
             className={cn(
-                "relative p-6 md:p-8 bg-slate-900/60 backdrop-blur-xl border overflow-hidden group",
+                "relative p-6 md:p-8 bg-slate-900/60 backdrop-blur-xl border overflow-hidden group animate-fade-in-up",
                 theme.borderColorDim,
                 active ? theme.cardActive : "",
                 className,
@@ -57,7 +53,7 @@ export const Card = ({
             <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-0 bg-[length:100%_2px,3px_100%] opacity-20" />
 
             <div className="relative z-10">{children}</div>
-        </motion.div>
+        </div>
     );
 };
 

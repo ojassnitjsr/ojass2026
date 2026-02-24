@@ -2,7 +2,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { DayKey, timelineData } from "@/lib/constants";
 import { MapPin, Radio, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import ElectroBorder from "./ElectroBorder";
+import ElectroBorder from "./ElectroBorderWrapper";
 
 type EventStatus = "COMPLETED" | "LIVE NOW" | "SCHEDULED";
 
@@ -21,11 +21,13 @@ const EventDetailsContent = ({
     status,
     isDystopian,
     onClose,
+    isMobile,
 }: {
     event: EventData;
     status: EventStatus;
     isDystopian: boolean;
     onClose: () => void;
+    isMobile: boolean;
 }) => {
     const accentColor = isDystopian ? "text-yellow-400" : "text-cyan-400";
     const borderColor = isDystopian ? "border-yellow-500" : "border-cyan-500";
@@ -45,6 +47,7 @@ const EventDetailsContent = ({
             <div className="flex-1 overflow-y-auto p-4 md:p-6 scrollbar-thin scrollbar-thumb-white/10">
                 <ElectroBorder
                     borderWidth={2}
+                    isMobile={isMobile}
                     borderColor={isDystopian ? "#EAB308" : "#22D3EE"}>
                     <div
                         className={`relative p-6 bg-black/80 backdrop-blur-md ${glowColor} shadow-2xl`}>
@@ -236,7 +239,7 @@ const MapNode = ({
 
 // --- Main Component ---
 
-const EventMap = ({ selectedDay }: { selectedDay: DayKey }) => {
+const EventMap = ({ selectedDay, isMobile }: { selectedDay: DayKey; isMobile: boolean }) => {
     const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
     const [now, setNow] = useState(new Date());
     const { theme } = useTheme();
@@ -258,7 +261,10 @@ const EventMap = ({ selectedDay }: { selectedDay: DayKey }) => {
         [selectedDay],
     );
 
-    const getEventStatus = (start: Date, end: Date) => {
+    const getEventStatus = (start: Date, end: Date, index: number) => {
+        const festStart = new Date("2026-02-26T08:55:00");
+        if (now < festStart && selectedDay === 1 && index === 0) return "LIVE NOW";
+
         if (now > end) return "COMPLETED";
         if (now >= start && now <= end) return "LIVE NOW";
         return "SCHEDULED";
@@ -370,11 +376,11 @@ const EventMap = ({ selectedDay }: { selectedDay: DayKey }) => {
                             </svg>
 
                             {/* Nodes */}
-                            {events.map((evt) => (
+                            {events.map((evt, index) => (
                                 <MapNode
                                     key={evt.id}
                                     event={evt}
-                                    status={getEventStatus(evt.start, evt.end)}
+                                    status={getEventStatus(evt.start, evt.end, index)}
                                     isSelected={selectedEventId === evt.id}
                                     onClick={() =>
                                         setSelectedEventId(
@@ -423,9 +429,11 @@ const EventMap = ({ selectedDay }: { selectedDay: DayKey }) => {
                                 status={getEventStatus(
                                     activeEvent.start,
                                     activeEvent.end,
+                                    events.findIndex((e) => e.id === activeEvent.id),
                                 )}
                                 isDystopian={isDystopian}
                                 onClose={() => setSelectedEventId(null)}
+                                isMobile={isMobile}
                             />
                         )}
                     </div>
