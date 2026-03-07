@@ -21,7 +21,7 @@ export default function OjassDashboard() {
     const router = useRouter();
     const theme = useLoginTheme();
 
-    const { theme : Theme } = useTheme();
+    const { theme: Theme } = useTheme();
     const isDystopia = Theme === "dystopia";
     useEffect(() => {
         let styleElement = document.getElementById("gallery-clip-styles") as HTMLStyleElement;
@@ -246,16 +246,7 @@ export default function OjassDashboard() {
         fetchUserData();
     }, [router]);
 
-    // Certificate type definition
-    interface Certificate {
-        id: string;
-        event: string;
-        type: string;
-        date: string;
-        url: string;
-    }
 
-    const certificates: Certificate[] = [];
 
     if (loading) {
         return <Loader />;
@@ -405,7 +396,11 @@ export default function OjassDashboard() {
                                     )}
                                     {activeTab === "certificates" && (
                                         <Certificate
-                                            certificates={certificates}
+                                            verifiedEvents={registeredEvents}
+                                            profileData={{
+                                                name: profileData?.name || "",
+                                                ojassId: profileData?.ojassId || "",
+                                            }}
                                         />
                                     )}
                                     {activeTab === "notifications" && (
