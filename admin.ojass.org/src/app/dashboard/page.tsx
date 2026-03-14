@@ -1260,7 +1260,7 @@ export default function Dashboard() {
                     ) : filteredTeams.length > 0 ? (
                       filteredTeams.map((team) => {
                         const eventName = typeof team.eventId === 'object' ? team.eventId.name : 'Unknown';
-                        const leader = typeof team.teamLeader === 'object' ? team.teamLeader.name : 'Unknown';
+                        const leader = (team.teamLeader && typeof team.teamLeader === 'object') ? team.teamLeader.name : 'Unknown';
                         return (
                           <tr key={team._id} className="hover:bg-gray-50">
                             <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{team.teamName || 'Individual'}</td>
