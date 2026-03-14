@@ -1,4 +1,7 @@
 import mongoose from 'mongoose';
+// Register all models so populate() never throws "Schema hasn't been registered"
+// in serverless environments where each function has an isolated module scope.
+import '@/models/index';
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
