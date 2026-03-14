@@ -76,35 +76,36 @@ export default function Dashboard() {
 
   // Fetch full student details when modal opens
   useEffect(() => {
-    if (selectedStudentDetails && !selectedStudentFullData && !loadingStudentDetails) {
-      setLoadingStudentDetails(true);
-      userAPI.getById(selectedStudentDetails)
-        .then((fullData) => {
-          setSelectedStudentFullData(fullData);
-          setLoadingStudentDetails(false);
-        })
-        .catch((error) => {
-          console.error('Error fetching student details:', error);
-          setLoadingStudentDetails(false);
-        });
-    }
-  }, [selectedStudentDetails, selectedStudentFullData, loadingStudentDetails]);
+    if (!selectedStudentDetails) return;
+    setLoadingStudentDetails(true);
+    setSelectedStudentFullData(null);
+    userAPI.getById(selectedStudentDetails)
+      .then((fullData) => {
+        setSelectedStudentFullData(fullData);
+      })
+      .catch((error) => {
+        console.error('Error fetching student details:', error);
+      })
+      .finally(() => {
+        setLoadingStudentDetails(false);
+      });
+  }, [selectedStudentDetails]);
 
   // Fetch student registrations when modal opens
   useEffect(() => {
-    if (selectedStudentDetails && !loadingStudentRegistrations) {
-      setLoadingStudentRegistrations(true);
-      userAPI.getRegistrations(selectedStudentDetails)
-        .then((registrations) => {
-          setStudentRegistrations(registrations);
-          setLoadingStudentRegistrations(false);
-        })
-        .catch((error) => {
-          console.error('Error fetching student registrations:', error);
-          setLoadingStudentRegistrations(false);
-        });
-    }
-  }, [selectedStudentDetails, loadingStudentRegistrations]);
+    if (!selectedStudentDetails) return;
+    setLoadingStudentRegistrations(true);
+    userAPI.getRegistrations(selectedStudentDetails)
+      .then((registrations) => {
+        setStudentRegistrations(registrations);
+      })
+      .catch((error) => {
+        console.error('Error fetching student registrations:', error);
+      })
+      .finally(() => {
+        setLoadingStudentRegistrations(false);
+      });
+  }, [selectedStudentDetails]);
 
   // Clear full data when modal closes
   useEffect(() => {
@@ -654,7 +655,7 @@ export default function Dashboard() {
                     ) : filteredTeams.length > 0 ? (
                       filteredTeams.map((team) => {
                         const eventName = typeof team.eventId === 'object' ? team.eventId.name : 'Unknown';
-                        const leader = typeof team.teamLeader === 'object' ? team.teamLeader.name : 'Unknown';
+                        const leader = (team.teamLeader && typeof team.teamLeader === 'object') ? team.teamLeader.name : 'Unknown';
                         return (
                           <tr key={team._id} className="hover:bg-gray-50">
                             <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{team.teamName || 'Individual'}</td>
