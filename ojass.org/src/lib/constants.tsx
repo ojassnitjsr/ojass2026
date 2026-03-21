@@ -1,4 +1,4 @@
-import { IconType } from "react-icons";
+﻿import { IconType } from "react-icons";
 import { BiSolidCalendarEvent } from "react-icons/bi";
 import {
     FaFacebook,
@@ -20,7 +20,7 @@ export const NavItems: Icons = [
     { title: "Home", element: FaHome },
     { title: "Events", element: BiSolidCalendarEvent },
     { title: "Gallery", element: RiGalleryFill },
-    { title: "Timeline", element: RiMapPinTimeLine },
+    { title: "Winner", element: RiMapPinTimeLine },
     { title: "Team", element: IoPeopleSharp },
 ];
 
@@ -130,6 +130,22 @@ export type TimelineData = {
         }[];
     };
 };
+
+export type WinnerTeam = {
+    team_name: string;
+    members: string[];
+    ojass_ids: string[];
+};
+
+export type WinnerEntry = {
+    id: number;
+    event_name: string;
+    winner?: WinnerTeam;
+    runner_up?: WinnerTeam;
+    second_runner_up?: WinnerTeam;
+};
+
+export type WinnerData = WinnerEntry[];
 
 export const timelineData: TimelineData = {
     1: {
@@ -514,3 +530,570 @@ export const REGISTRATION_TIER_CONFIG: {
     NIT_JSR: INTERNAL_STUDENT_PERKS,
     OTHER_COLLEGE: EXTERNAL_STUDENT_PERKS,
 };
+
+
+export const WinnerData: WinnerData = [
+    {
+        "id": 0,
+        "event_name": "OJASS OLYMPIAD",
+        "winner": {
+            "team_name": "Individual",
+            "members": ["Rishabh Raj"],
+            "ojass_ids": ["OJASS26SQD8"]
+        },
+        "runner_up": {
+            "team_name": "Individual",
+            "members": ["Neeladri Sadhu"],
+            "ojass_ids": ["OJASS26DYWA"]
+        }
+    },
+    {
+        "id": 1,
+        "event_name": "VISHWA CODE MANIA",
+        "winner": {
+            "team_name": "N-LOG-N",
+            "members": ["Utkarsh Jha", "Shubham Gupta", "Satya Jay"],
+            "ojass_ids": ["OJASS26GFV8", "OJASS26XIUU", "OJASS264EWC"]
+        },
+        "runner_up": {
+            "team_name": "WE DONT WIN",
+            "members": ["Manbendra Singh", "Md Mahtab Ansari", "Shaishav Singh"],
+            "ojass_ids": ["OJASS2663IH", "OJASS26Z5N1", "OJASS26K4M5"]
+        }
+    },
+    {
+        "id": 2,
+        "event_name": "CHESS",
+        "winner": {
+            "team_name": "Individual",
+            "members": ["Rohit Mishra"],
+            "ojass_ids": ["OJASS264S6J"]
+        },
+        "runner_up": {
+            "team_name": "Individual",
+            "members": ["Prem Kumar"],
+            "ojass_ids": ["OJASS26RO1K"]
+        }
+    },
+    {
+        "id": 3,
+        "event_name": "AI HACKATHON",
+        "winner": {
+            "team_name": "Latent Space",
+            "members": ["Kanta Vishnu Madhav", "Chandra Viharika Ravila"],
+            "ojass_ids": ["OJASS26RZD4", "OJASS26GJND"]
+        },
+        "runner_up": {
+            "team_name": "The Optimizers",
+            "members": ["Harshit Kumar", "Swayam Agarwal", "Rishav Kashyap"],
+            "ojass_ids": ["OJASS26FZ80", "OJASS26OM11", "OJASS267S63"]
+        }
+    },
+    {
+        "id": 4,
+        "event_name": "RURAL TECH IDEATHON (SCHOOL - CATEGORY A)",
+        "winner": {
+            "team_name": "Team DAV",
+            "members": ["Devanshu Swami", "Abhinav Mukherjee", "Rishav Raj", "Neeladri Sadhu"],
+            "ojass_ids": ["OJASS263XY9", "OJASS261OKV", "OJASS26SQD8", "OJASS26DYWA"]
+        }
+    },
+    {
+        "id": 4,
+        "event_name": "RURAL TECH IDEATHON (COLLEGE - CATEGORY B)",
+        "winner": {
+            "team_name": "Mechpitch",
+            "members": ["Alok Dey", "Priya Yadav", "Sagar Kumar Saw"],
+            "ojass_ids": ["OJASS268DNR", "OJASS26JGKC", "OJASS26K3AO"]
+        },
+        "runner_up": {
+            "team_name": "Microwheels",
+            "members": ["Dhirendra Pratap Dindoure", "Shubham Gupta", "Shristy Shreya"],
+            "ojass_ids": ["OJASS26PX9O", "OJASS26XIUU", "OJASS269VWR"]
+        }
+    },
+    {
+        "id": 5,
+        "event_name": "SANRACHNA",
+        "winner": {
+            "team_name": "ENIGMA HUNTERS",
+            "members": ["Ashish Kumar", "Sahil Yadav", "Roshan Kumar", "Yash Labh"],
+            "ojass_ids": ["OJASS26N7TE", "OJASS264F80", "OJASS26FN5Z", "OJASS26TKEQ"]
+        },
+        "runner_up": {
+            "team_name": "GALGOTIA BUILDERS",
+            "members": ["Rahul Prasad Prajapati", "Manas", "Shiv Shankar", "Shishir Dwivedi"],
+            "ojass_ids": ["OJASS26PTA8", "OJASS265J4T", "OJASS26RXEQ", "OJASS26VBYI"]
+        },
+        "second_runner_up": {
+            "team_name": "TRUSS ISSUE",
+            "members": ["Shreya Mukesh Jaiswal", "Shivani Sinha", "Sadamsetty Praneeth", "Saniya Chouhan"],
+            "ojass_ids": ["OJASS26SQXG", "OJASS26A03T", "OJASS26TIIB", "OJASS267BI8"]
+        }
+    },
+    {
+        "id": 6,
+        "event_name": "PIXEL SYNC",
+        "winner": {
+            "team_name": "Designer Tripod",
+            "members": ["Abhishek Anand", "Manish Kumar", "Priyanshu Singh"],
+            "ojass_ids": ["OJASS26XYOB", "OJASS26NTTR", "OJASS262B37"]
+        },
+        "runner_up": {
+            "team_name": "Pixel_Perfects",
+            "members": ["Yashi Piparsaniya", "Sisanta Chhatoi", "Satya Jay"],
+            "ojass_ids": ["OJASS267M8Q", "OJASS260RF1", "OJASS264EWC"]
+        }
+    },
+    {
+        "id": 7,
+        "event_name": "FLOW FORGE",
+        "winner": {
+            "team_name": "CodeCatalyst",
+            "members": ["Shambhawi Singh", "Darshit Naulakha"],
+            "ojass_ids": ["OJASS26IKEM", "OJASS26192F"]
+        },
+        "runner_up": {
+            "team_name": "GenOps",
+            "members": ["Akash Verma", "Abhas Kumar Bardhan", "Kunal Singh Marwaha"],
+            "ojass_ids": ["OJASS26KCRB", "OJASS26C5OT", "OJASS26JDJ3"]
+        }
+    },
+    {
+        "id": 8,
+        "event_name": "TRACE BOT CHALLENGE",
+        "winner": {
+            "team_name": "Individual",
+            "members": ["Nilanjana Dutta"],
+            "ojass_ids": ["OJASS26BBSV"]
+        },
+        "runner_up": {
+            "team_name": "Individual",
+            "members": ["Animesh Kumar"],
+            "ojass_ids": ["OJASS26OB19"]
+        }
+    },
+    {
+        "id": 9,
+        "event_name": "ROBO RUMBLE",
+        "winner": {
+            "team_name": "Metal Gears B",
+            "members": ["Somnath S", "Aman Chandrakar"],
+            "ojass_ids": ["OJASS26FYF9", "OJASS26BB5F"]
+        },
+        "runner_up": {
+            "team_name": "Mechanix",
+            "members": ["Mridul Maurya", "Shreyas Shray", "Abhas Mishra", "Ketan Ranjan Sui"],
+            "ojass_ids": ["OJASS26OJ4L", "OJASS260MC7", "OJASS260O5Q", "OJASS26QTT9"]
+        }
+    },
+    {
+        "id": 10,
+        "event_name": "HACK DE SCIENCE",
+        "winner": {
+            "team_name": "Modi Sarkar",
+            "members": ["Utkarsh Singh", "Tanishk S Pandey", "Adarsh Kumar", "Ruchika Sinha"],
+            "ojass_ids": ["OJASS26B5KV", "OJASS26ZHPI", "OJASS26JF9Z", "OJASS2668GS"]
+        },
+        "runner_up": {
+            "team_name": "Bit Set",
+            "members": ["Rishav Kashyap", "Awaish Ehsan", "Aditya Raj"],
+            "ojass_ids": ["OJASS267S63", "OJASS26TLNK", "OJASS26178M"]
+        }
+    },
+    {
+        "id": 11,
+        "event_name": "ULYSSES",
+        "winner": {
+            "team_name": "GOD",
+            "members": ["Deeptanshu Singh Negi", "Yash Labh"],
+            "ojass_ids": ["OJASS26L5QF", "OJASS26TKEQ"]
+        },
+        "runner_up": {
+            "team_name": "Twin Quills",
+            "members": ["Priyanshi", "Suyash Shandilya"],
+            "ojass_ids": ["OJASS26VHLC", "OJASS260DTK"]
+        }
+    },
+    {
+        "id": 12,
+        "event_name": "UNDER WATER TRACING",
+        "winner": {
+            "team_name": "Depthwalker",
+            "members": ["Suraj Kumar", "Tejas Kumar", "Mridul Maurya", "Shreyas Shrey"],
+            "ojass_ids": ["OJASS26236I", "OJASS26BKHD", "OJASS260J4L", "OJASS260MC7"]
+        },
+        "runner_up": {
+            "team_name": "Pirates of NITJSR",
+            "members": ["Akshat Kumar", "Abhishek Rajendra Tribhuvan", "Aditya Raj", "Sonu"],
+            "ojass_ids": ["OJASS263105", "OJASS26ZGGE", "OJASS26HQIM", "OJASS26FWQ8"]
+        }
+    },
+    {
+        "id": 13,
+        "event_name": "MOCK TATA CRUCIBLE",
+        "winner": {
+            "team_name": "Unknown",
+            "members": ["Shiv Shankar", "Yash Labh"],
+            "ojass_ids": ["OJASS26RXEQ", "OJASS26TKEQ"]
+        },
+        "runner_up": {
+            "team_name": "Tata Bye Bye",
+            "members": ["Priyanshu Gupta", "Abhishek Tribhuwan"],
+            "ojass_ids": ["OJASS2658HC", "OJASS26ZGGE"]
+        }
+    },
+    {
+        "id": 14,
+        "event_name": "THE GREAT INDIAN MELA",
+        "winner": {
+            "team_name": "Mela Drama",
+            "members": ["Neha", "Raunak Srivastava"],
+            "ojass_ids": ["OJASS26GZNG", "OJASS26OIQB"]
+        },
+        "runner_up": {
+            "team_name": "No Clew Crew",
+            "members": ["Shiv Shankar", "Yash Labh"],
+            "ojass_ids": ["OJASS26RXEQ", "OJASS26TKEQ"]
+        }
+    },
+    {
+        "id": 15,
+        "event_name": "FIX-IT FIESTA",
+        "winner": {
+            "team_name": "Team Optiminds",
+            "members": ["Kunal Singh Marwaha", "Akash Verma", "Abhas Kumar Bardhan"],
+            "ojass_ids": ["OJASS26JDJ3", "OJASS26KCRB", "OJASS26C5OT"]
+        },
+        "runner_up": {
+            "team_name": "Team Vahan Parichay",
+            "members": ["Debangshu Mondal", "Amandeep", "Suniti Saw"],
+            "ojass_ids": ["OJASS26N9LT", "OJASS26L004", "OJASS26R87G"]
+        },
+        "second_runner_up": {
+            "team_name": "Team ScaleUp Squade",
+            "members": ["Anushka Garg", "Raja Kumar"],
+            "ojass_ids": ["OJASS26XFNI", "OJASS266E1H"]
+        }
+    },
+    {
+        "id": 16,
+        "event_name": "EAFC",
+        "winner": {
+            "team_name": "Individual",
+            "members": ["Anoop Kumar Burnwal"],
+            "ojass_ids": ["OJASS26YRKG"]
+        },
+        "runner_up": {
+            "team_name": "Individual",
+            "members": ["Inayat"],
+            "ojass_ids": ["OJASS260DIB"]
+        }
+    },
+    {
+        "id": 17,
+        "event_name": "CASE STUDY CHALLENGE",
+        "winner": {
+            "team_name": "Team DeepTrace",
+            "members": ["Tushar Das"],
+            "ojass_ids": ["OJASS261GVA"]
+        },
+        "runner_up": {
+            "team_name": "Team whattheHACK ",
+            "members": ["Mohammad Saad Haque Ansari", "Aayan Hasim", "Shreya Sekseria", "Parisha Roy"],
+            "ojass_ids": ["OJASS26S4L2", "OJASS26UZC4", "OJASS26F4PI", "OJASS265Q1T"]
+        }
+    },
+    {
+        "id": 18,
+        "event_name": "SIMULATION SPRINT",
+        "winner": {
+            "team_name": "Individual",
+            "members": ["Tanishq Tanmay"],
+            "ojass_ids": ["OJASS264IJX"]
+        },
+        "runner_up": {
+            "team_name": "Individual",
+            "members": ["Kumari Lipsa"],
+            "ojass_ids": ["OJASS26AX32"]
+        }
+    },
+    {
+        "id": 19,
+        "event_name": "BGMI",
+        "winner": {
+            "team_name": "Xian Ternousha",
+            "members": ["Kislai Bramhbhatt", "Shreyas Kumar", "Vansh Agastya", "Mohammad Shahid Khan"],
+            "ojass_ids": ["OJASS265W9I", "OJASS26OC1V", "OJASS26IMB9", "OJASS26AR1N"]
+        },
+        "runner_up": {
+            "team_name": "RED_ZONE",
+            "members": ["Abhas Mishra", "Mridul Maurya", "Ketan Sui", "Shreyas Shrey"],
+            "ojass_ids": ["OJASS260O5Q", "OJASS26OJ4L", "OJASS26QTT9", "OJASS260MC7"]
+        }
+    },
+    {
+        "id": 20,
+        "event_name": "VALORANT",
+        "winner": {
+            "team_name": "BloodRush",
+            "members": ["Aditya Raj", "Riyan Roy", "Yash Raj", "Ujjawal Kumar", "Rigzin Chhospel"],
+            "ojass_ids": ["OJASS26W9F3", "OJASS26CRT2", "OJASS2641EC", "OJASS26YQ3M", "OJASS260SMR"]
+        },
+        "runner_up": {
+            "team_name": "Wolfsbane",
+            "members": ["Adarsh Pratap Singh", "Aditya Raj", "Aayan Hasim", "Subham Kumar", "Tanmay Gupta"],
+            "ojass_ids": ["OJASS26EIBT", "OJASS26HQIM", "OJASS26UZC4", "OJASS26E5G0", "OJASS26J1XV"]
+        }
+    },
+    {
+        "id": 21,
+        "event_name": "DRONE RACE CHALLENGE",
+        "winner": {
+            "team_name": "Team Uvira",
+            "members": ["Md Saddab Ansari", "Shreya Gorakhnath Mogal", "Yashraj Bajarang Lohat", "Shravani Sheshrao Kulkarni"],
+            "ojass_ids": ["OJASS268AQ4", "OJASS264U67", "OJASS26IUZT", "OJASS26LYXC"]
+        },
+        "runner_up": {
+            "team_name": "Team Unity",
+            "members": ["Swastik Nandi", "Ayush Mukherjee", "Subhadeep Barik", "Debarshi Patikar"],
+            "ojass_ids": ["OJASS261RDC", "OJASS26FV70", "OJASS26SJZU", "OJASS26BSDL"]
+        }
+    },
+    {
+        "id": 22,
+        "event_name": "NO GROUND ZONE",
+        "winner": {
+            "team_name": "Team Black Hawk",
+            "members": ["Avani Maheshwari", "Yash Labh", "Deepmala Deepak", "Sonu"],
+            "ojass_ids": ["OJASS26CEB1", "OJASS26TKEQ", "OJASS2619UF", "OJASS26FWQ8"]
+        },
+        "runner_up": {
+            "team_name": "FlyingPredators",
+            "members": ["Anupam Nain", "Mohammad Fahad Siddiqui"],
+            "ojass_ids": ["OJASS2661AF", "OJASS263BLE"]
+        }
+    },
+    {
+        "id": 23,
+        "event_name": "MOCK IPL AUCTION",
+        "winner": {
+            "team_name": "Individual",
+            "members": ["Aditi"],
+            "ojass_ids": ["OJASS26TSH7"]
+        },
+        "runner_up": {
+            "team_name": "Individual",
+            "members": ["Tanishq Tanmay"],
+            "ojass_ids": ["OJASS264IJX"]
+        }
+    },
+    {
+        "id": 24,
+        "event_name": "COZMO CLENCH",
+        "winner": {
+            "team_name": "Team Shoora",
+            "members": ["Piyush", "Jayesh Kadam", "Aasar Shukla"],
+            "ojass_ids": ["OJASS26N46V", "OJASS26W2SM", "OJASS26N4X0"]
+        },
+        "runner_up": {
+            "team_name": "Team Velocity Vipers",
+            "members": ["Eklavya Kumar", "Yash Dandapat", "Pranav Sahu", "Sameer Kumar"],
+            "ojass_ids": ["OJASS26O8PM", "OJASS26ZU7G", "OJASS26AA5A", "OJASS26AF04"]
+        }
+    },
+    {
+        "id": 25,
+        "event_name": "FINITE ELEMENT ANALYSIS",
+        "winner": {
+            "team_name": "Design Masters",
+            "members": ["Tanmay Gupta", "Aditya Raj"],
+            "ojass_ids": ["OJASS26J1XV", "OJASS26HQIM"]
+        }
+    },
+    {
+        "id": 26,
+        "event_name": "START UP IDEATHON",
+        "winner": {
+            "team_name": "Field2Fiber",
+            "members": ["Prins Raj Prasad", "Anish", "Manoj Kumar", "Vivek"],
+            "ojass_ids": ["OJASS26DIC4", "OJASS26LHG3", "OJASS269O44", "OJASS26DRPM"]
+        },
+        "runner_up": {
+            "team_name": "Fest Pay",
+            "members": ["Mohak"],
+            "ojass_ids": ["OJASS26RAMP"]
+        }
+    },
+    {
+        "id": 27,
+        "event_name": "BUSINESS SIMULATION",
+        "winner": {
+            "team_name": "Nexovo",
+            "members": ["Aditya Raj"],
+            "ojass_ids": ["OJASS26178M"]
+        },
+        "runner_up": {
+            "team_name": "Techy Stars",
+            "members": ["Harsh", "Yash Sharma", "Satyam Sagar", "Aryan Sinha"],
+            "ojass_ids": ["OJASS26!AG8,OJASS26CP0N,OJASS26YYJM,OJASS265FCV"]
+        }
+    },
+    {
+        "id": 28,
+        "event_name": "MAZE MARATHON",
+        "winner": {
+            "team_name": "Micro Wheels",
+            "members": ["Dhirendra Pratap Dindoure", "Shubham Gupta", "Shristy Shreya", "Dibyam Mohanty"],
+            "ojass_ids": ["OJASS26PX90", "OJASS26XIUU", "OJASS269VWR", "OJASS26SHLI"]
+        },
+        "runner_up": {
+            "team_name": "Mechanix",
+            "members": ["Mridul Maurya", "Shreyas Shray", "Abhas Mishra", "Ketan Ranjan Sui"],
+            "ojass_ids": ["OJASS26OJ4L", "OJASS260MC7", "OJASS260O5Q", "OJASS26QTT9"]
+        }
+    },
+    {
+        "id": 29,
+        "event_name": "AQUA RACE",
+        "winner": {
+            "team_name": "Team Shoora 2",
+            "members": ["Piyush Verma", "Aasar Shukla", "Jayesh Kadam"],
+            "ojass_ids": ["OJASS26N46V", "OJASS26N4X0", "OJASS26W2SM"]
+        },
+        "runner_up": {
+            "team_name": "Team Shoora 1",
+            "members": ["Piyush Verma", "Jayesh Kadam", "Aasar Shukla"],
+            "ojass_ids": ["OJASS26N46V", "OJASS26W2SM", "OJASS26N4X0"]
+        }
+    },
+    {
+        "id": 30,
+        "event_name": "ROBO SOCCER",
+        "winner": {
+            "team_name": "Metal Gears B",
+            "members": ["Somnath S", "Aman Chandrakar"],
+            "ojass_ids": ["OJASS26FYF9", "OJASS26BB5F"]
+        },
+        "runner_up": {
+            "team_name": "Metal Gears A",
+            "members": ["Aryan Singh"],
+            "ojass_ids": ["OJASS261B08"]
+        }
+    },
+    {
+        "id": 31,
+        "event_name": "KURUKSHETRA - ROBO WARS 3KG",
+        "winner": {
+            "team_name": "Team Unity",
+            "members": ["Tridibesh Jha", "Subhadeep Barik", "Ayush Mukherjee", "Debarshi Patikar"],
+            "ojass_ids": ["OJASS26A6N5", "OJASS26SJZU", "OJASS26FV70", "OJASS26BSDL"]
+        },
+        "runner_up": {
+            "team_name": "Team T-Rex",
+            "members": ["Arnab Loha", "Nilanjana Datta", "Ranit Swarnakar", "Arisudan Nandi"],
+            "ojass_ids": ["OJASS262VST", "OJASS26BBSV", "OJASS26PVDL", "OJASS262524"]
+        }
+    },
+    {
+        "id": 32,
+        "event_name": "KURUKSHETRA - ROBO WARS 8KG",
+        "winner": {
+            "team_name": "Team Shoora",
+            "members": ["Piyush Verma", "Aasar Shukla", "Jayesh Kadam"],
+            "ojass_ids": ["OJASS26N46V", "OJASS26N4X0", "OJASS26W2SM"]
+        },
+        "runner_up": {
+            "team_name": "Metal Gears",
+            "members": ["Aryan Singh", "Somnath S", "Aman Chandrakar"],
+            "ojass_ids": ["OJASS261B08", "OJASS26FYF9", "OJASS26BB5F"]
+        }
+    },
+    {
+        "id": 33,
+        "event_name": "KURUKSHETRA - ROBO WARS 15KG",
+        "winner": {
+            "team_name": "Team BloodFire",
+            "members": [],
+            "ojass_ids": []
+        }
+    },
+    {
+        "id": 34,
+        "event_name": "CINESCRIPT (BEST FILM)",
+        "winner": {
+            "team_name": "DAWNLIGHT PRODUCTIONS",
+            "members": ["Shivam Mishra", "Swaraj Sinha", "Abhideep Abhisek"],
+            "ojass_ids": ["OJASS26F8DW", "OJASS267EXS", "OJASS26EY23"]
+        }
+    },
+    {
+        "id": 35,
+        "event_name": "CINESCRIPT (BEST SCREENPLAY)",
+        "winner": {
+            "team_name": "XT PRODUCTION",
+            "members": ["Shreyas", "Swastika", "Priyanshu"],
+            "ojass_ids": ["OJASS26OC1V", "OJASS266TTD", "OJASS267EFV"]
+        }
+    },
+    {
+        "id": 36,
+        "event_name": "CINESCRIPT (BEST CINEMATOGRAPHY)",
+        "winner": {
+            "team_name": "BEYOND THE LENS",
+            "members": ["Aditya Raj", "Tanmay Gupta", "Abhijit Chandrakar"],
+            "ojass_ids": ["OJASS26HQIM", "OJASS26J1XV", "OJASS26SPTB"]
+        }
+    },
+    {
+        "id": 37,
+        "event_name": "CINESCRIPT (BEST EDITOR)",
+        "winner": {
+            "team_name": "ALOO K PARATHE",
+            "members": ["Ayan Hasim", "Adarsh Pratap Singh", "Shubham Kumar"],
+            "ojass_ids": ["OJASS26UZC4", "OJASS26EIBT", "OJASS26E560"]
+        }
+    },
+    {
+        "id": 38,
+        "event_name": "CINESCRIPT (BEST ACTOR)",
+        "winner": {
+            "team_name": "Group 3",
+            "members": ["Avani Maheshwari", "Deepmala Deepak", "Anant"],
+            "ojass_ids": ["OJASS26CEB1", "OJASS2619UF", "OJASS2645OK"]
+        }
+    },
+    {
+        "id": 39,
+        "event_name": "LIGHTS CAMERA OJASS",
+        "winner": {
+            "team_name": "BEYOND THE LENS",
+            "members": ["Aditya Raj", "Tanmay Gupta", "Abhijit Chandrakar"],
+            "ojass_ids": ["OJASS26HQIM", "OJASS26J1XV", "OJASS26SPTB"]
+        },
+        "runner_up": {
+            "team_name": "Hocus Phocus",
+            "members": ["Soham Deshpande", "Yash Labh"],
+            "ojass_ids": ["OJASS26ZI2C", "OJASS26TKEQ"]
+        },
+        "second_runner_up": {
+            "team_name": "Omni Ojass",
+            "members": ["Shreejay", "Adarsh Pratap Singh", "Aayan Hasim", "Utkarsh Singh"],
+            "ojass_ids": ["OJASS26E5G0", "OJASS26EIBT", "OJASS26UZC4", "OJASS26B5KV"]
+        }
+    },
+    {
+        "id": 40,
+        "event_name": "FRAMES AND TALES",
+        "winner": {
+            "team_name": "Adarsh Infinity",
+            "members": ["Adarsh Pratap Singh"],
+            "ojass_ids": ["OJASS26EIBT"]
+        },
+        "runner_up": {
+            "team_name": "Hocus Phocus",
+            "members": ["Soham Deshpande"],
+            "ojass_ids": ["OJASS26ZI2C"]
+        }
+    }
+]
