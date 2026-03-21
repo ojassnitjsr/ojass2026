@@ -1078,8 +1078,8 @@ export const WinnerData: WinnerData = [
         },
         "second_runner_up": {
             "team_name": "Omni Ojass",
-            "members": ["Shreejay", "Adarsh Pratap Singh", "Aayan Hasim", "Utkarsh Singh"],
-            "ojass_ids": ["OJASS26E5G0", "OJASS26EIBT", "OJASS26UZC4", "OJASS26B5KV"]
+            "members": ["Shreejay", "Adarsh Pratap Singh", "Aayan Hasim"],
+            "ojass_ids": ["OJASS26E5G0", "OJASS26EIBT", "OJASS26UZC4"]
         }
     },
     {
