@@ -138,12 +138,12 @@ export default function OjassDashboard() {
                                     teamLeader:
                                         typeof team.teamLeader === "object"
                                             ? {
-                                                _id: team.teamLeader._id,
+                                                _id: team.teamLeader?._id,
                                                 name:
-                                                    team.teamLeader.name ||
+                                                    team.teamLeader?.name ||
                                                     "Unknown",
                                                 ojassId:
-                                                    team.teamLeader.ojassId,
+                                                    team.teamLeader?.ojassId,
                                             }
                                             : team.teamLeader,
                                     teamMembers: team.teamMembers
@@ -156,11 +156,11 @@ export default function OjassDashboard() {
                                             const leaderId =
                                                 typeof team.teamLeader ===
                                                     "object"
-                                                    ? team.teamLeader._id
+                                                    ? team.teamLeader?._id
                                                     : team.teamLeader;
                                             return (
-                                                memberId.toString() !==
-                                                leaderId.toString()
+                                                memberId?.toString() !==
+                                                leaderId?.toString()
                                             );
                                         })
                                         .map((member: any) => ({
