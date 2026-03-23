@@ -51,8 +51,6 @@ export default function LeftPanel() {
                         href={
                             item.title === "Home"
                                 ? "/"
-                                : item.title === "Winner"
-                                ? "/winners"
                                 : item.title.toLowerCase().replace(" ", "-")
                         }
                         className={`layout-text flex flex-col items-center cursor-pointer hover:scale-110 transition-transform ${
