@@ -253,9 +253,9 @@ export default function Receipt({ userData, pricing }: { userData?: any, pricing
                                 Registration Fee
                             </p>
                             <p className="text-3xl font-bold mt-1">
-                                ₹{pricing.amount}
+                                ₹{pricing?.amount}
                             </p>
-                            {pricing.offerActive && (
+                            {pricing?.offerActive && (
                                 <p className="text-xs text-green-400 mt-2 font-mono">
                                     Special Offer Active
                                 </p>
@@ -285,7 +285,7 @@ export default function Receipt({ userData, pricing }: { userData?: any, pricing
                                 : "max-h-0 opacity-0",
                         )}>
                         <RegistrationBenefits
-                            tier={pricing.isNitJsrStudent ? "NIT_JSR" : "OTHER_COLLEGE"} 
+                            tier={pricing?.isNitJsrStudent ? "NIT_JSR" : "OTHER_COLLEGE"} 
                             theme={theme}
                         />
                     </div>
