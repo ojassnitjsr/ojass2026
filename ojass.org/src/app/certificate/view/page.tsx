@@ -8,6 +8,19 @@ function CertificateRenderer() {
     const name = rawName.trim().length > 30 ? rawName.trim().substring(0, 30) + "..." : rawName.trim();
     const ojassId = params.get("ojassId") || "OJASS26XXXX";
     const eventName = params.get("eventName") || "EVENT NAME";
+    const position = params.get("position"); // "winner" | "runner_up" | null
+
+    const toTitleCase = (str: string) =>
+        str.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
+
+    const achievementText =
+        position === "winner"
+            ? <>for securing <u>1st Position</u> in <u>{eventName.toUpperCase()}</u> conducted under the banner of OJASS 2026.</>
+            : position === "runner_up"
+                ? <>for securing <u>2nd Position</u> in <u>{eventName.toUpperCase()}</u> conducted under the banner of OJASS 2026.</>
+                : position === "second_runner_up"
+                    ? <>for securing <u>3rd Position</u> in <u>{eventName.toUpperCase()}</u> conducted under the banner of OJASS 2026.</>
+                    : <>for actively participating in <u>{eventName.toUpperCase()}</u> conducted under the banner of OJASS 2026.</>;
 
     return (
         <>
@@ -40,7 +53,7 @@ function CertificateRenderer() {
             }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                    src="/certificate/certificate.png"
+                    src={position ? "/certificate/winner_certificate.png" : "/certificate/certificate.png"}
                     alt="Certificate"
                     style={{ width: "100%", display: "block" }}
                 />
@@ -59,9 +72,7 @@ function CertificateRenderer() {
                         fontFamily: "Times New Roman, serif",
                         lineHeight: "2vw",
                     }}>
-                    for actively participating in{" "}
-                    <u>{eventName.toUpperCase()}</u> conducted under the banner
-                    of OJASS 2026.
+                    {achievementText}
                 </div>
 
                 {/* Participant name — top: 36%, Amoresa font */}
@@ -80,7 +91,7 @@ function CertificateRenderer() {
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                     }}>
-                    {name}
+                    {toTitleCase(name)}
                 </div>
 
                 {/* OJASS ID — bottom: 51% */}
